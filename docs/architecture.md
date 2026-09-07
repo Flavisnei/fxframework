@@ -47,8 +47,8 @@ create ou module:install. O Composer deve continuar sendo a fonte de resolução
 
 ## Segurança e operação
 
-Corrigir Request antes da resolução de controllers/middleware, regras de validação,
-404 de modelos ausentes e CSRF antes de disponibilizar o preset Admin. Implementar
+Etapa 2 implementa registro do Request antes de controllers/middleware, correções de
+validação, 404 de modelos ausentes e CSRF web. Antes do preset Admin, implementar
 sessões configuráveis, cookies adequados, logging, recuperação de senha e limitação
 de tentativas no módulo de autenticação. Permissões seguem recurso.acao, com negação
 por padrão; acesso a registros pode exigir políticas adicionais.

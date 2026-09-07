@@ -21,6 +21,7 @@ final class Pipeline
 
         foreach (array_reverse($middleware) as $item) {
             $next = function (Request $request) use ($item, $next): mixed {
+                $this->app->setRequest($request);
                 $instance = is_string($item) ? $this->app->make($item) : $item;
                 if (!$instance instanceof Middleware) {
                     throw new InvalidArgumentException('Middleware deve implementar ' . Middleware::class);

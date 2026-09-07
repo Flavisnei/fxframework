@@ -28,6 +28,16 @@ final class ExampleFormRequest extends Request
 {
 }
 
+final class ConstructorRequestController
+{
+    public function __construct(private Request $request, private \Illuminate\Http\Request $illuminate) {}
+
+    public function show(Request $request): array
+    {
+        return [$this->request, $this->illuminate, $request];
+    }
+}
+
 final class FormRequestController
 {
     public function store(ExampleFormRequest $request): string
@@ -38,6 +48,19 @@ final class FormRequestController
 
 final class ControllerDispatcherTest extends TestCase
 {
+    public function testConstructorReceivesCurrentRequestOnEachDispatch(): void
+    {
+        $app = new Application(__DIR__);
+        $dispatcher = new ControllerDispatcher($app);
+        foreach (['/first', '/second'] as $uri) {
+            $request = Request::create($uri);
+            self::assertSame([$request, $request, $request], $dispatcher->dispatch(
+                ConstructorRequestController::class, 'show', [], $request
+            ));
+            self::assertSame($request, $app->make('request'));
+        }
+    }
+
     public function testItInjectsRequestAndNamedRouteParameters(): void
     {
         $app = new Application(__DIR__);

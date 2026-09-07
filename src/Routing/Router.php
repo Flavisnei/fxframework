@@ -8,7 +8,7 @@ use Closure;
 use Fx\Framework\Foundation\Application;
 use Fx\Framework\Http\Request;
 use Fx\Framework\Middleware\Pipeline;
-use Illuminate\Http\Request as IlluminateRequest;
+use Fx\Framework\Middleware\Middleware;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,6 +16,18 @@ final class Router
 {
     /** @var list<Route> */
     private array $routes = [];
+
+    /** @var list<Middleware|class-string<Middleware>> */
+    private array $middleware = [];
+
+    /** Middleware aplicado a todas as rotas deste router, antes do middleware da rota.
+     * @param Middleware|class-string<Middleware> $middleware
+     */
+    public function middleware(Middleware|string $middleware): self
+    {
+        $this->middleware[] = $middleware;
+        return $this;
+    }
 
     public function __construct(private readonly Application $app)
     {
@@ -52,6 +64,7 @@ final class Router
     public function dispatch(?Request $request = null): mixed
     {
         $request ??= Request::capture();
+        $this->app->setRequest($request);
         $path = '/' . trim($request->getPathInfo(), '/');
         $path = $path === '/' ? '/' : rtrim($path, '/');
         $allowed = [];
@@ -67,7 +80,7 @@ final class Router
             }
 
             $destination = fn (Request $request): mixed => $this->invoke($route->action, $parameters, $request);
-            return (new Pipeline($this->app))->run($request, $route->middlewareStack(), $destination);
+            return (new Pipeline($this->app))->run($request, [...$this->middleware, ...$route->middlewareStack()], $destination);
         }
 
         return $allowed !== []
@@ -88,9 +101,7 @@ final class Router
             return (new ControllerDispatcher($this->app))->dispatch($controller, $method, $parameters, $request);
         }
         if ($action instanceof Closure || is_callable($action)) {
-            $this->app->instance(Request::class, $request);
-            $this->app->instance(IlluminateRequest::class, $request);
-            $this->app->instance('request', $request);
+            $this->app->setRequest($request);
             return $this->app->call($action, $parameters);
         }
         throw new InvalidArgumentException('Acao de rota invalida.');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fx\Framework\View;
 
 use Smarty;
+use Fx\Framework\Http\Csrf;
 
 final class View
 {
@@ -21,6 +22,10 @@ final class View
         $this->smarty->setCacheDir($cacheDirectory);
         $this->smarty->setLeftDelimiter('-{');
         $this->smarty->setRightDelimiter('}-');
+        $this->smarty->registerPlugin('function', 'csrf_field', static function (): string {
+            return '<input type="hidden" name="_csrf" value="'
+                . htmlspecialchars(Csrf::token(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">';
+        }, false);
         $this->smarty->registerPlugin('function', 'fxwindows_assets', [FxWindowsHelper::class, 'assets']);
         $this->smarty->registerPlugin('function', 'fxwindow', [FxWindowsHelper::class, 'window']);
     }

@@ -163,9 +163,11 @@ PHP);
         $this->writeNew($root . '/routes/web.php', <<<'PHP'
 <?php
 use Fx\Framework\Routing\Router;
+use Fx\Framework\Middleware\VerifyCsrfToken;
 
 /** @var Router $router */
 $router = $app->make(Router::class);
+$router->middleware(VerifyCsrfToken::class);
 $router->get('/', fn (): string => 'FX Framework');
 foreach (glob(__DIR__ . '/generated/*.php') ?: [] as $routes) {
     require $routes;
@@ -258,7 +260,7 @@ final class {{name}}Request extends Request
 PHP),
             "/app/Controllers/{$name}Controller.php" => $this->crudControllerTemplate($name),
             "/resources/views/{$plural}/index.tpl" => "<h1>{$name}</h1>\n",
-            "/resources/views/{$plural}/form.tpl" => "<label>Nome <input name=\"name\" required></label>\n",
+            "/resources/views/{$plural}/form.tpl" => "-{csrf_field}-\n<label>Nome <input name=\"name\" required></label>\n",
             "/routes/generated/{$plural}.php" => str_replace(
                 ['{{name}}', '{{uri}}'],
                 [$name, $plural],

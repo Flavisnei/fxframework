@@ -7,6 +7,7 @@ namespace Fx\Framework\Foundation;
 use Fx\Framework\Container\Container;
 use Fx\Framework\Http\ExceptionHandler;
 use Fx\Framework\Http\Kernel;
+use Fx\Framework\Http\Request;
 use Fx\Framework\Routing\Router;
 use Fx\Framework\Support\ServiceProvider;
 use InvalidArgumentException;
@@ -34,6 +35,13 @@ final class Application extends Container
     {
         $base = rtrim($this->basePath, '/\\');
         return $path === '' ? $base : $base . DIRECTORY_SEPARATOR . ltrim($path, '/\\');
+    }
+
+    public function setRequest(Request $request): void
+    {
+        $this->instance(Request::class, $request);
+        $this->instance(\Illuminate\Http\Request::class, $request);
+        $this->instance('request', $request);
     }
 
     public function withDebug(bool $debug): self

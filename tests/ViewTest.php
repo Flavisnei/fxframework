@@ -9,6 +9,19 @@ use PHPUnit\Framework\TestCase;
 
 final class ViewTest extends TestCase
 {
+    public function testCsrfFieldIsFreshEvenWhenTemplateCachingIsEnabled(): void
+    {
+        file_put_contents($this->directory . '/templates/csrf.tpl', '-{csrf_field}-');
+        $view = new View($this->directory . '/templates', $this->directory . '/compile', $this->directory . '/cache');
+        $view->engine()->setCaching(\Smarty::CACHING_LIFETIME_CURRENT);
+        $first = \Fx\Framework\Http\Csrf::regenerate();
+        self::assertStringContainsString($first, $view->render('csrf.tpl'));
+        $second = \Fx\Framework\Http\Csrf::regenerate();
+        $html = $view->render('csrf.tpl');
+        self::assertStringContainsString($second, $html);
+        self::assertStringNotContainsString($first, $html);
+    }
+
     private string $directory;
 
     protected function setUp(): void

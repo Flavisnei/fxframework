@@ -22,6 +22,17 @@ final class HeaderMiddleware implements Middleware
 
 final class RouterTest extends TestCase
 {
+    public function testMiddlewareConstructorReceivesCurrentRequest(): void
+    {
+        $app = new Application(__DIR__);
+        $router = $app->make(Router::class);
+        $router->get('/current', fn (Request $request) => $request)->middleware(RequestAwareMiddleware::class);
+        foreach (['first', 'second'] as $value) {
+            $request = Request::create('/current?value=' . $value);
+            self::assertSame([$request, $request], $router->dispatch($request));
+        }
+    }
+
     public function testItDispatchesDynamicRoutesThroughMiddleware(): void
     {
         $app = new Application(__DIR__);
@@ -42,5 +53,15 @@ final class RouterTest extends TestCase
 
         self::assertSame(405, $router->dispatch(Request::create('/users', 'GET'))->getStatusCode());
         self::assertSame(404, $router->dispatch(Request::create('/missing'))->getStatusCode());
+    }
+}
+
+final class RequestAwareMiddleware implements Middleware
+{
+    public function __construct(private Request $request) {}
+
+    public function process(Request $request, callable $next): mixed
+    {
+        return [$this->request, $next($request)];
     }
 }

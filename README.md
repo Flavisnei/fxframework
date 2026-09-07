@@ -227,6 +227,12 @@ $router->resource('/clientes', ClienteController::class);
 Middleware implementa `Fx\Framework\Middleware\Middleware` e recebe `Request` e
 o callback `$next`.
 
+Novas aplicações geradas registram `VerifyCsrfToken` no router web. Envie `_csrf`
+no corpo ou `X-CSRF-TOKEN` no cabeçalho das operações de escrita. Em Smarty,
+`-{csrf_field}-` gera o campo oculto. Aplicações existentes devem adicionar o
+middleware e o campo explicitamente; consulte a [migração](docs/index.html#historico).
+Routers criados diretamente continuam sem proteção CSRF automática.
+
 ### Validacao
 
 ```php

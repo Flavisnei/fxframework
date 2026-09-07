@@ -34,22 +34,28 @@ final class Validator
             $rules = is_array($definition) ? $definition : explode('|', $definition);
             $present = array_key_exists($field, $this->data);
             $value = $this->data[$field] ?? null;
+            $required = in_array('required', $rules, true);
+            if ($required && (!$present || $value === null || $value === [] || (is_string($value) && trim($value) === ''))) {
+                $this->errors[$field][] = "O campo {$field} falhou na regra required.";
+                continue;
+            }
+            if (!$present) { continue; }
             if (in_array('nullable', $rules, true) && ($value === null || $value === '')) { continue; }
+            $numeric = array_intersect(['integer', 'int', 'numeric'], $rules) !== [];
 
             foreach ($rules as $rule) {
                 [$name, $parameter] = array_pad(explode(':', $rule, 2), 2, null);
-                if ($name === 'nullable') { continue; }
+                if ($name === 'nullable' || $name === 'required') { continue; }
                 $valid = match ($name) {
-                    'required' => $present && $value !== null && $value !== '',
                     'string' => is_string($value),
-                    'integer', 'int' => filter_var($value, FILTER_VALIDATE_INT) !== false,
+                    'integer', 'int' => (is_int($value) || is_string($value)) && filter_var($value, FILTER_VALIDATE_INT) !== false,
                     'numeric' => is_numeric($value),
                     'boolean', 'bool' => is_bool($value) || in_array($value, [0, 1, '0', '1'], true),
                     'array' => is_array($value),
                     'email' => is_string($value) && filter_var($value, FILTER_VALIDATE_EMAIL) !== false,
-                    'min' => $this->size($value) >= (float) $parameter,
-                    'max' => $this->size($value) <= (float) $parameter,
-                    'in' => in_array((string) $value, explode(',', (string) $parameter), true),
+                    'min' => $this->size($value, $numeric) !== null && $this->size($value, $numeric) >= (float) $parameter,
+                    'max' => $this->size($value, $numeric) !== null && $this->size($value, $numeric) <= (float) $parameter,
+                    'in' => is_scalar($value) && in_array((string) $value, explode(',', (string) $parameter), true),
                     'confirmed' => ($this->data[$field . '_confirmation'] ?? null) === $value,
                     default => false,
                 };
@@ -58,10 +64,11 @@ final class Validator
         }
     }
 
-    private function size(mixed $value): float
+    private function size(mixed $value, bool $numeric): ?float
     {
-        if (is_numeric($value)) { return (float) $value; }
+        if ($numeric) { return is_numeric($value) ? (float) $value : null; }
         if (is_array($value)) { return count($value); }
-        return is_string($value) ? mb_strlen($value) : 0;
+        if (is_string($value)) { return mb_strlen($value, 'UTF-8'); }
+        return is_int($value) || is_float($value) ? (float) $value : null;
     }
 }

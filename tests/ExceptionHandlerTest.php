@@ -11,6 +11,36 @@ use PHPUnit\Framework\TestCase;
 
 final class ExceptionHandlerTest extends TestCase
 {
+    public function testMissingModelBecomes404WithoutLeakingModelDetails(): void
+    {
+        $request = Request::create('/missing');
+        $request->headers->set('Accept', 'application/json');
+        $exception = (new \Illuminate\Database\Eloquent\ModelNotFoundException())->setModel('PrivateUser', [42]);
+        $response = (new ExceptionHandler())->render($exception, $request);
+        self::assertSame(404, $response->getStatusCode());
+        self::assertSame(['message' => 'Not Found'], json_decode($response->getContent(), true));
+    }
+
+    public function testHttpExceptionsPreserveStatusAndHeaders(): void
+    {
+        $response = (new ExceptionHandler())->render(
+            new \Symfony\Component\HttpKernel\Exception\HttpException(429, 'Try later', null, ['Retry-After' => '30'])
+        );
+        self::assertSame(429, $response->getStatusCode());
+        self::assertSame('30', $response->headers->get('Retry-After'));
+        self::assertSame('Try later', $response->getContent());
+    }
+
+    public function testHttpServerErrorsRemainPrivate(): void
+    {
+        $response = (new ExceptionHandler())->render(
+            new \Symfony\Component\HttpKernel\Exception\HttpException(503, 'private server details', null, ['Retry-After' => '60'])
+        );
+        self::assertSame(503, $response->getStatusCode());
+        self::assertSame('Service Unavailable', $response->getContent());
+        self::assertSame('60', $response->headers->get('Retry-After'));
+    }
+
     public function testItRendersValidationErrorsAsJson(): void
     {
         $request = Request::create('/users', 'POST');
