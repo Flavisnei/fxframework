@@ -1,5 +1,17 @@
 # FX Framework
 
+## Ajuda e evolução
+
+Abra [a central de ajuda HTML](docs/index.html) no navegador. Ela funciona offline,
+com busca, índice por assunto, exemplos e indicações do que ainda está planejado.
+
+- [Arquitetura modular](docs/architecture.md)
+- [Etapas e critérios de revisão](docs/roadmap.md)
+- [Histórico de alterações](CHANGELOG.md)
+
+O estado original está preservado na tag Git local `v1.0.01`. A versão interna
+`0.2.0` desse marco foi mantida. A evolução será feita em etapas documentadas.
+
 Nucleo PHP reutilizavel extraido do projeto FX Corrente. O pacote fornece os primeiros componentes genericos para banco de dados, views, respostas HTTP e protecao CSRF.
 
 ## Requisitos

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Ajuda do FX Framework: instalação, Artisan, rotas, formulários, FX Windows e evolução modular.">
+<title>FX Framework — Central de ajuda</title>
+<link rel="stylesheet" href="help.css"><script src="help.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="layout">
+<aside>
+<div class="brand"><span class="mark">FX</span> Framework</div>
+<p>CENTRAL DE AJUDA<br>Base histórica v1.0.01 · Etapa 1</p>
+<nav aria-label="Índice da documentação">
+<p class="group">Comece por aqui</p>
+<a href="#visao">01 · Visão e estado atual</a><a href="#instalacao">02 · Instalação</a><a href="#estrutura">03 · Estrutura e configuração</a>
+<p class="group">Desenvolva</p>
+<a href="#container">04 · Container e providers</a><a href="#http">05 · Rotas e respostas</a><a href="#formularios">06 · Validação e AJAX</a><a href="#seguranca">07 · Login e permissões</a><a href="#banco">08 · Banco e migrations</a><a href="#views">09 · Views e FX Windows</a><a href="#artisan">10 · Referência Artisan</a>
+<p class="group">Evolua com segurança</p>
+<a href="#modulos">11 · Módulos e WordPress</a><a href="#desempenho">12 · Desempenho</a><a href="#problemas">13 · Solução de problemas</a><a href="#etapas">14 · Plano por etapas</a><a href="#historico">15 · Versões e documentação</a>
+</nav>
+</aside>
+<main id="conteudo">
+<header><span class="eyebrow">Manual do desenvolvedor</span><h1>Pequeno para começar.<br>Preparado para evoluir.</h1><p class="intro">Encontre o próximo passo, entenda o código disponível e acompanhe a construção do FX modular.</p></header>
+<div class="search" role="search"><label for="search">O que você precisa fazer?</label><div class="search-row"><input id="search" type="search" placeholder="Busque por instalação, permissões, JSON…" aria-describedby="search-status"><button type="button" id="clear-search">Limpar busca</button></div><output id="search-status" aria-live="polite"></output><noscript>A busca precisa de JavaScript. Todos os tópicos continuam disponíveis pelo índice e pela busca do navegador.</noscript></div>
+<div class="cards"><a class="card" href="#instalacao"><strong>Iniciar uma aplicação →</strong><span>Requisitos e primeiros comandos</span></a><a class="card" href="#artisan"><strong>Consultar comandos →</strong><span>Geradores, banco e assets</span></a><a class="card" href="#etapas"><strong>Acompanhar a evolução →</strong><span>Entregas e critérios de revisão</span></a></div>
+<p id="empty" hidden>Nenhum tópico encontrado. Tente menos palavras ou use o índice para limpar o filtro.</p>
+
+<section id="visao"><span class="tag">Disponível · base atual</span><h2>01 · Visão e estado atual</h2><p>O FX reúne container Illuminate, Eloquent, HTTP, roteador, middleware, validação, autenticação por sessão, autorização, Smarty e ferramentas CLI. Atualmente é um pacote único.</p><p>A direção é um núcleo mínimo com módulos opcionais, do plugin WordPress ao painel administrativo. Presets, download de módulos e dashboard com gerenciamento de usuários ainda serão implementados.</p><div class="note">A tag <code>v1.0.01</code> preserva o código original. A constante interna do Artisan ainda informa <code>0.2.0</code>. A etapa atual acrescenta documentação, sem modificar o comportamento PHP.</div><p>Use o índice por assunto, a busca local ou links como <code>index.html#formularios</code>. Este manual funciona offline; para imprimir todos os tópicos, use a função de impressão do navegador.</p></section>
+
+<section id="instalacao"><span class="tag">Disponível</span><h2>02 · Instalação passo a passo</h2><h3>Preparar o framework local</h3><p>O pacote declara PHP 8.1 ou superior e Composer 2. A compatibilidade com versões mais recentes deve ser verificada pelos testes. Na pasta do framework:</p><pre><code>composer install
+php vendor/bin/phpunit --do-not-cache-result
+php bin/fxartisan list</code></pre><p>Resultado: dependências em <code>vendor/</code> e lista de comandos disponível. <code>composer.lock</code> preserva as versões usadas pelo projeto.</p><h3>Usar em outra aplicação</h3><p>Crie uma pasta irmã, como <code>minha-aplicacao</code>, e coloque este conteúdo no <code>composer.json</code> dela:</p><pre><code>{
+  "name": "fx/minha-aplicacao",
+  "repositories": [{"type": "path", "url": "../fxframework"}],
+  "require": {"fxfavalessa/fx-framework": "@dev"},
+  "autoload": {"psr-4": {"App\\": "app/"}}
+}</code></pre><p>Na pasta da aplicação, execute:</p><pre><code>composer install
+php vendor/bin/fxartisan app:init
+composer dump-autoload
+php fxartisan serve --host=127.0.0.1 --port=8000</code></pre><p>Abra <code>http://127.0.0.1:8000</code>. A rota inicial deve mostrar “FX Framework”. O comando <code>app:init</code> cria diretórios e arquivos ausentes; ele não cria o banco nem instala um painel administrativo.</p><div class="tip">Execute geradores na raiz da aplicação consumidora. O diretório atual determina onde os comandos legados escrevem os arquivos.</div></section>
+
+<section id="estrutura"><span class="tag">Disponível</span><h2>03 · Estrutura e configuração</h2><div class="table-wrap"><table><thead><tr><th>Pasta</th><th>Uso</th></tr></thead><tbody><tr><td>app/</td><td>Controllers, models, requests, middleware e comandos da aplicação.</td></tr><tr><td>bootstrap/app.php</td><td>Cria Application, configura debug, inicializa banco e carrega rotas.</td></tr><tr><td>config/database.php</td><td>Driver, host, porta, credenciais, charset e prefixo.</td></tr><tr><td>routes/web.php</td><td>Rotas manuais e inclusão das rotas geradas.</td></tr><tr><td>database/migrations/</td><td>Alterações versionadas do banco.</td></tr><tr><td>resources/views/</td><td>Templates Smarty.</td></tr><tr><td>public/</td><td>Entrada HTTP e assets públicos.</td></tr><tr><td>storage/</td><td>Cache, logs e temporários; deve permitir escrita quando necessário.</td></tr></tbody></table></div><p>Configure <code>DB_DRIVER</code>, <code>DB_HOST</code>, <code>DB_PORT</code>, <code>DB_DATABASE</code>, <code>DB_USERNAME</code>, <code>DB_PASSWORD</code> e <code>DB_PREFIX</code> no ambiente do processo. <code>APP_DEBUG</code> controla detalhes de erro.</p><div class="note">O bootstrap gerado usa <code>getenv()</code>; copiar um arquivo <code>.env</code> não carrega suas variáveis automaticamente. O projeto ainda não possui um carregador integrado de .env. Configure o ambiente ou adapte explicitamente o bootstrap.</div><p>Em produção, configure a raiz pública do servidor para <code>public/</code>. O comando <code>serve</code> usa o servidor de desenvolvimento do PHP.</p></section>
+
+<section id="container"><span class="tag">Disponível</span><h2>04 · Container e providers</h2><p>Use o container para resolver dependências. <code>bind</code> registra implementações e <code>singleton</code> compartilha uma instância. Providers agrupam configuração e inicialização.</p><pre><code>use Fx\Framework\Foundation\Application;
+use Fx\Framework\Support\ServiceProvider;
+
+final class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this-&gt;app-&gt;instance('app.nome', 'Minha aplicação');
+    }
+}
+
+$app = new Application(dirname(__DIR__));
+$app-&gt;registerProviders([AppServiceProvider::class])-&gt;boot();</code></pre><p>Resultado: <code>$app-&gt;make('app.nome')</code> retorna o nome registrado. O bootstrap gerado ainda não registra seus providers nem chama <code>boot()</code>; acrescente isso ao integrá-los.</p><div class="note">Limitação conhecida: o Request atual é registrado depois da construção do controller. Até a correção, prefira receber Request no método da ação. A mesma limitação exige cuidado com dependências de middleware.</div></section>
+
+<section id="http"><span class="tag">Disponível</span><h2>05 · Rotas, middleware e respostas</h2><p>Em <code>routes/web.php</code>, o bootstrap disponibiliza <code>$app</code> e o arquivo obtém <code>$router</code>. Uma rota pode apontar para closure ou <code>[Controller::class, 'metodo']</code>.</p><pre><code>use Fx\Framework\Http\Request;
+use Fx\Framework\Http\Response;
+
+$router-&gt;get('/status', fn () =&gt; ['status' =&gt; 'ok']);
+$router-&gt;get('/clientes/{id}', fn (string $id) =&gt; ['id' =&gt; $id]);
+$router-&gt;post('/eco', function (Request $request) {
+    return Response::json(['name' =&gt; $request-&gt;input('name')]);
+});</code></pre><p>Arrays viram JSON no Kernel; <code>null</code> vira 204; strings viram conteúdo de resposta. Use <code>Response::json($dados, 201)</code> para definir o status de criação.</p><p>Middleware implementa <code>Fx\Framework\Middleware\Middleware</code>, com <code>process(Request $request, callable $next): mixed</code>. Associe com <code>-&gt;middleware(MinhaClasse::class)</code>. Chame <code>$next($request)</code> para continuar.</p><p><code>resource('/clientes', Controller::class)</code> registra GET da lista, POST, GET por id, PUT por id e DELETE por id. Não inclui telas create/edit nem PATCH. Rotas inexistentes retornam 404 e método incompatível retorna 405.</p><div class="note">O handler atual transforma ModelNotFoundException em 500. A correção para 404 está na etapa 2. HEAD automático, grupos e nomes de rotas utilizáveis ainda não fazem parte da API documentada.</div></section>
+
+<section id="formularios"><span class="tag">Disponível com limitações</span><h2>06 · Validação, AJAX e JSON</h2><p>Valide no servidor e persista apenas os dados retornados por <code>validate()</code>. A API atual aceita required, nullable, string, integer, numeric, boolean, array, email, min, max, in e confirmed.</p><pre><code>$router-&gt;post('/validar-contato', function (\Fx\Framework\Http\Request $request) {
+    $data = $request-&gt;validate([
+        'name' =&gt; 'required|string|max:255',
+        'email' =&gt; 'required|email',
+    ]);
+    return ['data' =&gt; $data];
+});</code></pre><p>Este endpoint apenas valida e devolve dados; não grava nada. Um exemplo de chamada no navegador:</p><pre><code>async function validarContato(name, email) {
+  const response = await fetch('/validar-contato', {
+    method: 'POST',
+    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+    body: JSON.stringify({name, email})
+  });
+  const payload = await response.json();
+  if (response.status === 422) return {errors: payload.errors};
+  if (!response.ok) throw new Error(payload.message || 'Falha na requisição');
+  return payload;
+}</code></pre><p>Trate também rejeição da Promise em falhas de rede. Exiba mensagens com <code>textContent</code> e associe erros aos campos. Para formulários que modificam dados com sessão autenticada, integre a verificação CSRF descrita a seguir.</p><div class="note">Defeitos confirmados na base: required com nullable aceita ausência; required aceita array vazio; min/max tratam strings numéricas pelo valor numérico. Evite depender dessas combinações até a etapa 2. A validação atual não implementa todas as regras do Laravel.</div></section>
+
+<section id="seguranca"><span class="tag">Primitivas disponíveis · painel planejado</span><h2>07 · Login, permissões e CSRF</h2><p><code>SessionGuard</code> oferece attempt, login, logout, user, check e guest. A aplicação implementa <code>UserProvider</code> com retrieveById, retrieveByCredentials e validateCredentials; o usuário implementa <code>Authenticatable::getAuthIdentifier()</code>.</p><p>No provider real, consulte o usuário e use hash de senha adequado com <code>password_verify()</code>; não armazene senha em texto puro. Registre o guard no container antes de usar o middleware Authenticate.</p><pre><code>$guard = new \Fx\Framework\Auth\SessionGuard($provider);
+$app-&gt;instance(\Fx\Framework\Auth\SessionGuard::class, $guard);
+$gate = new \Fx\Framework\Auth\Gate($guard);
+$gate-&gt;define('clientes.visualizar', fn ($user) =&gt; $user-&gt;role === 'admin');
+$gate-&gt;authorize('clientes.visualizar');</code></pre><p>Exemplo de integração: <code>$provider</code> é sua implementação e <code>role</code> é um atributo do seu usuário. A autorização negada resulta em 403. Verifique permissões no endpoint, mesmo se o botão estiver oculto.</p><h3>Proteção de formulários com sessão</h3><p><code>Csrf::token()</code> gera o token; envie-o no formulário ou JSON e verifique <code>Csrf::validate($token)</code> antes de gravar dados. O token deve ser uma string; rejeite entradas inesperadas.</p><pre><code>use Fx\Framework\Http\Csrf;
+use Fx\Framework\Http\Response;
+
+$token = $request-&gt;input('_csrf');
+if (!is_string($token) || !Csrf::validate($token)) {
+    return Response::json(['message' =&gt; 'Token CSRF inválido.'], 403);
+}</code></pre><div class="note">A proteção ainda é manual. O framework não instala middleware CSRF automaticamente. Telas de login, recuperação de senha, gerenciamento de usuários/perfis e limitação de tentativas serão entregues no módulo Auth/Admin.</div></section>
+
+<section id="banco"><span class="tag">Disponível</span><h2>08 · Banco, migrations e CRUD</h2><p><code>Database::boot($connection)</code> inicializa Eloquent; o bootstrap gerado já chama esse método. Crie primeiro o banco e configure credenciais. Depois execute na aplicação:</p><pre><code>php fxartisan make:crud Cliente
+composer dump-autoload
+php fxartisan migrate:status
+php fxartisan migrate
+php fxartisan route:list</code></pre><p>Resultado: model, request, controller, templates simples, migration e cinco rotas para <code>/clientes</code>. O controller gera JSON e pagina a lista; as views ainda não são conectadas às ações. O model gerado usa <code>$guarded = []</code>; mantenha o uso de dados validados e considere uma lista explícita de campos permitidos.</p><p><code>make:migration create_produtos_table</code> cria uma migration inicial com id, name e timestamps. Ajuste seu schema antes de executá-la. <code>migrate:rollback</code> reverte o último lote.</p><div class="note"><code>migrate:fresh</code> apaga todas as tabelas da conexão configurada. Use em banco descartável. Migrations não são globalmente atômicas; uma falha pode deixar alterações parciais. Revise o estado antes de repetir.</div><p>Dica: revise os nomes de tabela gerados, especialmente palavras com plural irregular. O gerador concatena “s”; Eloquent pode adotar outra convenção.</p></section>
+
+<section id="views"><span class="tag">Disponível</span><h2>09 · Views e FX Windows</h2><p>Crie os diretórios de templates, compilação e cache e instancie a view:</p><pre><code>$view = new \Fx\Framework\View\View(
+    $app-&gt;basePath('resources/views'),
+    $app-&gt;basePath('storage/tmp'),
+    $app-&gt;basePath('storage/cache')
+);
+echo $view-&gt;render('inicio.tpl', ['nome' =&gt; 'Maria']);</code></pre><p>Em <code>inicio.tpl</code>, use <code>-{$nome|escape:'html'}-</code>. O wrapper não habilita escape automático global. Escape dados conforme o contexto HTML, atributo ou JavaScript. Cada render limpa as variáveis atribuídas.</p><h3>Publicar as janelas</h3><pre><code>php fxartisan fxwindows:install</code></pre><p>O comando publica JavaScript e CSS em assets da aplicação. Em um template Smarty:</p><pre><code>-{fxwindows_assets forms=true}-
+-{fxwindow id="clientes" texto="Novo cliente" url="/clientes/novo"
+  titulo="Cadastro de clientes" largura=900 altura=600 nivel=1 foco="#nome"}-</code></pre><p>Crie a rota <code>/clientes/novo</code> e o formulário correspondente; o resource atual não a cria. O helper aceita tipo button ou link, classe, título, dimensões, nível e seletor de foco. <code>forms=true</code> inicializa os comportamentos de formulário; consulte a implementação antes de substituir atalhos da aplicação.</p><div class="tip">Carregue assets uma vez no layout. O dashboard completo ainda será construído; FX Windows disponível hoje é a biblioteca de janelas e formulários.</div></section>
+
+<section id="artisan"><span class="tag">Comandos existentes</span><h2>10 · Referência FX Artisan</h2><p>Na aplicação inicializada use <code>php fxartisan</code>. Dentro deste repositório use <code>php bin/fxartisan</code>. Para detalhes, use <code>help nome-do-comando</code>.</p><div class="table-wrap"><table><thead><tr><th>Comando</th><th>Finalidade / observação</th></tr></thead><tbody><tr><td>list / help / about</td><td>Consultar comandos, opções e ambiente.</td></tr><tr><td>app:init</td><td>Criar estrutura da aplicação na pasta atual.</td></tr><tr><td>make:controller Nome</td><td>Gerar classe de controller.</td></tr><tr><td>make:model Nome</td><td>Gerar model Eloquent.</td></tr><tr><td>make:request Nome</td><td>Gerar classe vazia; atualmente não estende Request automaticamente.</td></tr><tr><td>make:middleware Nome</td><td>Gerar middleware.</td></tr><tr><td>make:crud Nome</td><td>Gerar model, request específico, controller, migration, views básicas e rotas.</td></tr><tr><td>make:migration nome</td><td>Criar arquivo em database/migrations.</td></tr><tr><td>migrate / migrate:status</td><td>Aplicar migrations / consultar estado.</td></tr><tr><td>migrate:rollback / migrate:fresh</td><td>Reverter lote / apagar tabelas e reaplicar.</td></tr><tr><td>route:list</td><td>Consultar rotas registradas.</td></tr><tr><td>serve</td><td>Servidor local com opções --host e --port.</td></tr><tr><td>fxwindows:install</td><td>Publicar assets FX Windows.</td></tr><tr><td>cache:clear / cache:cleartmp</td><td>Limpar storage/cache / storage/tmp da aplicação.</td></tr><tr><td>optimize:clear</td><td>Executar limpeza de caches e temporários.</td></tr></tbody></table></div><p>Comandos personalizados: retorne uma lista de objetos Symfony Console Command em <code>app/Console/commands.php</code>. Os comandos antigos como crud, crudeloquent e tabela:show pertencem ao legado FX Corrente e não são geradores funcionais deste pacote.</p></section>
+
+<section id="modulos"><span class="tag planned">Planejado</span><h2>11 · Módulos, presets e WordPress</h2><p>A instalação mínima conterá Core. HTTP, banco, ORM, templates, autenticação e painel serão opcionais. O Artisan coordenará Composer, publicação de recursos e configuração. Downloads acontecerão na instalação/deploy.</p><p>Presets desejados: minimal, api, admin e wordpress. Comandos como <code>module:install</code> e <code>create --preset=admin</code> são propostas; não estão disponíveis.</p><p>Cada módulo deverá informar dependências, compatibilidade, rotas, migrations, assets, permissões e ajuda. Instalar, ativar e desativar serão operações distintas. Desativar não excluirá dados.</p><p>No WordPress, o adaptador aproveitará hooks, usuários e capabilities existentes. A instalação deve coexistir com outros plugins sem iniciar outro kernel ou sessão automaticamente. A compatibilidade ainda precisa de prova prática.</p><p>Detalhes de implementação: <a href="architecture.md">arquitetura alvo</a>.</p></section>
+
+<section id="desempenho"><span class="tag planned">Metas e práticas</span><h2>12 · Velocidade e crescimento</h2><p>Priorize respostas pequenas, paginação no servidor, índices adequados, seleção de campos e carregamento de assets quando necessário. AJAX reduz recargas; não elimina consultas lentas nem torna a aplicação automaticamente escalável.</p><p>Vamos medir endpoint JSON simples, consulta paginada e operação autenticada: latência p50/p95, memória, consultas, bytes transferidos e tamanho instalado. Comparações usarão o mesmo ambiente, dados e carga.</p><p>Cache, filas e armazenamento externo serão integrações opcionais. Workers persistentes só serão considerados suportados após testes de isolamento do estado de requisição.</p><div class="note">Ainda não há benchmark que demonstre vantagem de desempenho sobre Laravel. A meta de leveza será verificada antes de divulgar números.</div></section>
+
+<section id="problemas"><span class="tag">Diagnóstico</span><h2>13 · Solução de problemas</h2><h3>Autoload não encontrado ou classe App inexistente</h3><p>Execute <code>composer install</code>, confira o mapeamento PSR-4 App no composer.json da aplicação e rode <code>composer dump-autoload</code>.</p><h3>O .env não muda a conexão</h3><p>O bootstrap lê variáveis do processo. Configure-as no servidor/shell ou integre um carregador explicitamente. Confira config/database.php e a extensão PDO do driver usado.</p><h3>Resposta de validação veio em HTML</h3><p>Envie <code>Accept: application/json</code>. O handler usa expectsJson para escolher o formato.</p><h3>Erro ao iniciar sessão</h3><p>Evite saída antes de iniciar autenticação/CSRF. Verifique BOM, espaços antes de &lt;?php, debug impresso e configuração do diretório de sessões.</p><h3>Template não compila ou aparece sem estilos</h3><p>Confira permissões de storage/tmp e storage/cache, delimitadores Smarty e publicação dos assets. O endereço público deve corresponder ao caminho usado pelo helper.</p><h3>Erro 500 sem detalhes</h3><p>Em ambiente local, ative APP_DEBUG e consulte o log do PHP. O handler atual não grava exceções em storage/logs automaticamente. Modelos ausentes também resultam em 500 na base atual.</p></section>
+
+<section id="etapas"><span class="tag planned">Plano de evolução</span><h2>14 · Construção por partes</h2><ol><li><strong>Concluído:</strong> Git local e preservação da tag v1.0.01.</li><li><strong>Entrega atual:</strong> arquitetura, ajuda HTML e política de documentação.</li><li><strong>Próximo:</strong> regressões e correções de validação, Request, exceções e CSRF.</li><li>Extração do Core e dependências opcionais.</li><li>Adaptador WordPress com teste de coexistência.</li><li>Instalação de módulos e presets pelo Artisan.</li><li>Auth e Admin com usuários, perfis, permissões e FX Windows.</li><li>CRUD AJAX/JSON completo e ajuda contextual.</li><li>Benchmarks, compatibilidade, integração contínua e distribuição.</li></ol><p>Cada parte deve ter exemplo verificável, testes pertinentes, revisão de compatibilidade e atualização desta ajuda. Consulte <a href="roadmap.md">o roteiro técnico</a> para os critérios de conclusão.</p></section>
+
+<section id="historico"><span class="tag">Documentação contínua</span><h2>15 · Versões e manutenção da ajuda</h2><h3>v1.0.01 · Estado original</h3><p>Marco Git local preservado antes das alterações. Dependências podem ser restauradas com Composer. Não mova a tag histórica.</p><h3>Etapa 1 · 7 de setembro de 2026</h3><p>Central de ajuda offline, busca local, índice por assunto, plano modular e regras de manutenção. Sem mudança no comportamento PHP.</p><h3>Como documentar uma alteração</h3><ol><li>Atualize o tópico do recurso com objetivo e requisitos.</li><li>Inclua passos, exemplo e resultado esperado.</li><li>Registre limitações, dicas e solução dos erros comuns.</li><li>Preserve as âncoras usadas por links existentes.</li><li>Atualize CHANGELOG.md e o estado da etapa no roadmap.</li><li>Revise a busca, links e leitura no navegador.</li></ol><p>Essas regras estão registradas no AGENTS.md do projeto. Recursos novos devem trazer sua documentação na mesma entrega. O histórico detalhado está em <a href="../CHANGELOG.md">CHANGELOG.md</a>.</p></section>
+<footer>FX Framework · Ajuda local, sem dependências externas · Última atualização: 07/09/2026</footer>
+</main></div></body></html>
