@@ -8,7 +8,8 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 0 | Git local e marco v1.0.01 | Código original preservado em tag anotada | Concluída |
 | 1 | Arquitetura e central de ajuda | Navegação, busca offline, exemplos atuais e planos separados | Entregue; revisão visual pendente |
 | 2 | Correções de comportamento | Regressões para validação, Request, 404; desenho e testes CSRF | Concluída |
-| 3 | Core e dependências opcionais | Instalar mínimo sem banco/view/admin; compatibilidade documentada | Pendente |
+| 3A | Core independente | Instalar mínimo sem banco/view/admin; compatibilidade documentada | Concluída |
+| 3B | Pacotes opcionais | Separar HTTP, banco, views e CLI com instalação individual verificada | Pendente |
 | 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Pendente |
 | 5 | Módulos e presets via Artisan | Instalar, ativar, atualizar e diagnosticar dependências em ambiente temporário | Pendente |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões no servidor e recuperação de senha | Pendente |
@@ -42,8 +43,25 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 - Ajuda: 15 tópicos, sem links locais quebrados nem âncoras duplicadas. Interface
   preservada; revisão visual continua pendente. git diff --check sem erros.
 
-## Próxima parte
+## Evidências da etapa 3A
 
-Iniciar etapa 3 pelo mapa de dependências e pela extração mínima do Core. Preservar
-compatibilidade e validar instalação mínima sem banco, templates e painel. A revisão
+- composer validate --strict passou para os manifestos do framework e Core.
+- Instalação real por cópia em examples/minimal: Core + quatro dependências externas;
+  nenhuma classe HTTP, Eloquent ou Smarty disponível no autoload isolado.
+- examples/minimal/verify.php passou para configuração, injeção e providers, sem
+  alterar sessão ou substituir o container global do hospedeiro.
+- Consumidor completo em pasta temporária instalou framework e satisfez o requisito
+  Core pelo replace; rota JSON respondeu corretamente usando o autoload do consumidor.
+- Suíte completa: 59 testes / 158 assertions, todos passando em PHP 8.1.12.
+- Ajuda central (16 tópicos) e guia distribuído do Core sem referências locais
+  quebradas nem IDs duplicados. Revisão visual permanece pendente.
+- O lock da raiz manteve as versões. Os 44 pacotes externos do completo versus quatro
+  do Core demonstram isolamento de dependências, não um benchmark de velocidade.
+- O exemplo usa @dev intencionalmente durante desenvolvimento local; Composer
+  avisa sobre restrição aberta. Releases publicadas continuam pendentes.
+
+## Próxima parte: 3B
+
+Iniciar etapa 3B pela separação dos componentes opcionais, preservando o pacote
+completo. Validar combinações de instalação e compatibilidade. A revisão
 visual da ajuda permanece pendente pela limitação registrada na etapa 1.

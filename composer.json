@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Fx\\Framework\\": "src/"
+            "Fx\\Framework\\": ["src/", "packages/core/src/"]
         }
     },
     "autoload-dev": {
@@ -31,6 +31,9 @@
     "bin": [
         "bin/fxartisan"
     ],
+    "replace": {
+        "fxfavalessa/fx-core": "self.version"
+    },
     "config": {
         "optimize-autoloader": false,
         "sort-packages": true

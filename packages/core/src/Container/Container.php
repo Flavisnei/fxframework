@@ -14,9 +14,9 @@ use Illuminate\Container\Container as IlluminateContainer;
  */
 class Container extends IlluminateContainer
 {
-    public function __construct()
+    public function __construct(bool $registerAsGlobal = true)
     {
-        self::setInstance($this);
+        if ($registerAsGlobal) { self::setInstance($this); }
         $this->instance(self::class, $this);
         $this->instance(IlluminateContainer::class, $this);
     }

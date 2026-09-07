@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Fx\Framework\Support;
 
-use Fx\Framework\Foundation\Application;
+use Fx\Framework\Foundation\CoreApplication;
 
 abstract class ServiceProvider
 {
-    public function __construct(protected Application $app)
+    public function __construct(protected CoreApplication $app)
     {
     }
 

@@ -1,7 +1,28 @@
 # Arquitetura alvo do FX
 
-Estado: direção aprovada na conversa, implementação modular ainda pendente.
-O pacote atual continua único e mantém suas dependências existentes.
+Estado: etapa 3A implementada. Core independente em packages/core, com o pacote
+completo preservado. Os demais componentes continuam agrupados; extração na etapa 3B.
+
+## Extração inicial
+
+fxfavalessa/fx-core usa o namespace Fx\Framework e fornece CoreApplication,
+Container, ServiceProvider e Config\Repository. Sua única dependência direta é
+illuminate/container, que traz illuminate/contracts e dois contratos PSR.
+Não há dependência de Illuminate HTTP/Database, Smarty ou Symfony no Core.
+
+O pacote completo usa a mesma fonte em packages/core/src e declara replace com
+self.version, evitando instalar duas cópias dessas classes. A estratégia segue
+o [schema do Composer](https://getcomposer.org/doc/04-schema.md#replace).
+Nenhum pacote foi publicado; instalação local usa repositories do tipo path.
+
+Namespaces existentes permanecem. A propriedade app de ServiceProvider agora é
+CoreApplication; providers web permanecem vinculados funcionalmente à Application
+completa. O Core não altera o container global por padrão, mas a Application web
+e Container() mantêm o comportamento global anterior por compatibilidade.
+
+O exemplo examples/minimal instala por cópia, usando vendor próprio e verificando
+ausência das camadas opcionais. Não afirmar compatibilidade WordPress apenas com
+esse teste: ainda falta o adaptador e prova de coexistência entre plugins.
 
 ## Princípios
 
@@ -29,9 +50,9 @@ O pacote atual continua único e mantém suas dependências existentes.
 | WordPress | Adaptação ao ambiente WordPress | Core; ambiente hospedeiro |
 | Artisan | Instalação, diagnóstico e geradores | Core; Console apenas no contexto CLI |
 
-Os nomes e o versionamento dos futuros pacotes serão fixados na etapa de extração.
+O nome fx-core foi fixado; nomes dos demais pacotes e releases serão definidos na etapa 3B.
 Não trocar container ou ORM antes de comparar compatibilidade, tamanho e custo.
-Manter inicialmente o pacote atual como ponto de compatibilidade é uma opção a avaliar.
+O pacote completo é mantido como ponto de compatibilidade durante a extração.
 
 ## Módulos
 

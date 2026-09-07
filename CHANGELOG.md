@@ -1,5 +1,21 @@
 # Histórico
 
+## Em desenvolvimento — etapa 3A — 2026-09-07
+
+- Pacote local fxfavalessa/fx-core extraído com container Illuminate, configuração
+  em memória e ciclo de service providers; sem dependências de HTTP, banco ou views.
+- CoreApplication não substitui o container global por padrão. Application completa
+  preserva o comportamento web e o registro global legado.
+- Container e ServiceProvider mantêm namespaces, com arquivos em packages/core/src.
+  Autoload do pacote completo inclui o Core, declarado em replace com self.version.
+- ServiceProvider passa a receber CoreApplication. Providers que redeclaram a
+  propriedade protegida app com Application devem ajustar o tipo ou remover a
+  redeclaração. Providers específicos de HTTP continuam exigindo o pacote completo.
+- Exemplo mínimo com instalação Composer própria e verificação independente.
+- Guia HTML incluído no Core e central de ajuda atualizada. Demais componentes
+  ainda não possuem pacotes independentes; isso será a etapa 3B.
+- composer.lock da raiz conserva versões: apenas hash do manifesto atualizado.
+
 ## Em desenvolvimento — etapa 2 — 2026-09-07
 
 - Corrigidas combinações required/nullable, campos opcionais, arrays vazios, tamanho

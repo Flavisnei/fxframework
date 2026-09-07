@@ -1,4 +1,8 @@
 /vendor/
+/packages/*/vendor/
+/packages/*/composer.lock
+/examples/*/vendor/
+/examples/*/composer.lock
 /.phpunit.result.cache
 /.phpunit.cache/
 /.env

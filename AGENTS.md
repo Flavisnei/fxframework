@@ -25,6 +25,8 @@ por conveniência de um módulo. O desenho está em docs/architecture.md.
 - Manter a ajuda utilizável offline, sem CDN, rastreamento ou ferramentas de build.
 - Conferir busca, navegação e legibilidade ao alterar a interface da ajuda.
 - Atualizar docs/roadmap.md com evidências e limitações da etapa concluída.
+- Para APIs de pacotes independentes, atualizar também a ajuda distribuída no pacote
+  (por exemplo packages/core/docs/index.html) e validar o exemplo isolado correspondente.
 
 ## Verificação
 
@@ -32,4 +34,6 @@ por conveniência de um módulo. O desenho está em docs/architecture.md.
 - Acrescentar testes de regressão para defeitos, com exemplos que falhavam antes.
 - Usar banco e diretórios temporários em testes de migrations e instalação.
 - Medir desempenho antes de afirmar ganhos; comparar ambientes equivalentes.
+- Em mudanças no Core/autoload, executar a suíte completa e examples/minimal/verify.php
+  após instalar/atualizar o vendor próprio do exemplo; o autoload da raiz não prova isolamento.
 - Não incluir vendor, segredos, logs, caches ou dados reais nos commits.

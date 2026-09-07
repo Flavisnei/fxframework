@@ -2,6 +2,22 @@
 
 ## Ajuda e evolução
 
+### Instalação mínima disponível
+
+O pacote independente `fxfavalessa/fx-core` está em `packages/core/` e contém
+container, configuração e providers. O pacote completo continua compatível e inclui
+esse mesmo código. A separação dos demais componentes ainda está em andamento.
+
+```bash
+composer install --working-dir=examples/minimal --no-dev
+php examples/minimal/index.php
+php examples/minimal/verify.php
+```
+
+Leia [o guia do Core](packages/core/docs/index.html) ou a
+[ajuda de instalação mínima](docs/index.html#core). Após atualizar este checkout,
+execute `composer install` para atualizar o autoload dos arquivos movidos.
+
 Abra [a central de ajuda HTML](docs/index.html) no navegador. Ela funciona offline,
 com busca, índice por assunto, exemplos e indicações do que ainda está planejado.
 
@@ -63,6 +79,9 @@ Em seguida, execute `composer update fxfavalessa/fx-framework` na aplicacao.
 O framework usa o container do Illuminate, o mesmo nucleo de injecao de dependencias
 utilizado pelo Laravel. A classe `Application` acrescenta o ciclo de vida de service
 providers.
+
+`CoreApplication` oferece esse ciclo sem serviços HTTP; `Application` herda o Core
+e registra os serviços web. Providers agora recebem `CoreApplication` no construtor.
 
 ```php
 use Fx\Framework\Foundation\Application;
