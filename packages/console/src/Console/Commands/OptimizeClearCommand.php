@@ -9,10 +9,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'optimize:clear', description: 'Limpa todos os caches da aplicacao')]
 final class OptimizeClearCommand extends Command
 {
-    protected static $defaultName = 'optimize:clear';
-    protected static $defaultDescription = 'Limpa todos os caches da aplicacao';
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $app = new LegacyApplication();

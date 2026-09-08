@@ -9,10 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'make:middleware', description: 'Cria uma classe de middleware')]
 final class MakeMiddlewareCommand extends Command
 {
-    protected static $defaultName = 'make:middleware';
-    protected static $defaultDescription = 'Cria uma classe de middleware';
 
     public function __construct(private readonly string $root) { parent::__construct(); $this->addArgument('name', InputArgument::REQUIRED); }
 

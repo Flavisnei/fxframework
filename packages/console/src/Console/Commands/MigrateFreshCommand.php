@@ -12,10 +12,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'migrate:fresh', description: 'Remove todas as tabelas e executa novamente as migrations')]
 final class MigrateFreshCommand extends Command
 {
-    protected static $defaultName = 'migrate:fresh';
-    protected static $defaultDescription = 'Remove todas as tabelas e executa novamente as migrations';
 
     public function __construct(private readonly string $root)
     {

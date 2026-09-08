@@ -11,6 +11,16 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 final class ArtisanTest extends TestCase
 {
+    public function testCommandMetadataSurvivesConsoleMajorUpgrade(): void
+    {
+        $artisan = new Artisan(__DIR__);
+        foreach (['about', 'module:list', 'optimize:clear', 'serve', 'route:list', 'make:middleware', 'migrate:fresh', 'migrate:status', 'fxwindows:install'] as $name) {
+            $command = $artisan->find($name);
+            self::assertSame($name, $command->getName());
+            self::assertNotSame('', $command->getDescription(), $name);
+        }
+    }
+
     public function testItListsFrameworkCommands(): void
     {
         $artisan = new Artisan(__DIR__);

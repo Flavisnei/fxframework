@@ -1,5 +1,13 @@
 # Histórico
 
+## Etapa 8C — PHP real e registro de comandos — 2026-09-08
+
+- Verificações locais completas executadas em PHP 8.2.12 e 8.5.10 no Windows.
+- Corrigido registro de nove comandos: AsCommand substitui metadados estáticos ignorados pelo Symfony Console 7, preservando Console 6.4.
+- Regressão cobre nomes e descrições; 104 testes / 379 assertions passam no stack atual e na experiência Illuminate 13/Console 7.4 em PHP 8.5.
+- Sem mudança nos requisitos ou lock principal; migração de dependências permanece experimental. Ajuda central e do pacote atualizadas.
+
+
 ## Etapa 8B — CI e atualização — 2026-09-08
 
 - Workflow GitHub Actions para PHP 8.1–8.5 em Ubuntu e 8.3 em Windows; configuração local, execução remota pendente.

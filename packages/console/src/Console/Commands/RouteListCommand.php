@@ -11,10 +11,9 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'route:list', description: 'Lista as rotas registradas')]
 final class RouteListCommand extends Command
 {
-    protected static $defaultName = 'route:list';
-    protected static $defaultDescription = 'Lista as rotas registradas';
 
     public function __construct(private readonly string $root) { parent::__construct(); }
 

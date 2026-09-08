@@ -10,10 +10,9 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'migrate:status', description: 'Exibe o status das migrations')]
 final class MigrationStatusCommand extends Command
 {
-    protected static $defaultName = 'migrate:status';
-    protected static $defaultDescription = 'Exibe o status das migrations';
 
     public function __construct(private readonly string $root) { parent::__construct(); }
 

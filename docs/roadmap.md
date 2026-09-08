@@ -237,3 +237,21 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
   verificados nesta máquina; matriz configurada não significa suporte certificado.
 - PHP 8.1 e Illuminate 10 permanecem no contrato histórico; modernização de
   dependências, distribuição e testes de carga são pendências explícitas.
+
+## Etapa 8C — runtimes Windows e correção preventiva de compatibilidade
+
+- PHP 8.5.10 NTS x64 oficial baixado em diretório temporário e hash conferido;
+  XAMPP e PHP padrão preservados. PHP 8.2.12 já disponível também utilizado.
+- tools/verify.php passou em ambos: suíte 103/361 antes do ajuste, isolamento de
+  Core/HTTP/módulos, Admin 18, Contatos 34 e SMTP loopback 8 verificações.
+- Lock completo instalado do zero em worktree temporário no PHP 8.5; suíte passou.
+- Experiência separada com Illuminate 13.30.1 e Symfony Console 7.4.18 reproduziu
+  10 erros por comandos sem nome. Conversão para AsCommand corrigiu a causa.
+- Novo teste de nomes/descrições dos nove comandos. Suíte após ajuste: 104 testes /
+  379 assertions, aprovada em PHP 8.1.12/stack atual e 8.5.10/stack experimental.
+- Manifests e lock principal não alterados. Illuminate 13 exige PHP 8.3 e amplia
+  dependências de Core/HTTP; resolução em 8.5 escolheu transitivos Symfony 8.
+  Pacotes isolados com versões novas ainda não certificados. Não anunciar migração
+  concluída nem PHP 8.3 suportado nessa experiência sem ensaio específico.
+- Evidência em docs/compatibility/2026-09-08.json; detalhes e reprodução na ajuda.
+- Linux, PHP 8.3/8.4, execução remota, navegador, carga e distribuição pendentes.

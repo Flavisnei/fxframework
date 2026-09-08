@@ -10,10 +10,9 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'about', description: 'Exibe informacoes sobre a aplicacao e o ambiente')]
 final class AboutCommand extends Command
 {
-    protected static $defaultName = 'about';
-    protected static $defaultDescription = 'Exibe informacoes sobre a aplicacao e o ambiente';
 
     public function __construct(private readonly string $root) { parent::__construct(); }
 

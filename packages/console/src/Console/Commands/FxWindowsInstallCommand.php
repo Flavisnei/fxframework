@@ -9,10 +9,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'fxwindows:install', description: 'Publica os assets do FX Windows na aplicacao')]
 final class FxWindowsInstallCommand extends Command
 {
-    protected static $defaultName = 'fxwindows:install';
-    protected static $defaultDescription = 'Publica os assets do FX Windows na aplicacao';
 
     public function __construct(private readonly string $root)
     {

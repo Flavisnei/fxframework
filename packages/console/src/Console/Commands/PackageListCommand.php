@@ -10,10 +10,9 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'module:list', description: 'Mostra o catalogo de componentes e presets disponiveis')]
 final class PackageListCommand extends Command
 {
-    protected static $defaultName = 'module:list';
-    protected static $defaultDescription = 'Mostra o catalogo de componentes e presets disponiveis';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
