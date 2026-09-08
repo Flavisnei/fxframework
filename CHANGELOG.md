@@ -1,5 +1,11 @@
 # Histórico
 
+## Etapa 8G — confirmação de CI e roteiro visual — 2026-09-08
+
+- Confirmadas oito tarefas aprovadas no GitHub Actions para o commit 9b6e01f; evidência com links por tarefa em docs/compatibility/github-actions-34233932875.json.
+- Ajuda offline inclui preparo, cenários e resultados esperados para revisão manual de login, janelas, usuários, permissões, Contatos e saída.
+- Revisão em navegador permanece pendente: a conexão de automação foi recusada pelo ambiente. Nenhuma alteração de runtime nesta etapa.
+
 ## Etapas 8E e 8F — compatibilidade e concorrência — 2026-09-08
 
 - Contratos Composer permitem Illuminate 10 ou 13 e Symfony 6.4 ou 7.4. O lock principal mantém as versões anteriores; Illuminate 13 exige PHP 8.3. Migração e diferenças documentadas na ajuda central e nos quatro pacotes afetados.

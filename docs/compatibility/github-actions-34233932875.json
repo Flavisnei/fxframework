@@ -1,0 +1,52 @@
+{
+  "run_id": 34233932875,
+  "commit": "9b6e01fd9b072d216182d7ad3e5a3b74df435275",
+  "url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875",
+  "status": "completed",
+  "conclusion": "success",
+  "started_at": "2026-09-08T13:45:21Z",
+  "updated_at": "2026-09-08T13:47:37Z",
+  "jobs": [
+    {
+      "name": "Dependencias modernas / PHP 8.3",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086692636"
+    },
+    {
+      "name": "Dependencias modernas / PHP 8.5",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086692788"
+    },
+    {
+      "name": "PHP 8.1 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086692831"
+    },
+    {
+      "name": "PHP 8.3 / windows-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086692874"
+    },
+    {
+      "name": "PHP 8.3 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086692915"
+    },
+    {
+      "name": "PHP 8.5 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086692950"
+    },
+    {
+      "name": "PHP 8.2 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086693033"
+    },
+    {
+      "name": "PHP 8.4 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34233932875/job/102086693039"
+    }
+  ],
+  "browser_review": "pending: browser automation connection rejected by environment"
+}

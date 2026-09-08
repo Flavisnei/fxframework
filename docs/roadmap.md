@@ -285,3 +285,12 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - CI ampliada para dependências modernas. Execução no GitHub ainda precisa ser conferida após o envio; resultados locais não certificam Linux ou toda a matriz.
 - Fontes destinadas a https://github.com/Flavisnei/fxframework com histórico e tag v1.0.01 preservados. Credenciais locais, vendor e bancos não fazem parte do envio.
 - Permanecem pendentes revisão visual em navegador (conexão indisponível), carga HTTP representativa, outros bancos, catálogo remoto e publicação dos pacotes no Packagist. Não há promessa de ausência de bugs ou alta escala demonstrada.
+
+
+## Etapa 8G — CI confirmada; revisão visual parcialmente bloqueada — 2026-09-08
+
+- Execução 34233932875, commit 9b6e01fd9b072d216182d7ad3e5a3b74df435275: oito tarefas concluídas com sucesso. Confirmados via API tanto o resultado geral quanto o de cada tarefa.
+- Matriz aprovada: PHP 8.1–8.5 em Ubuntu, PHP 8.3 em Windows e dependências modernas em PHP 8.3/8.5. Evidência versionada em docs/compatibility/github-actions-34233932875.json. Esse resultado resolve a pendência de execução remota da revisão anterior.
+- Conexão com navegador tentada novamente e recusada pelo ambiente antes de abrir qualquer página. Login, janelas, formulários, teclado e revisão visual em navegador não foram executados nesta etapa e continuam pendentes.
+- Ajuda central contém roteiro manual com dados fictícios, pré-requisitos, cenários e diagnóstico. Nenhuma conta, configuração SMTP ou banco real foi modificado. Não houve alteração PHP nem repetição desnecessária da suíte aprovada.
+- Permanecem pendentes revisão visual real, catálogo remoto, carga HTTP, outros bancos e homologação SMTP externa.
