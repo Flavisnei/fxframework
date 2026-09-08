@@ -33,3 +33,27 @@ em banco temporário ouvindo apenas em 127.0.0.1, separado dos sites existentes.
 Isso não valida automaticamente WordPress mais recente, multisite, UI no navegador
 ou plugins com versões conflitantes de dependências. Desligue o banco temporário
 após o teste. Os testes PHPUnit normais não carregam esse script automaticamente.
+
+## Instalação e presets com Composer real
+
+Execute na raiz do framework, após composer install:
+
+~~~powershell
+php tests/integration/installation.php C:/composer/composer.phar
+~~~
+
+O argumento é opcional se Composer estiver no PATH; no Windows o teste procura
+composer.phar. Requer acesso aos repositórios Composer ou cache disponível, PHP
+com as extensões dos pacotes e proc_open habilitado. Não integra a suíte PHPUnit
+normal para evitar downloads implícitos em testes unitários.
+
+Cria três projetos em uma pasta fx-install-review-* nova no temporário do sistema.
+A saída informa o caminho; os arquivos ficam disponíveis para inspeção. Executa
+os presets minimal/api/wordpress, simulações, instalação individual de Windows,
+reaplicação de minimal e conflitos deliberados (^999.0). Os erros de dependências
+são esperados; o resultado final deve ser OK: 26 verificacoes. Também verifica
+que scripts não rodaram e executa probes em processos com autoload próprio.
+
+Não acessa banco ou WordPress em execução. O teste WordPress deste arquivo apenas
+confere presença do adaptador sem camadas HTTP; os testes do host estão descritos
+acima. Validado com Composer 2.8.4, PHP 8.1.12 e Windows; Unix ainda não testado.

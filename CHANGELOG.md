@@ -1,5 +1,15 @@
 # Histórico
 
+## Em desenvolvimento — etapa 5A — 2026-09-07
+
+- Artisan instala componentes do catálogo via module:install e apresenta module:list.
+- preset:install adiciona minimal, api ou wordpress a projetos Composer existentes.
+- Resolução/download pelo Composer, restrição configurável e simulação dry-run.
+- Processo sem shell, scripts/plugins desabilitados e erros propagados ao CLI.
+- Presets preservam requisitos não selecionados; não geram aplicações nem ativam módulos.
+- Ajuda central e manual distribuído explicam versões locais, requisitos e solução de erros.
+- Contrato e ciclo de módulos reservados para 5B; painel/preset Admin permanece na etapa 6.
+
 ## Em desenvolvimento — etapa 4 — 2026-09-07
 
 - Pacote fx-wordpress com dependência apenas do Core, usando hooks, REST API,

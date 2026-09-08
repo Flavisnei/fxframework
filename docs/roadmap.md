@@ -11,7 +11,8 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 3A | Core independente | Instalar mínimo sem banco/view/admin; compatibilidade documentada | Concluída |
 | 3B | Pacotes opcionais | Separar HTTP, banco, views e CLI com instalação individual verificada | Concluída |
 | 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Concluída no escopo testado |
-| 5 | Módulos e presets via Artisan | Instalar, ativar, atualizar e diagnosticar dependências em ambiente temporário | Pendente |
+| 5A | Instalação e presets via Artisan | Composer real, simulação, conflitos e isolamento em projetos temporários | Concluída no escopo testado |
+| 5B | Ciclo de módulos | Contrato, ativação, desativação, atualização e diagnóstico | Pendente |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões no servidor e recuperação de senha | Pendente |
 | 7 | CRUD AJAX/JSON | Validação por campo, paginação, erros de rede e módulo exemplo completo | Pendente |
 | 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | Pendente |
@@ -91,7 +92,26 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
   válidos, JavaScript com sintaxe válida e links HTML locais conferidos. Banco
   MariaDB temporário encerrado; sites existentes não foram alterados.
 
-## Próxima parte: 5
+## Evidências da etapa 5A
 
-Iniciar contrato de módulos e instalação/presets pelo Artisan. A revisão
-visual da ajuda permanece pendente pela limitação registrada na etapa 1.
+- module:list apresenta nove componentes; module:install e preset:install funcionam
+  com Console isolado ou distribuição completa. Nenhuma dependência nova no Core.
+- Três projetos temporários instalaram os presets minimal, api e wordpress com
+  Composer 2.8.4 / PHP 8.1.12 / Windows. 26 verificações reais passaram.
+- Simulações preservaram manifesto/lock/vendor; falhas de resolução restauraram
+  manifesto/lock. Scripts não foram executados. Instalação individual de Windows
+  e reaplicação de minimal preservaram os requisitos existentes.
+- Processos PHP separados verificaram os autoloads consumidores, Core, resposta
+  JSON, comandos disponíveis, adaptador WordPress e assets, sem Eloquent/Smarty/Auth.
+- Suíte completa: 66 testes / 186 assertions. Cobertura de argumentos separados,
+  caminhos com espaços, erros, catálogo, preset indisponível e redirecionamento
+  de manifesto por variável de ambiente.
+- Limites: catálogo de componentes, não registro de módulos ativos; sem scaffold,
+  preset admin, publicação automática ou migrations. Versões FX somente locais.
+  Interrupções durante instalação não têm garantia de rollback de vendor.
+- Ajuda central e manual Console atualizados. Revisão visual continua pendente.
+
+## Próxima parte: 5B
+
+Contrato de módulos de negócio, validação de dependências, ativação/desativação,
+atualização e diagnóstico. O painel administrativo continua reservado à etapa 6.

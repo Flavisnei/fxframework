@@ -36,6 +36,9 @@ final class Artisan extends SymfonyApplication
     private function registerFrameworkCommands(): void
     {
         $this->addCommands([
+            new \Fx\Framework\Console\Commands\PackageListCommand(),
+            new \Fx\Framework\Console\Commands\PackageInstallCommand($this->root),
+            new \Fx\Framework\Console\Commands\PackageInstallCommand($this->root, true),
             new AboutCommand($this->root), new OptimizeClearCommand(),
             new LegacyCommand('make:controller', 'Cria um controller', true),
             new LegacyCommand('cache:clear', 'Limpa o cache da aplicacao'),

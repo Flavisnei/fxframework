@@ -1,6 +1,6 @@
 # Arquitetura alvo do FX
 
-Estado: etapas 3A, 3B e 4 implementadas. Core, componentes opcionais e adaptador
+Estado: etapas 3A, 3B, 4 e 5A implementadas. Core, componentes opcionais e adaptador
 WordPress em packages/, com a distribuição completa preservada.
 
 ## Extração inicial
@@ -83,8 +83,15 @@ A ativação deve validar dependências e não executar migrations implicitament
 Desativar não apaga dados. Atualizações devem preservar personalizações e informar
 passos de migração. Remoção de dados será uma operação explícita e separada.
 
-Os futuros presets serão minimal, api, admin e wordpress. Não existem ainda comandos
-create ou module:install. O Composer deve continuar sendo a fonte de resolução.
+A etapa 5A entrega module:list, module:install e preset:install no Console. O catálogo
+contém os nove componentes FX. Presets minimal (Core), api (HTTP + Console) e
+wordpress (adaptador) adicionam requisitos em um composer.json existente. Não removem
+dependências nem geram aplicações. Composer resolve versões e instala; Artisan não
+reescreve manifestos ou lock por conta própria. Scripts e plugins ficam desabilitados.
+
+A instalação usa proc_open com argumentos separados, sem shell, e oferece dry-run.
+A etapa 5B ainda deverá entregar contrato e ciclo de ativação/desativação, atualização
+e diagnóstico dos módulos de negócio. Não há create ou preset admin disponível.
 
 ## Segurança e operação
 
