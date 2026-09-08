@@ -35,7 +35,7 @@ final class DistributionTest extends TestCase
             $zip=new \ZipArchive(); self::assertTrue($zip->open($result['archive']));
             self::assertSame('committed',$zip->getFromName('README.md'));
             self::assertSame('EXAMPLE',$zip->getFromName('.env.example'));
-            foreach (['.env','storage/test.sqlite','vendor/test.php','config/mail.local.json','untracked.txt'] as $file) self::assertFalse($zip->locateName($file),$file);
+            foreach (['.env','storage/','vendor/','storage/test.sqlite','vendor/test.php','config/mail.local.json','untracked.txt'] as $file) self::assertFalse($zip->locateName($file),$file);
             self::assertSame($result['commit'],json_decode($zip->getFromName('FX-DISTRIBUTION.json'),true)['commit']); $zip->close();
             self::assertSame(1,$run([PHP_BINARY,'tools/package.php',$root . '/output'],$repo)[0]);
             self::assertSame(1,$run([PHP_BINARY,'tools/package.php',$repo . '/inside'],$repo)[0]);

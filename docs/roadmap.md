@@ -265,7 +265,7 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
   caminho; recusa symlinks/submódulos. Filtragem não detecta segredos dentro de código.
 - Teste com repositório sintético verifica conteúdo do commit versus edição local,
   arquivos não versionados, exclusões, checksum, destino interno e sobrescrita.
-- Suíte Windows/PHP 8.1.12: 105 testes / 397 assertions. CI passa a solicitar ZIP.
+- Suíte Windows/PHP 8.1.12: 105 testes / 399 assertions. CI passa a solicitar ZIP.
 - Snapshot da revisão 3d01836 extraído fora do repositório: Composer instalou Core
   mínimo e Contatos preservando caminhos relativos; Core isolado verificado e
   34 verificações HTTP/CLI de Contatos aprovadas a partir da extração.

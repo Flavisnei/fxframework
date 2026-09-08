@@ -42,6 +42,8 @@ try {
     gitPackage(['archive','--format=zip','--output=' . $archive,$commit], $root);
     $zip = new ZipArchive();
     if ($zip->open($archive) !== true) { throw new RuntimeException('Nao foi possivel abrir o ZIP gerado.'); }
+    // Git archive pode manter entradas de diretorios vazios apos remover arquivos.
+    for ($index = 0; $index < $zip->numFiles; $index++) { $entry = $zip->getNameIndex($index); if (is_string($entry) && excludedPackagePath($entry) && !in_array($entry, $excluded, true)) { $excluded[] = $entry; } }
     foreach ($excluded as $file) { if ($zip->locateName($file) !== false && !$zip->deleteName($file)) { throw new RuntimeException('Falha ao filtrar o ZIP.'); } }
     $manifest = ['schema'=>1,'kind'=>'source-snapshot','commit'=>$commit,'source_date'=>trim(gitPackage(['show','-s','--format=%cI',$commit],$root)),'excluded_paths'=>$excluded,'dependencies_bundled'=>false];
     if (!$zip->addFromString('FX-DISTRIBUTION.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n") || !$zip->close()) { throw new RuntimeException('Falha ao finalizar ZIP.'); }
