@@ -1,5 +1,13 @@
 # Histórico
 
+## Etapa 8A — benchmark local — 2026-09-08
+
+- Ferramenta CLI sem dependências novas: Core mínimo/completo, JSON e contatos autenticados com dados sintéticos.
+- Relatório de 20 amostras por cenário, percentis, memória PHP, bytes do corpo, inventário e ambiente.
+- Ajuda HTML com execução, metodologia e limitações; nenhuma mudança em APIs ou otimização de runtime.
+- Referência local não é teste de carga nem comparação com Laravel; versões modernas, CI e distribuição continuam pendentes.
+
+
 ## Etapa 7 — Contatos e extensões Admin — 2026-09-08
 
 - Exemplo Contatos isolado: CRUD SQLite, AJAX/JSON, páginas de 20, erros por campo, email único e versão para conflitos de edição/exclusão.

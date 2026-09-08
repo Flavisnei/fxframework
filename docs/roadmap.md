@@ -15,7 +15,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 5B | Ciclo de módulos | Contrato, ativação, desativação, reconhecimento de atualizações e diagnóstico | Concluída no escopo testado |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões e recuperação configurável | Entregue para SQLite; revisão visual pendente |
 | 7 | CRUD AJAX/JSON | Contatos: validação por campo, paginação, conflitos e ajuda | Entregue no escopo SQLite; revisão visual pendente |
-| 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | Pendente |
+| 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | 8A entregue: referência CLI local; demais partes pendentes |
 
 ## Evidências iniciais
 
@@ -199,3 +199,22 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Limites: SQLite, consulta compartilhada sem isolamento multiempresa, sem auditoria
   específica de contatos, importação/anexos/lixeira ou benchmark. Pacotes locais
   por path, sem catálogo remoto de módulos de negócio. Etapa 8 segue pendente.
+
+## Etapa 8A — referência de desempenho local — 2026-09-08
+
+- benchmarks/run.php inicia processos novos, intercala quatro cenários, descarta
+  duas rodadas iniciais e calcula percentis nearest-rank com inventário e ambiente.
+- 20 amostras válidas por cenário: mesmo trabalho Core mínimo/completo, rota JSON,
+  consulta autenticada com 1.000 contatos sintéticos e paginação de 20.
+- Resultado integral e interpretação em docs/benchmarks/2026-09-08.json e .md.
+  Rodada de referência sem suíte simultânea; OPcache CLI desativado, PHP 8.1.12.
+- Verificadas respostas, cardinalidade, bytes estáveis e ordem dos percentis.
+  Sintaxe PHP válida; entradas de CLI inválidas rejeitadas. Suíte: 103 testes /
+  361 assertions; exemplo Core mínimo isolado continua passando.
+- Não houve otimização de runtime ou mudança de API. Vendors completos contêm
+  ferramentas dev; a medição não compara implantações equivalentes de produção.
+- Documentados preparo excluído, heap/pico PHP, arquivos aquecidos, bytes somente
+  do corpo e limites da amostra. Sem rede/concorrência/contagem instrumentada de SQL.
+- Pendências da etapa 8: matriz de versões atuais, CI, atualização/distribuição,
+  carga real e outros bancos. Revisão visual continua pendente; nenhum ganho sobre
+  Laravel ou suporte a alta escala foi demonstrado.

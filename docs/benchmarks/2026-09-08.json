@@ -1,0 +1,408 @@
+{
+  "schema": 1,
+  "utc": "2026-09-08T05:14:27+00:00",
+  "environment": {
+    "php": "8.1.12",
+    "os": "Windows",
+    "architecture_bits": 64,
+    "sapi": "cli",
+    "opcache_enable_cli": false,
+    "xdebug_loaded": false,
+    "sqlite": "3.36.0",
+    "extensions": [
+      "Core",
+      "PDO",
+      "Phar",
+      "Reflection",
+      "SPL",
+      "SimpleXML",
+      "bcmath",
+      "bz2",
+      "calendar",
+      "ctype",
+      "curl",
+      "date",
+      "dom",
+      "exif",
+      "fileinfo",
+      "filter",
+      "ftp",
+      "hash",
+      "iconv",
+      "json",
+      "libxml",
+      "mbstring",
+      "mysqli",
+      "mysqlnd",
+      "openssl",
+      "pcre",
+      "pdo_mysql",
+      "pdo_sqlite",
+      "readline",
+      "session",
+      "standard",
+      "tokenizer",
+      "xml",
+      "xmlreader",
+      "xmlwriter",
+      "zip",
+      "zlib"
+    ]
+  },
+  "samples": 20,
+  "warmups_per_scenario": 2,
+  "scenarios": {
+    "core-minimal": {
+      "packages": {
+        "fxfavalessa/fx-core": "dev-main",
+        "illuminate/container": "v10.49.0",
+        "illuminate/contracts": "v10.49.0",
+        "psr/container": "2.0.2",
+        "psr/simple-cache": "3.0.0"
+      },
+      "installed_with_dev": true,
+      "vendor_files": 180,
+      "vendor_bytes": 245964,
+      "lock_sha256": "c529eaaa3460f4a7bc7ae7d457e6eb97219b5f7ad6b61980e8845875806a0531",
+      "metrics": {
+        "autoload_ms": {
+          "min": 2.1328,
+          "p50": 2.5051,
+          "p95": 3.2926,
+          "max": 3.478
+        },
+        "operation_ms": {
+          "min": 3.9908,
+          "p50": 4.9873,
+          "p95": 6.9479,
+          "max": 7.9031
+        },
+        "memory_before_bytes": {
+          "min": 498752,
+          "p50": 498752,
+          "p95": 498752,
+          "max": 498752
+        },
+        "memory_after_bytes": {
+          "min": 673600,
+          "p50": 673600,
+          "p95": 673600,
+          "max": 673600
+        },
+        "process_peak_bytes": {
+          "min": 2097152,
+          "p50": 2097152,
+          "p95": 2097152,
+          "max": 2097152
+        },
+        "body_bytes": {
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0
+        }
+      }
+    },
+    "core-complete": {
+      "packages": {
+        "brick/math": "0.12.3",
+        "carbonphp/carbon-doctrine-types": "2.1.0",
+        "doctrine/inflector": "2.1.0",
+        "fruitcake/php-cors": "v1.4.0",
+        "guzzlehttp/uri-template": "v1.0.11",
+        "illuminate/collections": "v10.49.0",
+        "illuminate/conditionable": "v10.49.0",
+        "illuminate/container": "v10.49.0",
+        "illuminate/contracts": "v10.49.0",
+        "illuminate/database": "v10.49.0",
+        "illuminate/filesystem": "v10.49.0",
+        "illuminate/http": "v10.49.0",
+        "illuminate/macroable": "v10.49.0",
+        "illuminate/session": "v10.49.0",
+        "illuminate/support": "v10.49.0",
+        "myclabs/deep-copy": "1.14.0",
+        "nesbot/carbon": "2.73.0",
+        "nikic/php-parser": "v5.8.0",
+        "phar-io/manifest": "2.0.4",
+        "phar-io/version": "3.2.1",
+        "phpunit/php-code-coverage": "10.1.16",
+        "phpunit/php-file-iterator": "4.1.0",
+        "phpunit/php-invoker": "4.0.0",
+        "phpunit/php-text-template": "3.0.1",
+        "phpunit/php-timer": "6.0.0",
+        "phpunit/phpunit": "10.5.64",
+        "psr/clock": "1.0.0",
+        "psr/container": "2.0.2",
+        "psr/event-dispatcher": "1.0.0",
+        "psr/log": "3.0.2",
+        "psr/simple-cache": "3.0.0",
+        "sebastian/cli-parser": "2.0.1",
+        "sebastian/code-unit": "2.0.0",
+        "sebastian/code-unit-reverse-lookup": "3.0.0",
+        "sebastian/comparator": "5.0.5",
+        "sebastian/complexity": "3.2.0",
+        "sebastian/diff": "5.1.1",
+        "sebastian/environment": "6.1.0",
+        "sebastian/exporter": "5.1.4",
+        "sebastian/global-state": "6.0.2",
+        "sebastian/lines-of-code": "2.0.2",
+        "sebastian/object-enumerator": "5.0.0",
+        "sebastian/object-reflector": "3.0.0",
+        "sebastian/recursion-context": "5.0.2",
+        "sebastian/type": "4.0.0",
+        "sebastian/version": "4.0.1",
+        "smarty/smarty": "v4.5.7",
+        "symfony/console": "v6.4.44",
+        "symfony/deprecation-contracts": "v3.7.1",
+        "symfony/error-handler": "v6.4.44",
+        "symfony/event-dispatcher": "v6.4.44",
+        "symfony/event-dispatcher-contracts": "v3.7.1",
+        "symfony/finder": "v6.4.44",
+        "symfony/http-foundation": "v6.4.44",
+        "symfony/http-kernel": "v6.4.44",
+        "symfony/mime": "v6.4.44",
+        "symfony/polyfill-ctype": "v1.37.0",
+        "symfony/polyfill-intl-grapheme": "v1.41.0",
+        "symfony/polyfill-intl-idn": "v1.42.0",
+        "symfony/polyfill-intl-normalizer": "v1.42.0",
+        "symfony/polyfill-mbstring": "v1.38.2",
+        "symfony/polyfill-php80": "v1.37.0",
+        "symfony/polyfill-php83": "v1.41.0",
+        "symfony/service-contracts": "v3.7.1",
+        "symfony/string": "v6.4.43",
+        "symfony/translation": "v6.4.44",
+        "symfony/translation-contracts": "v3.7.1",
+        "symfony/var-dumper": "v6.4.44",
+        "theseer/tokenizer": "1.3.1",
+        "voku/portable-ascii": "2.1.1"
+      },
+      "installed_with_dev": true,
+      "vendor_files": 4847,
+      "vendor_bytes": 17659735,
+      "lock_sha256": "ad7d2012dd96a208ef2b560bbe9585182e9e345abcae5b54dacfc90a4f74beee",
+      "metrics": {
+        "autoload_ms": {
+          "min": 17.3814,
+          "p50": 18.8976,
+          "p95": 24.5213,
+          "max": 25.3977
+        },
+        "operation_ms": {
+          "min": 3.9569,
+          "p50": 4.2496,
+          "p95": 6.7007,
+          "max": 6.9536
+        },
+        "memory_before_bytes": {
+          "min": 1328000,
+          "p50": 1328000,
+          "p95": 1328000,
+          "max": 1328000
+        },
+        "memory_after_bytes": {
+          "min": 1568712,
+          "p50": 1568712,
+          "p95": 1568712,
+          "max": 1568712
+        },
+        "process_peak_bytes": {
+          "min": 4194304,
+          "p50": 4194304,
+          "p95": 4194304,
+          "max": 4194304
+        },
+        "body_bytes": {
+          "min": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0
+        }
+      }
+    },
+    "http-json": {
+      "packages": {
+        "carbonphp/carbon-doctrine-types": "3.2.1",
+        "doctrine/inflector": "2.1.0",
+        "fruitcake/php-cors": "v1.4.0",
+        "fxfavalessa/fx-core": "dev-main",
+        "fxfavalessa/fx-http": "dev-main",
+        "fxfavalessa/fx-validation": "dev-main",
+        "guzzlehttp/uri-template": "v1.0.11",
+        "illuminate/collections": "v10.49.0",
+        "illuminate/conditionable": "v10.49.0",
+        "illuminate/container": "v10.49.0",
+        "illuminate/contracts": "v10.49.0",
+        "illuminate/filesystem": "v10.49.0",
+        "illuminate/http": "v10.49.0",
+        "illuminate/macroable": "v10.49.0",
+        "illuminate/session": "v10.49.0",
+        "illuminate/support": "v10.49.0",
+        "nesbot/carbon": "2.73.0",
+        "psr/clock": "1.0.0",
+        "psr/container": "2.0.2",
+        "psr/event-dispatcher": "1.0.0",
+        "psr/log": "3.0.2",
+        "psr/simple-cache": "3.0.0",
+        "symfony/deprecation-contracts": "v3.7.1",
+        "symfony/error-handler": "v6.4.44",
+        "symfony/event-dispatcher": "v6.4.44",
+        "symfony/event-dispatcher-contracts": "v3.7.1",
+        "symfony/finder": "v6.4.44",
+        "symfony/http-foundation": "v6.4.45",
+        "symfony/http-kernel": "v6.4.45",
+        "symfony/mime": "v6.4.45",
+        "symfony/polyfill-ctype": "v1.37.0",
+        "symfony/polyfill-intl-idn": "v1.42.0",
+        "symfony/polyfill-intl-normalizer": "v1.42.0",
+        "symfony/polyfill-mbstring": "v1.38.2",
+        "symfony/polyfill-php80": "v1.37.0",
+        "symfony/polyfill-php83": "v1.41.0",
+        "symfony/translation": "v6.4.44",
+        "symfony/translation-contracts": "v3.7.1",
+        "symfony/var-dumper": "v6.4.45",
+        "voku/portable-ascii": "2.1.1"
+      },
+      "installed_with_dev": false,
+      "vendor_files": 2328,
+      "vendor_bytes": 7808007,
+      "lock_sha256": "2fed1006e618cdac803db1083a59f4ff9f753aa8d321d7b9dc3f952e22806b2f",
+      "metrics": {
+        "autoload_ms": {
+          "min": 10.0001,
+          "p50": 11.1462,
+          "p95": 14.7753,
+          "max": 16.3029
+        },
+        "operation_ms": {
+          "min": 23.7184,
+          "p50": 26.0033,
+          "p95": 34.577,
+          "max": 37.7309
+        },
+        "memory_before_bytes": {
+          "min": 612840,
+          "p50": 612840,
+          "p95": 612840,
+          "max": 612840
+        },
+        "memory_after_bytes": {
+          "min": 2016352,
+          "p50": 2016352,
+          "p95": 2016352,
+          "max": 2016352
+        },
+        "process_peak_bytes": {
+          "min": 4194304,
+          "p50": 4194304,
+          "p95": 4194304,
+          "max": 4194304
+        },
+        "body_bytes": {
+          "min": 22,
+          "p50": 22,
+          "p95": 22,
+          "max": 22
+        }
+      }
+    },
+    "contacts-page": {
+      "packages": {
+        "carbonphp/carbon-doctrine-types": "3.2.1",
+        "doctrine/inflector": "2.1.0",
+        "fruitcake/php-cors": "v1.4.0",
+        "fxfavalessa/fx-admin": "dev-main",
+        "fxfavalessa/fx-auth": "dev-main",
+        "fxfavalessa/fx-console": "dev-main",
+        "fxfavalessa/fx-core": "dev-main",
+        "fxfavalessa/fx-http": "dev-main",
+        "fxfavalessa/fx-modules": "dev-main",
+        "fxfavalessa/fx-validation": "dev-main",
+        "fxfavalessa/fx-windows": "dev-main",
+        "guzzlehttp/uri-template": "v1.0.11",
+        "illuminate/collections": "v10.49.0",
+        "illuminate/conditionable": "v10.49.0",
+        "illuminate/container": "v10.49.0",
+        "illuminate/contracts": "v10.49.0",
+        "illuminate/filesystem": "v10.49.0",
+        "illuminate/http": "v10.49.0",
+        "illuminate/macroable": "v10.49.0",
+        "illuminate/session": "v10.49.0",
+        "illuminate/support": "v10.49.0",
+        "nesbot/carbon": "2.73.0",
+        "psr/clock": "1.0.0",
+        "psr/container": "2.0.2",
+        "psr/event-dispatcher": "1.0.0",
+        "psr/log": "3.0.2",
+        "psr/simple-cache": "3.0.0",
+        "symfony/console": "v6.4.45",
+        "symfony/deprecation-contracts": "v3.7.1",
+        "symfony/error-handler": "v6.4.44",
+        "symfony/event-dispatcher": "v6.4.44",
+        "symfony/event-dispatcher-contracts": "v3.7.1",
+        "symfony/finder": "v6.4.44",
+        "symfony/http-foundation": "v6.4.45",
+        "symfony/http-kernel": "v6.4.45",
+        "symfony/mime": "v6.4.45",
+        "symfony/polyfill-ctype": "v1.37.0",
+        "symfony/polyfill-intl-grapheme": "v1.41.0",
+        "symfony/polyfill-intl-idn": "v1.42.0",
+        "symfony/polyfill-intl-normalizer": "v1.42.0",
+        "symfony/polyfill-mbstring": "v1.38.2",
+        "symfony/polyfill-php80": "v1.37.0",
+        "symfony/polyfill-php83": "v1.41.0",
+        "symfony/service-contracts": "v3.7.3",
+        "symfony/string": "v6.4.43",
+        "symfony/translation": "v6.4.44",
+        "symfony/translation-contracts": "v3.7.1",
+        "symfony/var-dumper": "v6.4.45",
+        "voku/portable-ascii": "2.1.1"
+      },
+      "installed_with_dev": true,
+      "vendor_files": 2566,
+      "vendor_bytes": 8859727,
+      "lock_sha256": "f3742cdde44ad79a2bddc06663ef646f3b75e1a13577912091c81b07d88752bc",
+      "metrics": {
+        "autoload_ms": {
+          "min": 10.2185,
+          "p50": 12.581,
+          "p95": 16.9269,
+          "max": 19.1546
+        },
+        "operation_ms": {
+          "min": 18.6861,
+          "p50": 19.4426,
+          "p95": 26.5901,
+          "max": 30.3526
+        },
+        "memory_before_bytes": {
+          "min": 1308400,
+          "p50": 1308400,
+          "p95": 1308400,
+          "max": 1308400
+        },
+        "memory_after_bytes": {
+          "min": 2373296,
+          "p50": 2373296,
+          "p95": 2373296,
+          "max": 2373296
+        },
+        "process_peak_bytes": {
+          "min": 4194304,
+          "p50": 4194304,
+          "p95": 4194304,
+          "max": 4194304
+        },
+        "body_bytes": {
+          "min": 1829,
+          "p50": 1829,
+          "p95": 1829,
+          "max": 1829
+        }
+      }
+    }
+  },
+  "benchmark_sha256": {
+    "run.php": "45ffafc66b5ea35e5a83dbc4d08f28993334ff762f2de44e431c277ae19872f8",
+    "worker.php": "d3f38318f9e86283b8d4c79c6b3c2bf0cc5ee26f2c81fad5aa35d1ea28a93b45"
+  }
+}
