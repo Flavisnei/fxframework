@@ -1,6 +1,6 @@
 # Arquitetura alvo do FX
 
-Estado: etapas 3A, 3B, 4 e 5A implementadas. Core, componentes opcionais e adaptador
+Estado: etapas 3A, 3B, 4, 5A e 5B implementadas. Core, componentes opcionais e adaptador
 WordPress em packages/, com a distribuição completa preservada.
 
 ## Extração inicial
@@ -52,7 +52,7 @@ com hooks nativos; conflitos de versões entre plugins continuam fora dessa cobe
 | Artisan | Instalação, diagnóstico e geradores | Core; Console apenas no contexto CLI |
 
 Pacotes definidos: fx-core, fx-http, fx-database, fx-view, fx-console, fx-auth,
-fx-validation, fx-windows e fx-wordpress. Todos continuam em desenvolvimento local.
+fx-validation, fx-windows, fx-wordpress e fx-modules. Todos continuam em desenvolvimento local.
 Não trocar container ou ORM antes de comparar compatibilidade, tamanho e custo.
 O pacote completo é mantido como ponto de compatibilidade durante a extração.
 
@@ -76,8 +76,9 @@ não são herdados pelo consumidor. Releases estáveis ainda serão preparadas.
 
 ## Módulos
 
-O contrato deverá declarar identificador, versão, compatibilidade, dependências,
-provider, rotas por contexto, migrations, assets, permissões e entrada de ajuda.
+O contrato schema 1 declara ID, versão, provider, dependências por ID, ajuda HTML
+e metadados opcionais de rotas por contexto, migrations, assets e permissões.
+Compatibilidade PHP/pacotes e restrições de versão são resolvidas pelo Composer.
 Instalado significa pacote presente; ativo significa habilitado naquela aplicação.
 A ativação deve validar dependências e não executar migrations implicitamente em HTTP.
 Desativar não apaga dados. Atualizações devem preservar personalizações e informar
@@ -90,8 +91,11 @@ dependências nem geram aplicações. Composer resolve versões e instala; Artis
 reescreve manifestos ou lock por conta própria. Scripts e plugins ficam desabilitados.
 
 A instalação usa proc_open com argumentos separados, sem shell, e oferece dry-run.
-A etapa 5B ainda deverá entregar contrato e ciclo de ativação/desativação, atualização
-e diagnóstico dos módulos de negócio. Não há create ou preset admin disponível.
+A etapa 5B entrega fx-modules, dependente apenas do Core. Registro explícito em
+config/modules.json; estado de ativação em storage/framework/modules.json. Providers
+são registrados por dependência antes do boot. CLI opcional habilita status, doctor,
+enable, disable e refresh. Atualização do código permanece no Composer; refresh
+valida e reconhece versões após revisão, sem executar migrations ou conceder acesso. Não há create ou preset admin disponível.
 
 ## Segurança e operação
 

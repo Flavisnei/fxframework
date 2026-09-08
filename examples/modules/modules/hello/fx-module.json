@@ -1,0 +1,9 @@
+{
+    "schema": 1,
+    "id": "hello",
+    "version": "1.0.0",
+    "provider": "Example\\HelloProvider",
+    "requires": [],
+    "help": "help.html",
+    "permissions": ["hello.read"]
+}

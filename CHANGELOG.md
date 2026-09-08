@@ -1,5 +1,16 @@
 # Histórico
 
+## Em desenvolvimento — etapa 5B — 2026-09-07
+
+- Novo fx-modules opcional, dependente somente do Core, incluído no completo.
+- Manifesto JSON schema 1, registro explícito e ajuda HTML obrigatória.
+- Ativação com dependências e bloqueio de ciclos, providers inválidos e recursos externos.
+- Desativação preserva dados e é bloqueada por dependentes ativos. Estado com lock e troca atômica.
+- CLI module:status/doctor/enable/disable/refresh disponível quando fx-modules está presente.
+- Bootstrap explícito registra providers por dependência; atualização exige reconhecer versões.
+- Exemplo Hello com autoload isolado e manual offline. Rotas/migrations/assets/permissões
+  são metadados e não são executados/publicados/concedidos automaticamente.
+
 ## Em desenvolvimento — etapa 5A — 2026-09-07
 
 - Artisan instala componentes do catálogo via module:install e apresenta module:list.

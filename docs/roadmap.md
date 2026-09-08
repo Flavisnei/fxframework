@@ -12,7 +12,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 3B | Pacotes opcionais | Separar HTTP, banco, views e CLI com instalação individual verificada | Concluída |
 | 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Concluída no escopo testado |
 | 5A | Instalação e presets via Artisan | Composer real, simulação, conflitos e isolamento em projetos temporários | Concluída no escopo testado |
-| 5B | Ciclo de módulos | Contrato, ativação, desativação, atualização e diagnóstico | Pendente |
+| 5B | Ciclo de módulos | Contrato, ativação, desativação, reconhecimento de atualizações e diagnóstico | Concluída no escopo testado |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões no servidor e recuperação de senha | Pendente |
 | 7 | CRUD AJAX/JSON | Validação por campo, paginação, erros de rede e módulo exemplo completo | Pendente |
 | 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | Pendente |
@@ -111,7 +111,27 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
   Interrupções durante instalação não têm garantia de rollback de vendor.
 - Ajuda central e manual Console atualizados. Revisão visual continua pendente.
 
-## Próxima parte: 5B
+## Evidências da etapa 5B
 
-Contrato de módulos de negócio, validação de dependências, ativação/desativação,
-atualização e diagnóstico. O painel administrativo continua reservado à etapa 6.
+- fx-modules separado, requer somente Core. Console mínimo não registra os comandos
+  de ciclo sem esse pacote. Nenhuma dependência externa nova na distribuição completa.
+- Manifestos JSON explícitos com schema 1; ajuda HTML obrigatória. Recursos resolvidos
+  dentro do módulo. Estado por aplicação com lock exclusivo e substituição atômica.
+- 77 testes / 222 assertions: ordem, ciclos, dependências ausentes, desativação
+  bloqueada, estado corrompido, preflight de providers, recursos externos,
+  versões alteradas, preparação de novas dependências e CLI na raiz correta.
+- Exemplo modules com vendor próprio, sem HTTP/Eloquent/Smarty/Auth: ativa, registra
+  provider, desativa e verifica que o novo bootstrap não carrega o serviço.
+- Atualização de código continua a cargo do Composer. refresh apenas valida e
+  reconhece versões; não migra banco, publica assets ou concede permissões.
+- Não há rollback dos efeitos de providers, lock distribuído ou recarga de workers.
+  Operações de deploy e distribuição do estado precisam ser coordenadas pelo projeto.
+- Core mínimo reinstalado e verificado com quatro dependências externas; Console
+  isolado também verificado, sem comandos de ciclo. Lock completo manteve versões.
+- Manual do pacote, ajuda Console, central e exemplo atualizados. Revisão visual
+  permanece pendente; os testes são de execução PHP e estrutura da documentação.
+
+## Próxima parte: 6
+
+Auth e Admin FX Windows: sessões, login, usuários, perfis, permissões no servidor,
+recuperação de senha e ajuda contextual. O painel completo ainda não está entregue.

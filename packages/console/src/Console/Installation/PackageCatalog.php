@@ -19,6 +19,7 @@ final class PackageCatalog
         'validation' => 'Validacao de dados',
         'windows' => 'Assets FX Windows; sem painel',
         'wordpress' => 'Adaptador para o WordPress hospedeiro',
+        'modules' => 'Registro, dependencias e ativacao de modulos',
     ];
 
     public const PRESETS = [

@@ -44,6 +44,11 @@ final class Artisan extends SymfonyApplication
             new LegacyCommand('cache:clear', 'Limpa o cache da aplicacao'),
             new LegacyCommand('cache:cleartmp', 'Limpa arquivos temporarios'),
         ]);
+        if (class_exists(\Fx\Framework\Modules\ModuleManager::class)) {
+            foreach (['status', 'doctor', 'enable', 'disable', 'refresh'] as $operation) {
+                $this->add(new \Fx\Framework\Console\Commands\ModuleCommand($this->root, $operation));
+            }
+        }
         $http = class_exists(\Fx\Framework\Foundation\Application::class);
         $database = class_exists(\Fx\Framework\Database\Database::class);
         if ($http) {

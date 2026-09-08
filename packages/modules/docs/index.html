@@ -1,0 +1,49 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FX Modules — Ajuda</title><style>body{max-width:900px;margin:36px auto;padding:0 20px;font:17px/1.65 system-ui;color:#19332e;background:#f5f7f3}a{color:#12684b}nav{display:flex;gap:14px;flex-wrap:wrap}pre{overflow:auto;padding:18px;background:#19332e;color:white;border-radius:8px}section{border-top:1px solid #dbe4de;margin-top:24px}h1,h2{line-height:1.2}@media print{pre{white-space:pre-wrap}}</style></head><body><h1>Gerenciamento de módulos FX</h1><p>Etapa 5B · Manual offline · 07/09/2026</p><nav><a href="#instalar">instalar</a><a href="#manifesto">manifesto</a><a href="#registro">registro</a><a href="#comandos">comandos</a><a href="#bootstrap">bootstrap</a><a href="#atualizar">atualizar</a><a href="#estado">estado</a></nav><section id="instalar"><h2>Instalar o gerenciador</h2><p>fx-modules depende apenas de fx-core. O núcleo mínimo continua sem gerenciador, HTTP, banco ou templates. Para usar os comandos, instale também fx-console. Na distribuição completa, ambos já estão incluídos.</p>
+<pre>php vendor/bin/fxartisan module:install modules --constraint=@dev</pre>
+<p>Durante o desenvolvimento local, o composer.json consumidor precisa de repositório path apontando para os pacotes do framework, minimum-stability dev e prefer-stable true. Os pacotes ainda não foram publicados. Depois da instalação, execute o Artisan novamente. Compatibilidade de PHP e versões de pacotes pertence ao require do Composer; requires do manifesto abaixo expressa dependências de ativação por identificador, sem interpretar restrições de versão.</p></section>
+<section id="manifesto"><h2>Declarar um módulo</h2><p>Crie um fx-module.json junto ao código do módulo. Registre seu provider no autoload PSR-4 do Composer e gere o autoload. Cada módulo precisa de um provider próprio, que estenda ServiceProvider, e de ajuda HTML existente.</p>
+<pre>{
+  "schema": 1,
+  "id": "contacts",
+  "version": "1.0.0",
+  "provider": "App\\Modules\\ContactsProvider",
+  "requires": [],
+  "help": "docs/index.html",
+  "permissions": ["contacts.read"]
+}</pre>
+<p>Campos obrigatórios: schema 1, id, version, provider e help. IDs usam letras minúsculas, números, hífens e pontos entre segmentos. Versão usa três números e pode incluir sufixo de pré-release/build. Alterações no comportamento do módulo devem aumentar sua versão e atualizar a ajuda. Campos desconhecidos são rejeitados para detectar erros de digitação.</p>
+<p>Campos opcionais: requires (lista de IDs), permissions (lista de identificadores), assets e migrations (diretórios relativos), routes (objeto com contextos http, wordpress ou console apontando para arquivos relativos). Os recursos precisam existir e permanecer dentro da pasta real do módulo, inclusive após resolver symlinks. A ajuda deve ter extensão .html.</p>
+<p>Esses recursos são metadados. O gerenciador não executa arquivos de rotas, migrations, publica assets nem concede permissões. O provider integra o contexto desejado explicitamente; permissões precisam ser verificadas no servidor pelo sistema de autorização. O painel que usará esses metadados ainda está planejado.</p></section>
+<section id="registro"><h2>Registrar na aplicação</h2><p>Crie config/modules.json na aplicação:</p>
+<pre>{
+  "schema": 1,
+  "manifests": ["modules/contacts/fx-module.json"]
+}</pre>
+<p>Para um módulo distribuído via Composer, use um caminho como vendor/minhaempresa/contacts/fx-module.json. Os caminhos são relativos à aplicação; não são aceitos caminhos absolutos ou segmentos .. nesta lista. Symlinks de repositórios path são aceitos porque o destino foi explicitamente registrado. Não há varredura automática de vendor ou execução de manifestos PHP.</p>
+<p>Dois módulos não podem compartilhar o mesmo ID ou provider. A configuração ausente representa catálogo vazio. Um manifesto listado, mas ausente ou inválido, interrompe a validação; corrija a configuração, sem ocultar a falha.</p></section>
+<section id="comandos"><h2>Ativar, consultar e desativar</h2>
+<pre>php vendor/bin/fxartisan module:status
+php vendor/bin/fxartisan module:enable contacts
+php vendor/bin/fxartisan module:doctor
+php vendor/bin/fxartisan module:disable contacts</pre>
+<p>enable ativa também as dependências registradas, em ordem. Não baixa dependências que ainda não estejam instaladas e registradas. A validação rejeita ciclos, dependências ausentes, providers inválidos e recursos inexistentes. As classes dos providers são verificadas pelo autoload, mas seus construtores/register/boot não são chamados pelos comandos.</p>
+<p>disable é bloqueado quando outro módulo ativo depende diretamente dele; desative primeiro os dependentes. A operação preserva código, dados, assets e permissões existentes. status mostra versões disponíveis e reconhecidas, incluindo IDs ativos que saíram do catálogo. doctor valida o conjunto ativo, não garante que o código de cada provider funcione em execução.</p>
+<p>module:list continua sendo o catálogo de componentes instaláveis do framework. module:status é a consulta dos módulos de negócio registrados pela aplicação.</p></section>
+<section id="bootstrap"><h2>Carregar os módulos ativos</h2><p>No bootstrap, após configurar serviços do ambiente e antes de boot():</p>
+<pre>$app = new Fx\Framework\Foundation\CoreApplication(__DIR__);
+$modules = new Fx\Framework\Modules\ModuleManager(__DIR__);
+$modules-&gt;register($app);
+$app-&gt;boot();</pre>
+<p>Em uma aplicação HTTP, use sua Application já existente. No WordPress, use o CoreApplication retornado por Plugin::app(), no hook apropriado e antes de boot(). Não crie um segundo kernel. O gerenciador valida o conjunto ativo inteiro antes de registrar providers, depois registra dependências primeiro. Exceções dentro do código de um provider interrompem o bootstrap; seus efeitos anteriores não têm rollback automático.</p>
+<p>Mudanças de ativação valem no próximo bootstrap. Reinicie workers persistentes após alterações. Registrar depois de boot() é rejeitado. O carregamento de um processo existente não é desfeito pela desativação.</p></section>
+<section id="atualizar"><h2>Atualizar um módulo</h2><ol>
+<li>Prepare o deploy com cópia do lock, estado e dados; revise as instruções da ajuda do módulo. Faça a troca de código em janela controlada, com workers parados.</li>
+<li>Atualize o pacote pelo Composer no projeto consumidor, por exemplo composer update minhaempresa/contacts. Use as restrições e políticas do projeto. module:refresh não baixa código.</li>
+<li>Execute module:doctor. Uma versão diferente da reconhecida bloqueia o carregamento até a revisão. Registre novas dependências no catálogo e ative-as explicitamente com module:enable ID, se a atualização exigir.</li>
+<li>Execute os passos de migration/configuração indicados pelo módulo e, então, module:refresh e module:doctor. refresh valida o grafo e providers, reconhece as versões disponíveis de todos os módulos ativos e não ativa dependências novas.</li>
+<li>Reinicie os processos e confira o funcionamento antes de liberar tráfego.</li></ol>
+<p>enable preserva a versão anteriormente reconhecida dos módulos que já estavam ativos, permitindo preparar novas dependências sem aprovar silenciosamente uma atualização. Se a atualização falhar, restaure código, lock, estado e dados conforme o procedimento de deploy do projeto. O gerenciador não oferece rollback de banco nem detecta mudanças feitas sem alterar a versão do manifesto.</p></section>
+<section id="estado"><h2>Estado e problemas comuns</h2><p>O arquivo storage/framework/modules.json guarda somente os IDs ativos e as versões reconhecidas. É separado do código e deve ser preservado entre deploys, com backup. Não edite durante operações concorrentes. Escritas usam lock exclusivo e substituição por arquivo temporário no mesmo diretório; o bootstrap apenas lê. JSON corrompido causa erro, nunca desativação silenciosa de todos os módulos.</p>
+<p>O usuário do CLI precisa escrever em storage/framework, e o usuário da aplicação precisa ler o estado. Em Unix o arquivo novo usa permissão 0660; configure grupo e acesso aos diretórios. Estado não contém segredos. Não execute comandos de administração por uma rota pública.</p>
+<p>Provider ausente: revise namespace e autoload do consumidor, execute composer dump-autoload. Dependência desativada: instale, registre e habilite o ID informado. Pacote removido: restaure-o ou retire seu caminho da configuração e desative o ID, começando pelos dependentes. Ajuda/recurso inválido: corrija o caminho relativo. Estado corrompido: restaure uma cópia válida. Não apague o estado para mascarar o erro.</p>
+<p>O lock coordena comandos que usam este gerenciador, não edições manuais ou Composer. Não há lock distribuído; para múltiplos servidores, distribua estado e código de maneira coordenada. Validação funcional realizada em Windows/PHP 8.1.12; filesystem distribuído e execução Unix ainda não testados.</p></section></body></html>
