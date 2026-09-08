@@ -30,7 +30,8 @@
                 "packages/console/src/",
                 "packages/auth/src/",
                 "packages/validation/src/",
-                "packages/windows/src/"
+                "packages/windows/src/",
+                "packages/wordpress/src/"
             ]
         }
     },
@@ -50,7 +51,8 @@
         "fxfavalessa/fx-console": "self.version",
         "fxfavalessa/fx-auth": "self.version",
         "fxfavalessa/fx-validation": "self.version",
-        "fxfavalessa/fx-windows": "self.version"
+        "fxfavalessa/fx-windows": "self.version",
+        "fxfavalessa/fx-wordpress": "self.version"
     },
     "config": {
         "optimize-autoloader": false,

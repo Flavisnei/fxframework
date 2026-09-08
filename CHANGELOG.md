@@ -1,5 +1,21 @@
 # Histórico
 
+## Em desenvolvimento — etapa 4 — 2026-09-07
+
+- Pacote fx-wordpress com dependência apenas do Core, usando hooks, REST API,
+  usuário atual, capabilities, wpdb e opções nativos.
+- Instâncias mantêm containers/configurações separados; rotas e opções são
+  prefixadas pelo slug. Não inicia sessão ou kernel e não troca a conexão do host.
+- Plugin FX Example com página de configurações, envio JSON, nonce REST e
+  autorização manage_options; campo validado e sanitizado no servidor.
+- Teste real com WordPress 6.4.3, PHP 8.1.12 e MariaDB 10.4.27 descartável:
+  28 verificações passaram. O teste detectou e motivou correção do validador REST
+  explícito no exemplo para impedir TypeError em entradas JSON do tipo array.
+- Manual HTML do adaptador e ajuda incluída no plugin. Integração descrita em
+  tests/integration/README.md, com limites de cobertura explícitos.
+- Coexistência validada para instâncias e hooks nativos na versão testada; isolamento
+  de versões conflitantes de bibliotecas, multisite e UI no navegador seguem pendentes.
+
 ## Em desenvolvimento — etapa 3B — 2026-09-07
 
 - Pacotes independentes fx-http, fx-database, fx-view, fx-console, fx-auth,

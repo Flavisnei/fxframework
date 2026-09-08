@@ -1,5 +1,19 @@
 # FX Framework
 
+## WordPress
+
+O pacote `fxfavalessa/fx-wordpress` integra o Core com os recursos nativos do
+WordPress. O [plugin de exemplo](examples/wordpress/README.md) possui formulário
+AJAX/JSON e permissão administrativa. Leia a [ajuda do adaptador](packages/wordpress/docs/index.html).
+
+```bash
+composer install --working-dir=examples/wordpress --no-dev
+```
+
+O exemplo deve ser copiado com vendor para um WordPress de desenvolvimento.
+Não instala HTTP do FX, Eloquent ou Smarty. Coexistência com bibliotecas de versões
+conflitantes ainda requer estratégia de distribuição; veja os limites no manual.
+
 ## Ajuda e evolução
 
 ### Instalação mínima disponível

@@ -10,7 +10,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 2 | Correções de comportamento | Regressões para validação, Request, 404; desenho e testes CSRF | Concluída |
 | 3A | Core independente | Instalar mínimo sem banco/view/admin; compatibilidade documentada | Concluída |
 | 3B | Pacotes opcionais | Separar HTTP, banco, views e CLI com instalação individual verificada | Concluída |
-| 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Pendente |
+| 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Concluída no escopo testado |
 | 5 | Módulos e presets via Artisan | Instalar, ativar, atualizar e diagnosticar dependências em ambiente temporário | Pendente |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões no servidor e recuperação de senha | Pendente |
 | 7 | CRUD AJAX/JSON | Validação por campo, paginação, erros de rede e módulo exemplo completo | Pendente |
@@ -74,8 +74,24 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 - A independência de instalação está entregue; HTTP continua usando Illuminate HTTP
   e Database continua com Eloquent. Redução adicional de dependências exige outra revisão.
 
-## Próxima parte: 4
+## Evidências da etapa 4
 
-Iniciar adaptador WordPress e plugin exemplo, reutilizando recursos do hospedeiro
-e verificando coexistência. A revisão
+- fx-wordpress instala Core e quatro dependências externas, sem HTTP FX, Eloquent ou Smarty.
+- Plugin de exemplo delega login ao WordPress e usa manage_options, REST/JSON e nonce nativo.
+- 28 verificações reais em WordPress 6.4.3 / PHP 8.1.12 / MariaDB 10.4.27, em cópia
+  e banco descartáveis. Dois adaptadores e hooks nativos coexistem sem trocar wpdb,
+  sessão ou container global. Configurações, rotas e opções permanecem separadas.
+- Tipos inválidos inicialmente causavam TypeError no exemplo; validador REST nativo
+  explícito e sanitização defensiva corrigiram a falha. Casos inválidos retornam 400.
+- Permissões 401/403 e nonces nativos verificados. Despacho REST e autenticação por
+  cookie foram testados separadamente; não foi uma simulação pelo navegador.
+- Limites: versão específica do WordPress, sem teste multisite, UI ou isolamento
+  de bibliotecas de versões conflitantes. Documentação mantém esses limites visíveis.
+- Validação final: 59 testes / 158 assertions do framework passaram, manifestos
+  válidos, JavaScript com sintaxe válida e links HTML locais conferidos. Banco
+  MariaDB temporário encerrado; sites existentes não foram alterados.
+
+## Próxima parte: 5
+
+Iniciar contrato de módulos e instalação/presets pelo Artisan. A revisão
 visual da ajuda permanece pendente pela limitação registrada na etapa 1.

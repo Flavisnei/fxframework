@@ -1,7 +1,7 @@
 # Arquitetura alvo do FX
 
-Estado: etapas 3A e 3B implementadas. Core e sete componentes independentes em
-packages/, com a distribuição completa preservada.
+Estado: etapas 3A, 3B e 4 implementadas. Core, componentes opcionais e adaptador
+WordPress em packages/, com a distribuição completa preservada.
 
 ## Extração inicial
 
@@ -22,7 +22,8 @@ e Container() mantêm o comportamento global anterior por compatibilidade.
 
 O exemplo examples/minimal instala por cópia, usando vendor próprio e verificando
 ausência das camadas opcionais. Não afirmar compatibilidade WordPress apenas com
-esse teste: ainda falta o adaptador e prova de coexistência entre plugins.
+esse teste: a etapa 4 acrescentou o adaptador e verificou coexistência de instâncias
+com hooks nativos; conflitos de versões entre plugins continuam fora dessa cobertura.
 
 ## Princípios
 
@@ -51,7 +52,7 @@ esse teste: ainda falta o adaptador e prova de coexistência entre plugins.
 | Artisan | Instalação, diagnóstico e geradores | Core; Console apenas no contexto CLI |
 
 Pacotes definidos: fx-core, fx-http, fx-database, fx-view, fx-console, fx-auth,
-fx-validation e fx-windows. Todos continuam em desenvolvimento local.
+fx-validation, fx-windows e fx-wordpress. Todos continuam em desenvolvimento local.
 Não trocar container ou ORM antes de comparar compatibilidade, tamanho e custo.
 O pacote completo é mantido como ponto de compatibilidade durante a extração.
 
@@ -93,8 +94,10 @@ sessões configuráveis, cookies adequados, logging, recuperação de senha e li
 de tentativas no módulo de autenticação. Permissões seguem recurso.acao, com negação
 por padrão; acesso a registros pode exigir políticas adicionais.
 
-WordPress precisa de prova de coexistência com outros plugins e versões de bibliotecas.
-Avaliar isolamento de dependências no artefato distribuído; não duplicar autenticação.
+O adaptador WordPress delega hooks, REST, usuário, capabilities, wpdb e opções ao
+host. Foram testadas duas instâncias e hooks nativos em WordPress 6.4.3 com banco
+descartável. Ainda falta isolamento de versões conflitantes no artefato distribuído,
+multisite e matriz com versões recentes. Não duplicar autenticação do WordPress.
 
 ## Desempenho
 
