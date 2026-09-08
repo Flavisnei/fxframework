@@ -1,0 +1,15 @@
+{
+    "name": "fxfavalessa/fx-auth",
+    "description": "Componente opcional FX: auth.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.1",
+        "fxfavalessa/fx-http": "^1.0 || dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fx\\Framework\\": "src/"
+        }
+    }
+}
