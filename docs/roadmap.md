@@ -319,3 +319,5 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Revisão visual adiada pelo usuário; PostgreSQL, versões recentes de bancos, carga de produção e entrega SMTP seguem pendentes.
 
 - Consumidor Admin+Console instalou os oito pacotes FX necessários por ZIP do GitHub e suas dependências externas. Autoload e comandos admin:init/module:install/module:enable aprovados em processo independente, sem Eloquent ou Smarty. Repositório de metadados usado localmente nessa primeira conferência.
+
+- Após publicação af82372, consumidor mínimo novo instalou o Core com metadados HTTPS do repositório Composer e ZIP do GitHub, sem path. examples/minimal/verify.php aprovado sem alterações. Suíte final: 114 testes / 613 assertions. MariaDB temporário encerrado.
