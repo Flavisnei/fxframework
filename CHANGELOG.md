@@ -1,5 +1,13 @@
 # Histórico
 
+## Etapa 8D — distribuição local de fontes — 2026-09-08
+
+- tools/package.php gera ZIP de HEAD com manifesto de revisão e SHA-256, sem publicação.
+- Filtragem por caminho de dependências, configurações privadas conhecidas, dados, logs e chaves; destino novo fora do repositório.
+- Teste de regressão verifica snapshot, exclusões, checksum e recusa de sobrescrita. CI inclui extensão ZIP.
+- Ajuda offline explica geração, conferência, extração, instalação e limites. Não é versão estável nem pacote offline com dependências.
+
+
 ## Etapa 8C — PHP real e registro de comandos — 2026-09-08
 
 - Verificações locais completas executadas em PHP 8.2.12 e 8.5.10 no Windows.

@@ -255,3 +255,20 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
   concluída nem PHP 8.3 suportado nessa experiência sem ensaio específico.
 - Evidência em docs/compatibility/2026-09-08.json; detalhes e reprodução na ajuda.
 - Linux, PHP 8.3/8.4, execução remota, navegador, carga e distribuição pendentes.
+
+## Etapa 8D — snapshot local de distribuição
+
+- tools/package.php empacota somente HEAD, identificado pelo commit, com
+  FX-DISTRIBUTION.json e checksum SHA-256 externo. Não publica nem cria tags.
+- Destino novo fora do repositório, sem sobrescrita. Exclui vendor, storage,
+  node_modules, configurações .env privadas/.local., bancos, logs e chaves por
+  caminho; recusa symlinks/submódulos. Filtragem não detecta segredos dentro de código.
+- Teste com repositório sintético verifica conteúdo do commit versus edição local,
+  arquivos não versionados, exclusões, checksum, destino interno e sobrescrita.
+- Suíte Windows/PHP 8.1.12: 105 testes / 397 assertions. CI passa a solicitar ZIP.
+- Snapshot da revisão 3d01836 extraído fora do repositório: Composer instalou Core
+  mínimo e Contatos preservando caminhos relativos; Core isolado verificado e
+  34 verificações HTTP/CLI de Contatos aprovadas a partir da extração.
+- Ajuda, links/âncoras e busca verificados: 22 tópicos. Sem revisão visual.
+- Não há versão estável nova, publicação Packagist, catálogo remoto, assinatura,
+  bundle offline de dependências ou promessa de reprodução binária entre sistemas.

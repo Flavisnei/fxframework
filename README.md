@@ -317,3 +317,16 @@ vendor/bin/fxartisan make:crud Cliente
 
 `make:crud` gera model Eloquent, request validado, controller REST, migration,
 views Smarty e cinco rotas resource.
+
+## Distribuição local de fontes
+
+Com Git e PHP CLI com ZIP, gere um snapshot do commit HEAD em uma pasta nova
+fora do repositório:
+
+```powershell
+php tools/package.php C:/Entregas/fx-revisao
+```
+
+O ZIP inclui fontes, exemplos e ajuda; dependências e dados locais ficam fora.
+A saída acompanha SHA-256 e manifesto do commit. Não publica nem cria versão/tag.
+Veja [geração, instalação e limitações](docs/index.html#distribuicao).
