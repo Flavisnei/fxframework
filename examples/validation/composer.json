@@ -7,7 +7,20 @@
             "type": "path",
             "url": "../../packages/*",
             "options": {
-                "symlink": false
+                "symlink": false,
+                "versions": {
+                    "fxfavalessa/fx-admin": "dev-main",
+                    "fxfavalessa/fx-auth": "dev-main",
+                    "fxfavalessa/fx-console": "dev-main",
+                    "fxfavalessa/fx-core": "dev-main",
+                    "fxfavalessa/fx-database": "dev-main",
+                    "fxfavalessa/fx-http": "dev-main",
+                    "fxfavalessa/fx-modules": "dev-main",
+                    "fxfavalessa/fx-validation": "dev-main",
+                    "fxfavalessa/fx-view": "dev-main",
+                    "fxfavalessa/fx-windows": "dev-main",
+                    "fxfavalessa/fx-wordpress": "dev-main"
+                }
             }
         }
     ],

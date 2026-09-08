@@ -3,8 +3,21 @@
     "description": "Exemplo local de instalacao independente do FX Core.",
     "license": "proprietary",
     "repositories": [
-        {"type": "path", "url": "../../packages/core", "options": {"symlink": false}}
+        {
+            "type": "path",
+            "url": "../../packages/core",
+            "options": {
+                "symlink": false,
+                "versions": {
+                    "fxfavalessa/fx-core": "dev-main"
+                }
+            }
+        }
     ],
-    "require": {"fxfavalessa/fx-core": "@dev"},
-    "config": {"allow-plugins": false}
+    "require": {
+        "fxfavalessa/fx-core": "@dev"
+    },
+    "config": {
+        "allow-plugins": false
+    }
 }

@@ -272,3 +272,16 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Ajuda, links/âncoras e busca verificados: 22 tópicos. Sem revisão visual.
 - Não há versão estável nova, publicação Packagist, catálogo remoto, assinatura,
   bundle offline de dependências ou promessa de reprodução binária entre sistemas.
+
+
+## Etapas 8E e 8F — dependências modernas e conflitos simultâneos — 2026-09-08
+
+- Suíte completa: 106 testes / 570 assertions em Windows/PHP 8.1.12 com lock histórico e em PHP 8.3.33 e 8.5.10 com Illuminate 13.30.1 e Symfony 7.4.18.
+- Instalação moderna feita em worktree separado e destacado; plataforma Composer 8.3.0 usada para resolução, seguida de execução em runtimes reais. Lock principal mantém todas as versões anteriores.
+- Quatorze exemplos modernos instalados separadamente. Runner de oito etapas e oito verificadores adicionais de pacotes aprovados; Core moderno contém onze dependências externas e não carrega HTTP, banco, sessão ou templates.
+- Regressão corrigida: checkout destacado atribuía dev-HASH aos pacotes path e impedia dependências internas dev-main. Quinze manifests agora informam versões explícitas; teste com 171 assertions protege essa configuração.
+- Concorrência SQLite em arquivo temporário aprovada com 2, 8 e 16 processos no stack histórico e 8 no moderno. Exatamente uma edição venceu; demais receberam conflito, versão final 2 e exclusão obsoleta recusada. Não é teste HTTP, capacidade de produção nem comparação de desempenho.
+- Ajuda central e dos pacotes Core/HTTP/Database/Console inclui migração e inventário. Ajuda de Contatos inclui reprodução e diagnóstico da concorrência.
+- CI ampliada para dependências modernas. Execução no GitHub ainda precisa ser conferida após o envio; resultados locais não certificam Linux ou toda a matriz.
+- Fontes destinadas a https://github.com/Flavisnei/fxframework com histórico e tag v1.0.01 preservados. Credenciais locais, vendor e bancos não fazem parte do envio.
+- Permanecem pendentes revisão visual em navegador (conexão indisponível), carga HTTP representativa, outros bancos, catálogo remoto e publicação dos pacotes no Packagist. Não há promessa de ausência de bugs ou alta escala demonstrada.

@@ -2,8 +2,36 @@
     "name": "fxfavalessa/example-smtp",
     "description": "Verificacao local do transporte SMTP opcional do Admin.",
     "license": "proprietary",
-    "repositories": [{"type": "path", "url": "../../packages/*", "options": {"symlink": false}}],
-    "require": {"fxfavalessa/fx-admin": "@dev", "fxfavalessa/fx-console": "@dev", "symfony/mailer": "^6.4"},
-    "minimum-stability": "dev", "prefer-stable": true,
-    "config": {"allow-plugins": false}
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/*",
+            "options": {
+                "symlink": false,
+                "versions": {
+                    "fxfavalessa/fx-admin": "dev-main",
+                    "fxfavalessa/fx-auth": "dev-main",
+                    "fxfavalessa/fx-console": "dev-main",
+                    "fxfavalessa/fx-core": "dev-main",
+                    "fxfavalessa/fx-database": "dev-main",
+                    "fxfavalessa/fx-http": "dev-main",
+                    "fxfavalessa/fx-modules": "dev-main",
+                    "fxfavalessa/fx-validation": "dev-main",
+                    "fxfavalessa/fx-view": "dev-main",
+                    "fxfavalessa/fx-windows": "dev-main",
+                    "fxfavalessa/fx-wordpress": "dev-main"
+                }
+            }
+        }
+    ],
+    "require": {
+        "fxfavalessa/fx-admin": "@dev",
+        "fxfavalessa/fx-console": "@dev",
+        "symfony/mailer": "^6.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": false
+    }
 }

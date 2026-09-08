@@ -18,6 +18,7 @@ $commands = [
     ['tests/integration/admin.php'],
     ['tests/integration/contacts.php'],
     ['tests/integration/smtp.php'],
+    ['tests/integration/contention.php'],
 ];
 echo 'PHP ' . PHP_VERSION . ' / ' . PHP_OS_FAMILY . PHP_EOL;
 foreach ($commands as $command) {
@@ -27,4 +28,4 @@ foreach ($commands as $command) {
     $code = proc_close($process);
     if ($code !== 0) { fwrite(STDERR, "Verificacao interrompida: processo retornou $code.\n"); exit($code > 0 && $code < 256 ? $code : 1); }
 }
-echo PHP_EOL . "OK: sete etapas de verificacao concluidas. Nenhum envio SMTP externo.\n";
+echo PHP_EOL . "OK: oito etapas de verificacao concluidas. Nenhum envio SMTP externo.\n";

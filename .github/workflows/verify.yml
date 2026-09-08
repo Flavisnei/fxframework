@@ -49,3 +49,40 @@ jobs:
           done
       - name: Executar verificacoes locais e de integracao
         run: php tools/verify.php
+
+  modern:
+    name: Dependencias modernas / PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.5']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo_sqlite, dom, xml, xmlwriter, openssl, zip
+          coverage: none
+          tools: composer:v2
+      - name: Resolver stack moderno no piso PHP 8.3
+        run: |
+          composer config platform.php 8.3.0
+          composer update --with=illuminate/container:^13.0 --with=illuminate/database:^13.0 --with=illuminate/http:^13.0 --with=symfony/console:^7.4 --with=symfony/http-foundation:^7.4 --with=symfony/http-kernel:^7.4 --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
+          composer check-platform-reqs
+      - name: Instalar e conferir exemplos modernos isolados
+        run: |
+          set -euo pipefail
+          for example in minimal http database console auth validation view windows web modular modules admin contacts smtp; do
+            composer config --working-dir="examples/$example" platform.php 8.3.0
+            composer update --working-dir="examples/$example" --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
+            composer check-platform-reqs --working-dir="examples/$example"
+          done
+          for example in database console auth validation view windows web modular; do
+            php examples/verify-package.php "$example"
+          done
+      - name: Suite e integracoes modernas
+        run: php tools/verify.php

@@ -1,5 +1,20 @@
 # FX Framework
 
+Framework PHP modular em desenvolvimento, com Core mínimo, pacotes opcionais e exemplos de Admin, Contatos e WordPress.
+
+## Obter as fontes
+
+```bash
+git clone https://github.com/Flavisnei/fxframework.git
+cd fxframework
+composer install --working-dir=examples/minimal --no-dev
+php examples/minimal/verify.php
+```
+
+Abra `docs/index.html` para consultar a ajuda offline. Para instalar o conjunto completo, execute `composer install` na raiz. Consulte [compatibilidade e migração](docs/index.html#modernizacao) antes de atualizar dependências: o lock histórico e a resolução moderna possuem requisitos diferentes.
+
+A branch `main` contém a evolução em desenvolvimento. A tag `v1.0.01` preserva o estado inicial. Veja as [verificações no GitHub Actions](https://github.com/Flavisnei/fxframework/actions); configuração de CI não significa execução aprovada. Os pacotes ainda usam repositórios locais Composer `path`.
+
 ## WordPress
 
 O pacote `fxfavalessa/fx-wordpress` integra o Core com os recursos nativos do
@@ -40,7 +55,7 @@ Na aplicação consumidora, configure um repositório Composer `path` apontando 
 `fxfavalessa/fx-database`, `fxfavalessa/fx-view`, `fxfavalessa/fx-console`,
 `fxfavalessa/fx-auth`, `fxfavalessa/fx-validation` ou `fxfavalessa/fx-windows`.
 Durante o desenvolvimento local, use `@dev`, `minimum-stability: dev` e
-`prefer-stable: true` para resolver dependências FX transitivas. Não houve publicação.
+`prefer-stable: true` para resolver dependências FX transitivas. Não houve publicação dos pacotes no Packagist.
 
 O Artisan básico não instala as camadas opcionais. Comandos são habilitados pelos
 pacotes presentes. Os nove cenários em `examples/` podem ser verificados com:

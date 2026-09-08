@@ -85,3 +85,13 @@ O teste usa autoload isolado, fila SQLite temporária e processo PHP que aceita
 uma conexão em loopback, sem relay. Confere cabeçalhos, conteúdo MIME, link,
 remoção após envio e recusa de transporte inseguro. Encerra o processo em finally.
 Não testa credenciais, certificado TLS remoto nem entrega externa.
+
+## Concorrência SQLite de Contatos
+
+Na raiz, após instalar examples/contacts, execute `php tests/integration/contention.php 8`.
+Aceita 2–16 processos PHP, um arquivo SQLite temporário, um único registro e barreira
+para partir da mesma versão. Exige exatamente uma edição aceita e N−1 conflitos,
+conteúdo final do vencedor e recusa de exclusão antiga. Retorna JSON e remove dados
+sintéticos ao final. Não mede HTTP, capacidade máxima ou múltiplas máquinas.
+
+`php tools/verify.php` agora inclui esse teste como oitava etapa.

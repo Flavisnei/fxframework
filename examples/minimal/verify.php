@@ -17,6 +17,10 @@ function check(bool $condition, string $message): void
 
 $allowed = ['fxfavalessa/example-minimal', 'fxfavalessa/fx-core', 'illuminate/container',
     'illuminate/contracts', 'psr/container', 'psr/simple-cache'];
+$containerVersion = InstalledVersions::getVersion('illuminate/container');
+if ($containerVersion !== null && version_compare($containerVersion, '13.0.0', '>=')) {
+    $allowed = [...$allowed, 'illuminate/reflection', 'illuminate/collections', 'illuminate/conditionable', 'illuminate/macroable', 'symfony/polyfill-php84', 'symfony/polyfill-php85', 'symfony/polyfill-php86'];
+}
 $installed = array_values(array_filter(InstalledVersions::getInstalledPackages(),
     static fn (string $package): bool => InstalledVersions::getInstallPath($package) !== null));
 check(array_diff($installed, $allowed) === [], 'Dependencias inesperadas no Core.');

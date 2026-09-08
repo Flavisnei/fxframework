@@ -1,5 +1,13 @@
 # Histórico
 
+## Etapas 8E e 8F — compatibilidade e concorrência — 2026-09-08
+
+- Contratos Composer permitem Illuminate 10 ou 13 e Symfony 6.4 ou 7.4. O lock principal mantém as versões anteriores; Illuminate 13 exige PHP 8.3. Migração e diferenças documentadas na ajuda central e nos quatro pacotes afetados.
+- Exemplos fixam a identidade dev-main dos pacotes locais para funcionar também em checkout destacado; teste de regressão cobre os quinze manifests. Core mínimo verifica o inventário antigo e o moderno sem serviços extras.
+- CI acrescenta resolução moderna em PHP 8.3/8.5 e exemplos isolados. Resultado remoto ainda deve ser consultado no GitHub.
+- Teste multiprocesso temporário de Contatos exige uma gravação vencedora, conflitos nas restantes e preservação do registro. tools/verify.php passa a reunir oito etapas.
+- Repositório de fontes e instruções para clonagem acrescentados ao README e à ajuda. A tag histórica v1.0.01 permanece preservada; pacotes não publicados no Packagist.
+
 ## Etapa 8D — distribuição local de fontes — 2026-09-08
 
 - tools/package.php gera ZIP de HEAD com manifesto de revisão e SHA-256, sem publicação.
