@@ -105,3 +105,8 @@ Instale o vendor de examples/console e execute `php tests/integration/catalog.ph
 ## MySQL/MariaDB
 
 Instale examples/database e configure FX_TEST_MYSQL_PORT, FX_TEST_MYSQL_USER e FX_TEST_MYSQL_PASSWORD para um servidor exclusivo de testes em 127.0.0.1. Execute `php tests/integration/mysql.php`. Exige PDO MySQL e permissão CREATE/DROP DATABASE. Dez verificações com banco aleatório temporário; não migra Admin/Contatos, que exigem SQLite.
+
+
+## Admin/Contatos em MariaDB
+
+Com FX_TEST_ADMIN_MYSQL=1 e FX_TEST_MYSQL_PORT/USER/PASSWORD definidos, `php tests/integration/contacts.php` usa banco MariaDB aleatório e descartável. Instale o vendor de examples/contacts. `php vendor/bin/phpunit --do-not-cache-result --filter "AdminTest|ContactsTest|ResetMailQueueTest|MariaDbConcurrencyTest"` executa testes de API e concorrência no mesmo backend, cada caso com banco próprio. Sem a variável, SQLite continua padrão e o teste multiprocesso MariaDB é pulado explicitamente.

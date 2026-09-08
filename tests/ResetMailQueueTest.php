@@ -7,13 +7,14 @@ use PHPUnit\Framework\TestCase;
 
 final class ResetMailQueueTest extends TestCase
 {
+    use DatabaseBackend;
     private \PDO $db;
     private ResetMailQueue $queue;
     private string $key;
     private string $token;
     protected function setUp(): void
     {
-        $this->db = new \PDO('sqlite::memory:'); $this->key = bin2hex(random_bytes(32)); $this->token = bin2hex(random_bytes(32));
+        $this->db = $this->backend(); $this->key = bin2hex(random_bytes(32)); $this->token = bin2hex(random_bytes(32));
         $this->queue = new ResetMailQueue($this->db, $this->key, 'https://example.test/admin');
         $this->queue->install();
     }

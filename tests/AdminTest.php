@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 final class AdminTest extends TestCase
 {
+    use DatabaseBackend;
     private AdminStore $store;
     private \PDO $db;
     private Application $app;
@@ -29,7 +30,7 @@ final class AdminTest extends TestCase
         $this->session = new AdminSession(false);
         $this->session->start();
         $_SESSION = [];
-        $this->db = new \PDO('sqlite::memory:');
+        $this->db = $this->backend();
         $this->store = new AdminStore($this->db);
         $this->store->install('Admin', 'admin@example.test', self::PASSWORD);
         $this->app = new Application(__DIR__);

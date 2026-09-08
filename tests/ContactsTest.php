@@ -16,6 +16,7 @@ require_once dirname(__DIR__) . '/examples/contacts/modules/contacts/src/Contact
 
 final class ContactsTest extends TestCase
 {
+    use DatabaseBackend;
     private string $root;
     private AdminStore $admin;
     private Application $app;
@@ -30,8 +31,9 @@ final class ContactsTest extends TestCase
         session_id(''); $session = new AdminSession(false); $session->start(); $_SESSION = [];
         $this->root = sys_get_temp_dir() . '/fx-contacts-' . bin2hex(random_bytes(8));
         mkdir($this->root . '/storage', 0770, true);
-        $store = new ContactStore(new \PDO('sqlite:' . $this->root . '/storage/contacts.sqlite')); $store->install();
-        $this->admin = new AdminStore(new \PDO('sqlite::memory:'), self::PERMISSIONS);
+        $store = new ContactStore($this->backend('sqlite:' . $this->root . '/storage/contacts.sqlite')); $store->install();
+        if ($this->backendConfig !== null) { mkdir($this->root.'/config'); file_put_contents($this->root.'/config/contacts.php','<?php return '.var_export(['database'=>$this->backendConfig],true).';'); }
+        $this->admin = new AdminStore($this->backend(), self::PERMISSIONS);
         $this->admin->install('Admin', 'admin@example.test', 'initial secret 123');
         $this->app = new Application($this->root);
         $this->panel = new Panel($this->admin, $session, new ModuleManager($this->root));
@@ -44,7 +46,8 @@ final class ContactsTest extends TestCase
     {
         $_SESSION = []; if (session_status() === PHP_SESSION_ACTIVE) session_destroy();
         Application::setInstance(null); unset($this->app, $this->panel); gc_collect_cycles();
-        unlink($this->root . '/storage/contacts.sqlite'); rmdir($this->root . '/storage'); rmdir($this->root);
+        if (is_file($this->root.'/config/contacts.php')) { unlink($this->root.'/config/contacts.php');rmdir($this->root.'/config'); }
+        if (is_file($this->root . '/storage/contacts.sqlite')) unlink($this->root . '/storage/contacts.sqlite'); rmdir($this->root . '/storage'); rmdir($this->root);
     }
     private function call(string $method, string $path, ?array $data = null, bool $csrf = true): array
     {

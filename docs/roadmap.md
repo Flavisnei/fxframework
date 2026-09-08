@@ -331,3 +331,16 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Carga local não certifica produção, sessões Admin, alta disponibilidade ou múltiplos nós. Itens 1 e 2 explicitamente adiados.
 
 - Oito clientes: 200 leituras + 200 gravações, zero erros, contador e linhas iguais a 200. Evidência em docs/benchmarks/2026-09-08-mariadb-http.json. PHPUnit executou simultaneamente nessa rodada: tempos não devem ser comparados como benchmark isolado. Suíte 114/613 aprovada.
+
+
+## Etapa 8K — portabilidade Admin/Contatos para MariaDB — 2026-09-08
+
+- Admin e fila aceitam PDO mysql, schema InnoDB e bloqueios de linha nas transações críticas; preservado caminho SQLite. Contatos recebe configuração própria e schema MariaDB com versão otimista.
+- Contrato novo aditivo: database array em AdminConfig; API connection; ContactStore::configured. Sem migração automática de dados SQLite existentes.
+- 26 testes Admin/Contatos/fila aprovados no MariaDB local, mais 34 verificações HTTP/CLI em consumidor isolado. Testes usam bases novas e descartáveis. Nenhum SMTP externo.
+- Itens de navegador e SMTP seguem adiados. MySQL/MariaDB em outras versões e alta escala não são certificados por esse ensaio.
+
+- Regressão multiprocesso MariaDB aprovada: duas despromoções concorrentes preservam um administrador; somente um consumo do token é aceito; limite 1 permite exatamente uma tentativa. 27 testes/163 assertions no subconjunto MariaDB.
+- Suíte padrão SQLite: 117 testes, 619 assertions e um teste MariaDB explicitamente pulado; integração HTTP SQLite 34/34 aprovada. CI recebe jobs MariaDB 10.4/10.11.
+
+- Suíte completa com FX_TEST_ADMIN_MYSQL=1: 117 testes / 643 assertions, sem skips ou falhas. Vendor próprio de Contatos atualizado; ajuda com âncoras preservadas e busca conferida.

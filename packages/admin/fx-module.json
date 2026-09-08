@@ -1,10 +1,17 @@
 {
     "schema": 1,
     "id": "fx-admin",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "provider": "Fx\\Framework\\Admin\\AdminProvider",
     "requires": [],
     "help": "docs/index.html",
     "assets": "resources",
-    "permissions": ["dashboard.view", "users.view", "users.manage", "roles.manage", "modules.view", "modules.manage"]
+    "permissions": [
+        "dashboard.view",
+        "users.view",
+        "users.manage",
+        "roles.manage",
+        "modules.view",
+        "modules.manage"
+    ]
 }

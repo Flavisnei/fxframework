@@ -148,3 +148,8 @@ semântica de entrega pelo menos uma vez, sem garantia de entrega na caixa posta
 ## Catálogos externos de instalação (etapa 8H)
 
 Console aceita catálogo JSON local ou HTTPS com SHA-256 obrigatório. A seleção é explícita por comando e não altera o catálogo padrão. Catálogo fornece apenas nomes, descrições e presets; repositórios e resolução de versões permanecem responsabilidade do Composer no consumidor. Catálogo remoto não equivale à publicação dos pacotes: fontes FX continuam no checkout por path. Nenhuma nova dependência do Core.
+
+
+## Admin/Contatos MariaDB (etapa 8K)
+
+Admin 0.1.3 aceita configuração database mysql além de caminho SQLite. Schema InnoDB e transações com linha mutex preservam operações críticas; fila tem mutex próprio. Contatos 0.1.1 aceita config/contacts.php e mantém versões otimistas. Nenhuma dependência do Core adicionada. DDL fora da transação no MariaDB; inicialização HTTP não migra. A troca de conexão não transfere dados de SQLite. Homologação local usa MariaDB 10.4.27; CI testa também 10.11.

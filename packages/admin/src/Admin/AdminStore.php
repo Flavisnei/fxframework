@@ -14,12 +14,14 @@ final class AdminStore implements UserProvider
     public function __construct(private readonly PDO $db, private readonly array $extraPermissions = [])
     {
         foreach ($extraPermissions as $permission) { if (!is_string($permission) || !preg_match('/^[a-z][a-z0-9_-]*\.[a-z][a-z0-9_.-]*$/D', $permission)) { throw new \InvalidArgumentException('Permissao adicional invalida.'); } }
-        if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') { throw new \InvalidArgumentException('AdminStore exige SQLite nesta versao.'); }
+        if (!in_array($db->getAttribute(PDO::ATTR_DRIVER_NAME), ['sqlite','mysql'], true)) { throw new \InvalidArgumentException('AdminStore exige SQLite ou MySQL/MariaDB.'); }
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $db->exec('PRAGMA foreign_keys = ON');
-        $db->exec('PRAGMA busy_timeout = 5000');
+        if (!$this->mysql()) { $db->exec('PRAGMA foreign_keys = ON'); $db->exec('PRAGMA busy_timeout = 5000'); }
+        else { $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false); }
     }
+
+    private function mysql(): bool { return $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'; }
 
     public function permissionCatalog(): array { return array_values(array_unique([...self::PERMISSIONS, ...$this->extraPermissions])); }
 
@@ -32,7 +34,11 @@ final class AdminStore implements UserProvider
 
     public function transaction(callable $action): mixed
     {
-        $this->db->exec('BEGIN IMMEDIATE');
+        if ($this->mysql()) {
+            $this->db->beginTransaction();
+            try { $this->query('SELECT id FROM fx_admin_mutex WHERE id=1 FOR UPDATE')->fetchColumn(); }
+            catch (\Throwable $error) { $this->db->rollBack(); throw $error; }
+        } else { $this->db->exec('BEGIN IMMEDIATE'); }
         try { $result = $action(); $this->db->exec('COMMIT'); return $result; }
         catch (\Throwable $error) { $this->db->exec('ROLLBACK'); throw $error; }
     }
@@ -40,13 +46,26 @@ final class AdminStore implements UserProvider
     /** Somente instalacao explicita por CLI; nunca chamada pelo bootstrap HTTP. */
     public function install(string $name, string $email, string $password): void
     {
+        if ($this->mysql()) {
+            // DDL no MariaDB faz commit implícito: schema antes da transação de dados.
+            foreach ([
+                'CREATE TABLE IF NOT EXISTS fx_admin_mutex (id INT PRIMARY KEY) ENGINE=InnoDB',
+                'CREATE TABLE IF NOT EXISTS fx_admin_roles (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(80) NOT NULL UNIQUE, permissions TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin',
+                'CREATE TABLE IF NOT EXISTS fx_admin_users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(120) NOT NULL, email VARCHAR(254) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, role_id INT NOT NULL, active INT NOT NULL DEFAULT 1, auth_version INT NOT NULL DEFAULT 1, FOREIGN KEY(role_id) REFERENCES fx_admin_roles(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin',
+                'CREATE TABLE IF NOT EXISTS fx_admin_limits (`key` CHAR(64) PRIMARY KEY, hits INT NOT NULL, expires BIGINT NOT NULL) ENGINE=InnoDB',
+                'CREATE TABLE IF NOT EXISTS fx_admin_resets (token CHAR(64) PRIMARY KEY, user_id INT NOT NULL, expires BIGINT NOT NULL, FOREIGN KEY(user_id) REFERENCES fx_admin_users(id)) ENGINE=InnoDB'
+            ] as $sql) { $this->db->exec($sql); }
+            $this->db->exec('INSERT IGNORE INTO fx_admin_mutex(id) VALUES(1)');
+        }
         $this->transaction(function () use ($name, $email, $password): void {
+            if (!$this->mysql()) {
             $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_roles (id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, permissions TEXT NOT NULL)');
             $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_users (id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, role_id INTEGER NOT NULL REFERENCES fx_admin_roles(id), active INTEGER NOT NULL DEFAULT 1, auth_version INTEGER NOT NULL DEFAULT 1)');
             $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_limits (key TEXT PRIMARY KEY, hits INTEGER NOT NULL, expires INTEGER NOT NULL)');
             $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_resets (token TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES fx_admin_users(id), expires INTEGER NOT NULL)');
+            }
             if ((int) $this->query('SELECT COUNT(*) FROM fx_admin_users')->fetchColumn() > 0) { throw new \RuntimeException('Admin ja inicializado; nenhuma conta foi alterada.'); }
-            $this->query('INSERT OR IGNORE INTO fx_admin_roles (id,name,permissions) VALUES (1,?,?)', ['Administrador', json_encode($this->permissionCatalog())]);
+            $this->query(($this->mysql() ? 'INSERT IGNORE' : 'INSERT OR IGNORE') . ' INTO fx_admin_roles (id,name,permissions) VALUES (1,?,?)', ['Administrador', json_encode($this->permissionCatalog())]);
             $this->writeUser(null, ['name' => $name, 'email' => $email, 'password' => $password, 'role_id' => 1, 'active' => true]);
         });
     }
@@ -151,8 +170,8 @@ final class AdminStore implements UserProvider
         $hits = $this->transaction(function () use ($key, $now, $seconds): int {
             $this->query('DELETE FROM fx_admin_limits WHERE expires<=?', [$now]);
             $key = hash('sha256', $key);
-            $this->query('INSERT INTO fx_admin_limits(key,hits,expires) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1', [$key, $now + $seconds]);
-            return (int) $this->query('SELECT hits FROM fx_admin_limits WHERE key=?', [$key])->fetchColumn();
+            $this->query($this->mysql() ? 'INSERT INTO fx_admin_limits(`key`,hits,expires) VALUES (?,1,?) ON DUPLICATE KEY UPDATE hits=hits+1' : 'INSERT INTO fx_admin_limits(key,hits,expires) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1', [$key, $now + $seconds]);
+            return (int) $this->query('SELECT hits FROM fx_admin_limits WHERE `key`=?', [$key])->fetchColumn();
         });
         if ($hits > $limit) { throw new HttpException(429, 'Muitas tentativas. Aguarde e tente novamente.', null, ['Retry-After' => (string) $seconds]); }
     }

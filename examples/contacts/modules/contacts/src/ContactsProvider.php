@@ -12,9 +12,7 @@ final class ContactsProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $file = $this->app->basePath('storage/contacts.sqlite');
-        if (!is_file($file)) { throw new \RuntimeException('Execute contacts:init antes de ativar o modulo.'); }
-        $store = new ContactStore(new \PDO('sqlite:' . $file));
+        $store = ContactStore::configured($this->app->basePath());
         $router = $this->app->make(Router::class); $panel = $this->app->make(Panel::class);
         $panel->addArea('contacts', 'Contatos', '/contacts', 'contacts.view');
         $panel->api($router, 'GET', 'contacts', 'contacts.view', fn (Request $request) => $store->listing($request->query->all()));

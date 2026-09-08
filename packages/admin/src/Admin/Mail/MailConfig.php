@@ -6,8 +6,8 @@ final class MailConfig
 {
     public static function queue(array $admin): ResetMailQueue
     {
-        if (!is_array($admin['mail'] ?? null) || !is_file($admin['database'])) { throw new \RuntimeException('Configure mail em config/admin.php e inicialize o banco Admin.'); }
-        return new ResetMailQueue(new \PDO('sqlite:' . $admin['database']), $admin['mail']['key'] ?? '', $admin['mail']['admin_url'] ?? '');
+        if (!is_array($admin['mail'] ?? null)) { throw new \RuntimeException('Configure mail em config/admin.php e inicialize o banco Admin.'); }
+        return new ResetMailQueue(\Fx\Framework\Admin\AdminConfig::connection($admin), $admin['mail']['key'] ?? '', $admin['mail']['admin_url'] ?? '');
     }
     public static function sender(array $admin): SmtpSender
     {

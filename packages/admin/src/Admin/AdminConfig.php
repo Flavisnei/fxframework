@@ -11,15 +11,34 @@ final class AdminConfig
         $file = $root . '/config/admin.php';
         if (!is_file($file)) { throw new \RuntimeException('Crie config/admin.php conforme a ajuda do Admin.'); }
         $config = require $file;
-        if (!is_array($config) || !is_string($config['database'] ?? null) || !preg_match('~^(?:[A-Za-z]:[/\\\\]|/)~', $config['database'])) { throw new \RuntimeException('Configure database com caminho absoluto de arquivo SQLite fora de public.'); }
+        if (!is_array($config)) { throw new \RuntimeException('Configuracao Admin invalida.'); }
+        self::validateDatabase($config['database'] ?? null);
         return $config;
+    }
+    private static function validateDatabase(mixed $database): void
+    {
+        if (is_string($database) && preg_match('~^(?:[A-Za-z]:[/\\\\]|/)~', $database)) { return; }
+        if (is_array($database) && ($database['driver'] ?? null) === 'mysql'
+            && is_string($database['host'] ?? null) && preg_match('/\A[a-zA-Z0-9.:-]+\z/', $database['host'])
+            && is_string($database['name'] ?? null) && preg_match('/\A[a-zA-Z0-9_]+\z/', $database['name'])
+            && is_string($database['username'] ?? null) && is_string($database['password'] ?? null)
+            && is_int($database['port'] ?? 3306) && ($database['port'] ?? 3306) >= 1 && ($database['port'] ?? 3306) <= 65535) { return; }
+        throw new \RuntimeException('Use database como caminho SQLite absoluto ou configuracao mysql com host, name, username, password e port inteiro.');
+    }
+    public static function connection(array $config, bool $create = false): \PDO
+    {
+        $database = $config['database'] ?? null; self::validateDatabase($database);
+        if (is_array($database)) {
+            try { return new \PDO('mysql:host='.$database['host'].';port='.($database['port'] ?? 3306).';dbname='.$database['name'].';charset=utf8mb4', $database['username'], $database['password'], [\PDO::ATTR_ERRMODE=>\PDO::ERRMODE_EXCEPTION, \PDO::ATTR_EMULATE_PREPARES=>false, \PDO::ATTR_STRINGIFY_FETCHES=>false]); }
+            catch (\PDOException) { throw new \RuntimeException('Falha ao conectar ao banco Admin MySQL/MariaDB. Confira extensao PDO, banco existente e credenciais.'); }
+        }
+        if (!$create && !is_file($database)) { throw new \RuntimeException('Banco Admin ausente. Execute admin:init pelo CLI.'); }
+        if ($create && !is_dir(dirname($database)) && !mkdir(dirname($database), 0770, true) && !is_dir(dirname($database))) { throw new \RuntimeException('Nao foi possivel criar storage do Admin.'); }
+        return new \PDO('sqlite:' . $database);
     }
     public static function store(array $config, bool $create = false): AdminStore
     {
-        $file = $config['database'];
-        if (!$create && !is_file($file)) { throw new \RuntimeException('Banco Admin ausente. Execute admin:init pelo CLI.'); }
-        if ($create && !is_dir(dirname($file)) && !mkdir(dirname($file), 0770, true) && !is_dir(dirname($file))) { throw new \RuntimeException('Nao foi possivel criar storage do Admin.'); }
-        return new AdminStore(new \PDO('sqlite:' . $file), $config['permissions'] ?? []);
+        return new AdminStore(self::connection($config, $create), $config['permissions'] ?? []);
     }
     public static function panel(string $root): Panel
     {

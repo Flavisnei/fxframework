@@ -90,3 +90,42 @@ jobs:
         run: php tools/verify.php
       - name: Catalogo com Composer real
         run: php tests/integration/catalog.php
+
+  mariadb:
+    name: Admin e Contatos / MariaDB ${{ matrix.database }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['10.4', '10.11']
+    services:
+      database:
+        image: mariadb:${{ matrix.database }}
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: '1'
+          MYSQL_ALLOW_EMPTY_PASSWORD: '1'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      FX_TEST_ADMIN_MYSQL: '1'
+      FX_TEST_MYSQL_PORT: '3306'
+      FX_TEST_MYSQL_USER: root
+      FX_TEST_MYSQL_PASSWORD: ''
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_mysql, pdo_sqlite, dom, xml, xmlwriter, openssl, zip
+          coverage: none
+          tools: composer:v2
+      - run: composer install --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
+      - run: composer install --working-dir=examples/contacts --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
+      - run: php vendor/bin/phpunit --do-not-cache-result --filter 'AdminTest|ContactsTest|ResetMailQueueTest|MariaDbConcurrencyTest'
+      - run: php tests/integration/contacts.php

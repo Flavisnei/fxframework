@@ -1,17 +1,17 @@
 {
-  "schema": 1,
-  "id": "contacts",
-  "version": "0.1.0",
-  "provider": "Example\\Contacts\\ContactsProvider",
-  "requires": [
-    "fx-admin"
-  ],
-  "help": "docs/index.html",
-  "assets": "resources",
-  "permissions": [
-    "contacts.view",
-    "contacts.create",
-    "contacts.update",
-    "contacts.delete"
-  ]
+    "schema": 1,
+    "id": "contacts",
+    "version": "0.1.1",
+    "provider": "Example\\Contacts\\ContactsProvider",
+    "requires": [
+        "fx-admin"
+    ],
+    "help": "docs/index.html",
+    "assets": "resources",
+    "permissions": [
+        "contacts.view",
+        "contacts.create",
+        "contacts.update",
+        "contacts.delete"
+    ]
 }

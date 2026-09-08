@@ -11,12 +11,27 @@ final class ContactStore
     {
         $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-        $db->exec('PRAGMA busy_timeout = 5000');
+        $driver=$db->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        if (!in_array($driver,['sqlite','mysql'],true)) { throw new \InvalidArgumentException('Contatos exige SQLite ou MySQL/MariaDB.'); }
+        if ($driver === 'sqlite') { $db->exec('PRAGMA busy_timeout = 5000'); }
+        else { $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES,false); $db->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES,false); }
+    }
+
+    public static function configured(string $root, bool $create = false): self
+    {
+        $file=$root.'/config/contacts.php';
+        $config=is_file($file) ? require $file : ['database'=>$root.'/storage/contacts.sqlite'];
+        if (!is_array($config)) { throw new \RuntimeException('Configuracao de Contatos invalida.'); }
+        return new self(\Fx\Framework\Admin\AdminConfig::connection($config,$create));
     }
 
     /** Instalacao explicita; nenhuma criacao de tabelas durante requisicoes. */
     public function install(): void
     {
+        if ($this->db->getAttribute(\PDO::ATTR_DRIVER_NAME)==='mysql') {
+            $this->db->exec('CREATE TABLE IF NOT EXISTS contacts (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(120) NOT NULL, email VARCHAR(254) NOT NULL UNIQUE, phone VARCHAR(40) NOT NULL, notes TEXT NOT NULL, version INT NOT NULL DEFAULT 1) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin');
+            return;
+        }
         $this->db->exec('CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, phone TEXT NOT NULL, notes TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 1)');
     }
 

@@ -1,5 +1,12 @@
 # Histórico
 
+## Etapa 8K — Admin e Contatos em MariaDB — 2026-09-08
+
+- Admin 0.1.3 aceita database mysql via AdminConfig::connection, com SQLite anterior preservado. Schema InnoDB, bloqueios transacionais para operações críticas e fila cifrada compatível.
+- Contatos 0.1.1 aceita config/contacts.php e conexão MariaDB, preservando configuração SQLite padrão e controle de versão.
+- admin:init atualizado; DDL separado da primeira conta para respeitar commits implícitos do MariaDB. Não há transferência automática de dados entre bancos.
+- Ajuda central e distribuída atualizada com configuração, compatibilidade, migração e limites de bloqueio.
+
 ## Etapa 8J — carga e compatibilidade MariaDB local — 2026-09-08
 
 - Teste opt-in via Apache local com token efêmero, leituras e POST transacionais em banco MariaDB temporário. Sem alterações no runtime dos pacotes.

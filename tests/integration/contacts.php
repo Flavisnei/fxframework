@@ -13,6 +13,21 @@ foreach (['modules/contacts/docs', 'modules/contacts/resources', 'app/Console'] 
 foreach (['modules/contacts/fx-module.json', 'modules/contacts/docs/index.html', 'app/Console/commands.php'] as $file) { copy($example . '/' . $file, $temporary . '/' . $file); }
 file_put_contents($temporary . '/config/modules.json', '{"schema":1,"manifests":["modules/admin/fx-module.json","modules/contacts/fx-module.json"]}');
 file_put_contents($temporary . '/config/admin.php', '<?php return ["database" => dirname(__DIR__) . "/storage/admin.sqlite", "secure_cookie" => false, "permissions" => ["contacts.view","contacts.create","contacts.update","contacts.delete"]];');
+// MariaDB opt-in: conta do ambiente, banco aleatório e descarte ao finalizar.
+if (getenv('FX_TEST_ADMIN_MYSQL') === '1') {
+    $mysqlPort=(int)(getenv('FX_TEST_MYSQL_PORT') ?: 3306);
+    $mysqlUser=getenv('FX_TEST_MYSQL_USER') ?: 'root';$mysqlPass=getenv('FX_TEST_MYSQL_PASSWORD') ?: '';
+    $mysqlServer=new PDO('mysql:host=127.0.0.1;port='.$mysqlPort,$mysqlUser,$mysqlPass,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+    $mysqlName='fx_http_test_'.bin2hex(random_bytes(8));
+    $mysqlServer->exec('CREATE DATABASE `'.$mysqlName.'` CHARACTER SET utf8mb4 COLLATE utf8mb4_bin');
+    register_shutdown_function(static function()use($mysqlServer,$mysqlName,$temporary):void {
+        $mysqlServer->exec('DROP DATABASE `'.$mysqlName.'`');
+        foreach (['admin.php','contacts.php'] as $file) { if(is_file($temporary.'/config/'.$file)) unlink($temporary.'/config/'.$file); }
+    });
+    $mysqlConfig=['driver'=>'mysql','host'=>'127.0.0.1','port'=>$mysqlPort,'name'=>$mysqlName,'username'=>$mysqlUser,'password'=>$mysqlPass];
+    file_put_contents($temporary.'/config/admin.php','<?php return '.var_export(['database'=>$mysqlConfig,'secure_cookie'=>false,'permissions'=>['contacts.view','contacts.create','contacts.update','contacts.delete']],true).';');
+    file_put_contents($temporary.'/config/contacts.php','<?php return '.var_export(['database'=>$mysqlConfig],true).';');
+}
 $autoload = var_export($example . '/vendor/autoload.php', true);
 file_put_contents($temporary . '/public/index.php', '<?php require ' . $autoload . '; $root=dirname(__DIR__); $app=new Fx\Framework\Foundation\Application($root); $app->instance(Fx\Framework\Admin\Panel::class, Fx\Framework\Admin\AdminConfig::panel($root)); (new Fx\Framework\Modules\ModuleManager($root))->register($app); $app->boot(); $app->make(Fx\Framework\Http\Kernel::class)->handle()->send();');
 $password = bin2hex(random_bytes(16));
