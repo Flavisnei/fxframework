@@ -12,7 +12,9 @@ function packageGit(array $args): string {
     return $out;
 }
 try {
-    if ($argc!==3 || !preg_match('~\Ahttps://github.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?\z~', $argv[2], $url)) { throw new InvalidArgumentException('Uso: php tools/package-repository.php DIRETORIO_NOVO https://github.com/conta/repositorio'); }
+    if (!in_array($argc,[3,4],true) || !preg_match('~\Ahttps://github.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?\z~', $argv[2], $url)) { throw new InvalidArgumentException('Uso: php tools/package-repository.php DIRETORIO_NOVO https://github.com/conta/repositorio [1.0.0-rc.1]'); }
+    $version=$argv[3] ?? 'dev-main';
+    if ($version !== 'dev-main' && !preg_match('/\A(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-rc\.[1-9][0-9]*)?\z/',$version)) { throw new InvalidArgumentException('Versao deve ser SemVer exata, opcionalmente -rc.N.'); }
     $parent=realpath(dirname($argv[1])); $name=basename($argv[1]);
     if ($parent===false || in_array($name,['','.','..'],true) || file_exists($argv[1])) { throw new InvalidArgumentException('Destino deve ser novo, com pai existente.'); }
     $destination=$parent.DIRECTORY_SEPARATOR.$name;
@@ -25,6 +27,18 @@ try {
         $parts=explode(' ',$row); if (count($parts)===2) { $parents[$parts[0]]=$parts[1]; }
     }
     $repository=['packages'=>[]]; $plan=['schema'=>1,'source_commit'=>$source,'repository'=>$base,'refs'=>[]];
+    // Mantém versões anteriores do índice comprometido; uma versão publicada nunca é regravada.
+    $index='docs/composer/packages.json';
+    if (trim(packageGit(['ls-tree','--name-only',$source,'--',$index])) !== '') {
+        $repository=json_decode(packageGit(['show',$source.':'.$index]),true,64,JSON_THROW_ON_ERROR);
+        if (!isset($repository['packages']) || !is_array($repository['packages'])) { throw new RuntimeException('Indice anterior invalido.'); }
+    }
+    if ($version!=='dev-main') {
+        foreach ($repository['packages'] as $versions) {
+            if (isset($versions[$version])) { throw new RuntimeException('Versao ja existe; escolha uma nova versao.'); }
+        }
+    }
+    $plan['version']=$version;
     foreach ($rows as $component) {
         if (!preg_match('/\A[a-z][a-z0-9-]*\z/',$component)) { throw new RuntimeException('Diretorio de pacote invalido.'); }
         $tree=trim(packageGit(['rev-parse',$source.':packages/'.$component]));
@@ -40,10 +54,16 @@ try {
         array_push($args,'-m','Snapshot '.$manifest['name'].' de '.$source);
         $commit=trim(packageGit($args));
         unset($manifest['require-dev'],$manifest['autoload-dev'],$manifest['repositories'],$manifest['scripts']);
-        $manifest['version']='dev-main';
+        $manifest['version']=$version;
+        if ($version!=='dev-main') {
+            foreach (($manifest['require'] ?? []) as $dependency=>$constraint) {
+                if (str_starts_with($dependency,'fxfavalessa/fx-')) { $manifest['require'][$dependency]=$version; }
+            }
+        }
         $manifest['source']=['type'=>'git','url'=>$base.'.git','reference'=>$commit];
         $manifest['dist']=['type'=>'zip','url'=>$base.'/archive/'.$commit.'.zip','reference'=>$commit];
-        $repository['packages'][$manifest['name']]['dev-main']=$manifest;
+        $repository['packages'][$manifest['name']][$version]=$manifest;
+        if ($version!=='dev-main') { $plan['tags'][]=['commit'=>$commit,'ref'=>'refs/tags/packages/'.$component.'/v'.$version]; }
         $plan['refs'][]=['package'=>$manifest['name'],'commit'=>$commit,'ref'=>'refs/heads/packages/'.$component];
     }
     if (!$plan['refs']) { throw new RuntimeException('Nenhum pacote encontrado.'); }

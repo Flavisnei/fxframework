@@ -348,3 +348,11 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Distribuição atualizada: snapshots de 5bbb8c2 nas branches packages/*, sem force. Consumidor separado baixou os ZIPs; instalação, validação de credenciais e fila MariaDB aprovadas com autoload exclusivo. Nenhum email externo enviado.
 
 - CI 34265550944 da revisão 5bbb8c2: dez tarefas aprovadas, incluindo MariaDB 10.4/10.11, matriz PHP/Windows/Linux e dependências modernas. Evidência em docs/compatibility/github-actions-34265550944.json. O suporte foi validado no escopo dos casos documentados; transferência de dados SQLite e ensaio visual permanecem separados.
+
+
+## Etapa 8L — carga autenticada, WordPress e candidato de release — 2026-09-08
+
+- Apache local/MariaDB 10.4.27, quatro e oito clientes com sessões distintas: 160 e 320 operações GET/POST/PUT/DELETE, sem erros e com 1.000 registros iniciais preservados. Evidência em docs/benchmarks/2026-09-08-admin-mariadb.json. Não certifica produção ou múltiplos nós.
+- Gerador de versões fixas com regressão sintética de preservação/recusa de regravação; 20 assertions. Sem mudança de contratos do runtime ou schema.
+- Revisão visual e SMTP permanecem reservados ao teste manual do usuário.
+- Suíte completa com MariaDB: 118 testes / 663 assertions aprovados. Ajuda: 31 tópicos, âncoras preservadas e busca funcional conferida (sem revisão visual).

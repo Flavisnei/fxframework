@@ -1,0 +1,83 @@
+{
+  "runs": [
+    {
+      "schema": 1,
+      "php_cli": "8.1.12",
+      "mariadb": "10.4.27-MariaDB",
+      "server": "Apache local",
+      "clients": 4,
+      "cycles_per_client": 10,
+      "metrics": {
+        "GET": {
+          "successes": 40,
+          "p50_ms": 77.92110000082175,
+          "p95_ms": 118.34950000047684
+        },
+        "POST": {
+          "successes": 40,
+          "p50_ms": 85.27820000017527,
+          "p95_ms": 149.46490000147605
+        },
+        "PUT": {
+          "successes": 40,
+          "p50_ms": 92.80299999954877,
+          "p95_ms": 199.42029999947408
+        },
+        "DELETE": {
+          "successes": 40,
+          "p50_ms": 77.31299999795738,
+          "p95_ms": 172.0024000023841
+        }
+      },
+      "errors": [],
+      "elapsed_seconds_including_logout": 4.393510999998398,
+      "requests_per_second": 36.41734366889222,
+      "final": {
+        "rows": 1000,
+        "changed_seed": 0
+      },
+      "integrity": true,
+      "scope": "Sessões distintas, CSRF, CRUD JSON, 1000 contatos; loopback em um nó; não certifica capacidade de produção."
+    },
+    {
+      "schema": 1,
+      "php_cli": "8.1.12",
+      "mariadb": "10.4.27-MariaDB",
+      "server": "Apache local",
+      "clients": 8,
+      "cycles_per_client": 10,
+      "metrics": {
+        "GET": {
+          "successes": 80,
+          "p50_ms": 212.3083000005863,
+          "p95_ms": 528.2737999987148
+        },
+        "POST": {
+          "successes": 80,
+          "p50_ms": 202.3414999966917,
+          "p95_ms": 627.7731000009226
+        },
+        "PUT": {
+          "successes": 80,
+          "p50_ms": 189.2337999997835,
+          "p95_ms": 537.609999999404
+        },
+        "DELETE": {
+          "successes": 80,
+          "p50_ms": 225.75869999855058,
+          "p95_ms": 656.4711999999417
+        }
+      },
+      "errors": [],
+      "elapsed_seconds_including_logout": 10.95094760000211,
+      "requests_per_second": 29.22121552293231,
+      "final": {
+        "rows": 1000,
+        "changed_seed": 0
+      },
+      "integrity": true,
+      "scope": "Sessões distintas, CSRF, CRUD JSON, 1000 contatos; loopback em um nó; não certifica capacidade de produção."
+    }
+  ],
+  "note": "Execuções sequenciais, sem outra suíte de testes executada pelo agente durante a medição."
+}

@@ -7,11 +7,23 @@ $root = getenv('FX_WP_TEST_ROOT');
 if (!$root || !is_file($root . '/.fx-test-environment')) {
     throw new RuntimeException('Defina FX_WP_TEST_ROOT para uma instalacao descartavel com .fx-test-environment.');
 }
+$hostAutoload = getenv('FX_WP_HOST_AUTOLOAD');
+if ($hostAutoload) {
+    require $hostAutoload;
+    // Força as classes do hospedeiro antes de registrar o autoloader FX.
+    class_exists(Illuminate\Container\Container::class);
+    $hostVersion = Composer\InstalledVersions::getPrettyVersion('illuminate/container');
+}
 require dirname(__DIR__, 2) . '/examples/wordpress/vendor/autoload.php';
 $host = new Illuminate\Container\Container();
 Illuminate\Container\Container::setInstance($host);
 $session = session_status();
 define('WP_DISABLE_FATAL_ERROR_HANDLER', true);
+if (!isset($_SERVER['HTTP_HOST'])) {
+    $_SERVER['HTTP_HOST']=getenv('FX_WP_TEST_HOST') ?: 'fx-matrix.test';
+    $_SERVER['SERVER_NAME']=getenv('FX_WP_TEST_HOST') ?: 'fx-matrix.test';
+    $_SERVER['REQUEST_URI']='/';
+}
 require $root . '/wp-load.php';
 
 $checks = 0;
@@ -49,8 +61,8 @@ $first->updateOption('name', 'primeiro');
 $second->updateOption('name', 'segundo');
 verify($first->option('name') === 'primeiro' && $second->option('name') === 'segundo', 'Opcoes colidiram.');
 
-$admin = get_user_by('login', 'fx_review_admin');
-$subscriber = get_user_by('login', 'fx_review_subscriber');
+$admin = get_user_by('login', 'fxtestadmin') ?: get_user_by('login', 'fx_review_admin');
+$subscriber = get_user_by('login', 'fxtestsubscriber') ?: get_user_by('login', 'fx_review_subscriber');
 verify($admin instanceof WP_User && $subscriber instanceof WP_User, 'Usuarios de teste ausentes.');
 wp_set_current_user($subscriber->ID);
 verify(!$first->can('manage_options'), 'Assinante recebeu permissao administrativa.');
@@ -92,4 +104,28 @@ unset($_REQUEST['_wpnonce']);
 rest_cookie_check_errors(null);
 verify(get_current_user_id() === 0, 'Ausencia de nonce manteve usuario autenticado.');
 verify(session_status() === $session, 'Adapter iniciou sessao durante operacoes.');
+if (is_multisite()) {
+    wp_set_current_user($subscriber->ID);
+    $originalBlog = get_current_blog_id();
+    $sites = get_sites(['site__not_in'=>[$originalBlog], 'number'=>1]);
+    verify(count($sites) === 1, 'Crie um segundo site descartavel.');
+    $first->updateOption('multisite', 'original');
+    switch_to_blog((int)$sites[0]->blog_id);
+    try {
+        verify($first->option('multisite', 'absent') === 'absent', 'Opcao vazou entre sites.');
+        $first->updateOption('multisite', 'second');
+        verify($first->option('multisite') === 'second', 'Opcao do segundo site nao persistiu.');
+        verify(!$first->can('manage_options'), 'Usuario recebeu permissao no segundo site.');
+        add_user_to_blog(get_current_blog_id(), $subscriber->ID, 'administrator');
+        wp_set_current_user(0); wp_set_current_user($subscriber->ID);
+        verify($first->can('manage_options'), 'Permissao nao acompanhou papel no site.');
+        verify($first->database() === $GLOBALS['wpdb'], 'Adapter substituiu wpdb ao trocar site.');
+    } finally { restore_current_blog(); }
+    verify($first->option('multisite') === 'original', 'Retorno ao site original perdeu opcao.');
+    verify(!$first->can('manage_options'), 'Permissao administrativa vazou para site original.');
+    verify(Illuminate\Container\Container::getInstance() === $host, 'Multisite alterou container hospedeiro.');
+}
+
+$containerVersion = $hostVersion ?? Composer\InstalledVersions::getPrettyVersion('illuminate/container');
+echo 'Illuminate container: '.$containerVersion.PHP_EOL;
 echo "WordPress {$GLOBALS['wp_version']}: {$checks} verificacoes reais passaram.\n";

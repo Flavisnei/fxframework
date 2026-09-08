@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-09-08 — Etapa 8L: homologação e versões fixas
+
+- Runner Apache/MariaDB com sessões Admin distintas, CSRF e CRUD JSON de Contatos; bancos descartáveis e evidência de 480 operações sem erros.
+- Runner WordPress descartável com checksums oficiais e email bloqueado; verificações multisite de opções e permissões.
+- Gerador de repositório aceita SemVer/RC, fixa dependências internas, preserva versões e recusa regravação; publicação permanece explícita.
+- Atualização/retorno requerem preservar manifesto, lock e backup do banco; sem alteração de schema nesta etapa.
+
 ## Etapa 8K — Admin e Contatos em MariaDB — 2026-09-08
 
 - Dez tarefas da CI aprovadas, incluindo MariaDB 10.4/10.11; suíte local MariaDB 117/643 e integração HTTP 34/34.
