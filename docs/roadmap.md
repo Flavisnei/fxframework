@@ -305,3 +305,6 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Vendor próprio de examples/console reinstalado e verificador de isolamento aprovado. Catálogo FX com onze componentes e quatro presets distribuído em docs/catalog.json. CI inclui o cenário com Composer real nas duas matrizes.
 - Publicação no Packagist e hospedagem de arquivos dos pacotes independentes continuam pendentes: catálogo remoto lista pacotes, enquanto o Composer usa as fontes configuradas na aplicação. Não anunciar instalação de pacotes FX sem preparar essas fontes.
 - Revisão visual adiada por solicitação do usuário. Carga HTTP, outros bancos e homologação SMTP externa permanecem trabalhos separados. Nenhum email externo enviado nesta etapa.
+
+- Complemento 8H: catálogo publicado lido por HTTPS na revisão fixa 097b04d com SHA-256 conferido; preset minimal instalado em consumidor temporário usando fonte path do Core e dependências resolvidas pelo Composer. Verificador do Core aprovado com somente o nome do consumidor ajustado na cópia temporária.
+- CI 34258207624 aprovada nas oito tarefas, incluindo instalação real por catálogo e as matrizes antiga/moderna. Evidência em docs/compatibility/github-actions-34258207624.json.

@@ -1,0 +1,57 @@
+{
+  "run_id": 34258207624,
+  "commit": "097b04de98f46eef027199194515fcd2d933be4a",
+  "url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Dependencias modernas / PHP 8.3",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257396"
+    },
+    {
+      "name": "PHP 8.3 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257564"
+    },
+    {
+      "name": "Dependencias modernas / PHP 8.5",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257569"
+    },
+    {
+      "name": "PHP 8.3 / windows-latest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257576"
+    },
+    {
+      "name": "PHP 8.2 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257617"
+    },
+    {
+      "name": "PHP 8.5 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257708"
+    },
+    {
+      "name": "PHP 8.1 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257769"
+    },
+    {
+      "name": "PHP 8.4 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34258207624/job/102169257799"
+    }
+  ]
+}

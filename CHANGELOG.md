@@ -2,6 +2,8 @@
 
 ## Etapa 8H — catálogo de instalação extensível — 2026-09-08
 
+- Catálogo HTTPS e instalação do preset mínimo conferidos com revisão fixa; oito tarefas da CI 34258207624 aprovadas.
+
 - module:list, module:install e preset:install aceitam --catalog e --catalog-sha256. Arquivos locais e HTTPS com hash obrigatório; TLS verificado, sem redirecionamentos e com leitura limitada.
 - Formato schema 1 valida aliases, pacotes, descrições e presets. Nenhuma inclusão automática de repositórios, scripts, permissões ou migrations. Sem opções novas, comportamento anterior preservado.
 - API opcional InstallCatalog no Console; ComposerInstaller mantém argumentos anteriores e aceita catálogo como último argumento opcional. Nenhuma dependência nova no Core.
