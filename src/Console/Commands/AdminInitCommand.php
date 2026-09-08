@@ -14,7 +14,7 @@ final class AdminInitCommand extends Command
     public function __construct(private readonly string $root) { parent::__construct('admin:init'); }
     protected function configure(): void
     {
-        $this->setDescription('Cria as tabelas SQLite e o primeiro administrador, sem substituir contas existentes')
+        $this->setDescription('Cria as tabelas SQLite ou MySQL/MariaDB e o primeiro administrador, sem substituir contas existentes')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Email do primeiro administrador')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Nome', 'Administrador')
             ->addOption('password-env', null, InputOption::VALUE_REQUIRED, 'Nome de variavel de ambiente contendo a senha; opcional em terminal interativo');
