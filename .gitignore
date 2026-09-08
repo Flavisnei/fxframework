@@ -14,5 +14,6 @@
 /storage/framework/modules.json.lock
 /examples/modules/storage/
 /examples/admin/storage/
+/examples/admin/config/mail.local.json
 !storage/cache/.gitkeep
 !storage/logs/.gitkeep

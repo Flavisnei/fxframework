@@ -173,3 +173,10 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
   origem HTTPS ainda pendentes; autorização do remetente precisa ser confirmada.
 - Navegador integrado continua indisponível para automação; revisão visual pendente.
 - Sem STARTTLS, testes de TLS remoto ou garantia de entrega exatamente uma vez.
+
+## Configuração do SMTP informado — 2026-09-08
+
+- Conexão TLS implícita e autenticação verificadas na porta 465, sem enviar mensagens.
+- Configuração local privada excluída do Git; chave gerada aleatoriamente.
+- URL HTTPS do painel e validação de aceitação do remetente ainda pendentes.
+- A autenticação não comprova autorização do remetente nem entrega na caixa postal.

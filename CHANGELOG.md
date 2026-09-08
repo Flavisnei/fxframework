@@ -1,5 +1,12 @@
 # Histórico
 
+## Configuração SMTP local — 2026-09-08
+
+- Exemplo Admin aceita config/mail.local.json ignorado pelo Git; ambiente não vazio
+  tem prioridade. Envio continua condicionado a FX_MAIL_ENABLED=1.
+- Credenciais e chave de cifragem permanecem exclusivamente na configuração privada.
+
+
 ## Em desenvolvimento — complemento SMTP — 2026-09-08
 
 - Admin 0.1.1 acrescenta fila SQLite cifrada com AES-256-GCM, reserva, expiração
