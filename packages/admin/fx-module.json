@@ -1,7 +1,7 @@
 {
     "schema": 1,
     "id": "fx-admin",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "provider": "Fx\\Framework\\Admin\\AdminProvider",
     "requires": [],
     "help": "docs/index.html",

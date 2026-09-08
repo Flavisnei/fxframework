@@ -72,3 +72,16 @@ e SameSite, CSRF, login com renovação de sessão, listagem, assets, ajuda e lo
 Servidor termina em finally; arquivos ficam no temporário informado. Nenhum usuário
 existente é alterado. Exige proc_open, PDO/SQLite e allow_url_fopen para o cliente HTTP.
 O teste não controla navegador e não envia email.
+
+## SMTP com capturador local
+
+Instale examples/smtp (Composer, sem scripts/plugins) e execute na raiz:
+
+~~~powershell
+php tests/integration/smtp.php
+~~~
+
+O teste usa autoload isolado, fila SQLite temporária e processo PHP que aceita
+uma conexão em loopback, sem relay. Confere cabeçalhos, conteúdo MIME, link,
+remoção após envio e recusa de transporte inseguro. Encerra o processo em finally.
+Não testa credenciais, certificado TLS remoto nem entrega externa.

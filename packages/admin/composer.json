@@ -9,5 +9,6 @@
         "fxfavalessa/fx-modules": "^1.0 || dev-main",
         "fxfavalessa/fx-windows": "^1.0 || dev-main"
     },
-    "autoload": {"psr-4": {"Fx\\Framework\\": "src/"}}
+    "autoload": {"psr-4": {"Fx\\Framework\\": "src/"}},
+    "suggest": {"symfony/mailer": "^6.4 para envio SMTP opcional", "ext-openssl": "Fila cifrada e transporte TLS"}
 }

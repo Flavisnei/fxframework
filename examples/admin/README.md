@@ -15,3 +15,7 @@ conforme [o manual HTML](../../packages/admin/docs/index.html).
 
 A partir da raiz do repositório, php tests/integration/admin.php testa CLI e HTTP
 com banco e servidor temporários, sem alterar contas deste exemplo.
+
+SMTP opcional: configure config/mail.php por variáveis de ambiente, instale
+symfony/mailer ^6.4 e siga [o guia da fila](../../packages/admin/docs/index.html#smtp).
+O exemplo mantém envio desabilitado por padrão; não contém credenciais ou chave.

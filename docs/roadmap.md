@@ -157,3 +157,19 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 CRUD de domínio em módulo separado, com validação por campo e exemplo de negócio.
 Revisão visual do painel permanece pendente de navegador disponível; escala,
 outros bancos e matriz de versões atuais continuam na etapa 8.
+
+## Complemento SMTP — 2026-09-08
+
+- Admin 0.1.1: fila SQLite com AES-256-GCM, chave externa, reserva por trabalhador,
+  expiração, substituição de pendentes por destinatário e cinco tentativas máximas.
+- admin:mail --init/--status não enviam; processamento SMTP explícito em CLI.
+- Oito testes específicos da fila (31 assertions), incluindo chave incorreta,
+  payload alterado, reserva, substituição durante entrega e comandos sem credenciais.
+- Suíte completa: 98 testes / 313 assertions passaram com acesso ao diretório de
+  sessões PHP; o sandbox inicialmente impediu a criação dessas sessões.
+- Oito verificações reais de SMTP/MIME com Symfony Mailer 6.4.44 em capturador
+  loopback. Corrigida a remoção de dot-stuffing no capturador do teste.
+- Nenhuma conexão ao SMTP do usuário ou mensagem externa. Porta, credenciais e
+  origem HTTPS ainda pendentes; autorização do remetente precisa ser confirmada.
+- Navegador integrado continua indisponível para automação; revisão visual pendente.
+- Sem STARTTLS, testes de TLS remoto ou garantia de entrega exatamente uma vez.

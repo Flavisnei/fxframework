@@ -1,5 +1,15 @@
 # Histórico
 
+## Em desenvolvimento — complemento SMTP — 2026-09-08
+
+- Admin 0.1.1 acrescenta fila SQLite cifrada com AES-256-GCM, reserva, expiração
+  e novas tentativas limitadas. Requisição HTTP apenas enfileira a recuperação.
+- Transporte opcional Symfony Mailer ^6.4 por SMTPS, sem dependência nova no Core.
+- admin:mail inicializa, consulta ou processa a fila; configuração por ambiente.
+- Migração: inicializar fila explicitamente e reconhecer a versão por module:refresh.
+- Testes locais não enviam mensagens externas; dados do provedor ainda precisam ser
+  configurados e validados antes de habilitar envio real.
+
 ## Em desenvolvimento — etapa 6 (Admin SQLite) — 2026-09-07
 
 - fx-admin opcional com login, logout, contas, perfis, permissões e módulos em FX Windows.

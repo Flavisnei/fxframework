@@ -46,6 +46,7 @@ final class Artisan extends SymfonyApplication
         ]);
         if (class_exists(\Fx\Framework\Admin\AdminConfig::class)) {
             $this->add(new \Fx\Framework\Console\Commands\AdminInitCommand($this->root));
+            $this->add(new \Fx\Framework\Console\Commands\AdminMailCommand($this->root));
         }
         if (class_exists(\Fx\Framework\Modules\ModuleManager::class)) {
             foreach (['status', 'doctor', 'enable', 'disable', 'refresh'] as $operation) {

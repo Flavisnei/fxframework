@@ -135,3 +135,11 @@ Contas têm um perfil; consultas de identidade e permissões são renovadas por 
 Estado de módulos continua separado do banco. Recuperação precisa de callback de
 entrega configurado; os testes não enviam email. Backend distribuído, outros bancos,
 MFA, OAuth, prefixo customizável e benchmarks ficam fora deste escopo inicial.
+
+## SMTP opcional (Admin 0.1.1)
+
+A recuperação pode usar fila SQLite com payload AES-256-GCM e chave externa.
+HTTP apenas enfileira; admin:mail processa em CLI, com reservas e tentativas limitadas.
+Symfony Mailer é instalado pelo consumidor, sem dependência obrigatória no Core/Admin.
+TLS implícito obrigatório em produção; STARTTLS ainda não suportado. A fila tem
+semântica de entrega pelo menos uma vez, sem garantia de entrega na caixa postal.

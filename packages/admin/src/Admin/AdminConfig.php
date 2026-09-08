@@ -24,6 +24,12 @@ final class AdminConfig
     public static function panel(string $root): Panel
     {
         $config = self::read($root);
-        return new Panel(self::store($config), new AdminSession($config['secure_cookie'] ?? true, 1800, 28800, $config['session_name'] ?? ('FXA' . substr(hash('sha256', realpath($root) ?: $root), 0, 16))), new ModuleManager($root), $config['reset_delivery'] ?? null, $config['logger'] ?? null);
+        $delivery = $config['reset_delivery'] ?? null;
+        if (isset($config['mail'])) {
+            if ($delivery !== null) { throw new \RuntimeException('Configure mail ou reset_delivery, nao ambos.'); }
+            $queue = \Fx\Framework\Admin\Mail\MailConfig::queue($config); $queue->assertReady();
+            $delivery = $queue->enqueue(...);
+        }
+        return new Panel(self::store($config), new AdminSession($config['secure_cookie'] ?? true, 1800, 28800, $config['session_name'] ?? ('FXA' . substr(hash('sha256', realpath($root) ?: $root), 0, 16))), new ModuleManager($root), $delivery, $config['logger'] ?? null);
     }
 }
