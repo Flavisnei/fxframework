@@ -84,3 +84,8 @@ alta escala a partir desses números. Estes continuam sendo trabalhos separados.
   com mais amostras. Não descarte seletivamente resultados desfavoráveis.
 - Alteração de configuração/dependências entre execuções: guarde o JSON e explique
   a diferença; não apresente isso como ganho causado por uma otimização isolada.
+
+
+## Apache e MariaDB locais
+
+`python benchmarks/mariadb-http-load.py --webroot=C:/xampp/htdocs --port=3306 --clients=4 --requests=50` testa GET/POST de FX HTTP/Database. Requer Apache local porta 80, vendor raiz, PDO MySQL e permissão CREATE/DROP DATABASE. Usuário/senha em FX_TEST_MYSQL_USER/FX_TEST_MYSQL_PASSWORD; padrão local root/sem senha. Cria endpoint com token e banco aleatórios e os remove; não usa Admin/Contatos, que não suportam MariaDB. Consulte a ajuda central #mariadb-carga. Não é dimensionamento de produção.

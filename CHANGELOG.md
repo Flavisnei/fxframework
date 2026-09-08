@@ -1,5 +1,12 @@
 # Histórico
 
+## Etapa 8J — carga e compatibilidade MariaDB local — 2026-09-08
+
+- Teste opt-in via Apache local com token efêmero, leituras e POST transacionais em banco MariaDB temporário. Sem alterações no runtime dos pacotes.
+- Confirmadas dez verificações Database no MariaDB local root/sem senha. Rodada de quatro clientes: 200 operações sem erro e contador íntegro.
+- Reproduzida ausência de suporte MariaDB em AdminStore e ContactStore. Ajuda documenta a diferença entre Database validado e painel ainda incompatível.
+- Navegador e SMTP adiados pelo usuário.
+
 ## Etapa 8I — distribuição e homologação — 2026-09-08
 
 - Preparador de snapshots independentes e repositório Composer próprio; onze branches packages/* com fontes e ajuda por pacote. Versões de desenvolvimento, sem Packagist.

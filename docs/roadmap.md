@@ -321,3 +321,13 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Consumidor Admin+Console instalou os oito pacotes FX necessários por ZIP do GitHub e suas dependências externas. Autoload e comandos admin:init/module:install/module:enable aprovados em processo independente, sem Eloquent ou Smarty. Repositório de metadados usado localmente nessa primeira conferência.
 
 - Após publicação af82372, consumidor mínimo novo instalou o Core com metadados HTTPS do repositório Composer e ZIP do GitHub, sem path. examples/minimal/verify.php aprovado sem alterações. Suíte final: 114 testes / 613 assertions. MariaDB temporário encerrado.
+
+
+## Etapa 8J — itens 3 e 4 no MariaDB do usuário — 2026-09-08
+
+- Instância existente 127.0.0.1:3306, MariaDB 10.4.27, root/sem senha; dez verificações Database aprovadas em banco novo e removido. Serviço existente não reiniciado.
+- Apache existente (apache2handler/PHP 8.1.12) usado para GET/POST concorrentes com FX HTTP + Database, token sintético e transações InnoDB. Quatro clientes: 100 leituras, 100 gravações, zero erros, 100 linhas e contador 100.
+- AdminStore rejeitou PDO mysql; ContactStore falhou no PRAGMA. Item 4 não eliminado: exige implementação e regressões do painel, não somente ajuste de configuração.
+- Carga local não certifica produção, sessões Admin, alta disponibilidade ou múltiplos nós. Itens 1 e 2 explicitamente adiados.
+
+- Oito clientes: 200 leituras + 200 gravações, zero erros, contador e linhas iguais a 200. Evidência em docs/benchmarks/2026-09-08-mariadb-http.json. PHPUnit executou simultaneamente nessa rodada: tempos não devem ser comparados como benchmark isolado. Suíte 114/613 aprovada.
