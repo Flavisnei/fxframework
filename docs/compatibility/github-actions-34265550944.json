@@ -1,0 +1,57 @@
+{
+  "commit": "5bbb8c25c3c04f7aef800f6c5d1b7ca8c2e389c7",
+  "url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944",
+  "jobs": [
+    {
+      "name": "Dependencias modernas / PHP 8.3",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881181"
+    },
+    {
+      "name": "Dependencias modernas / PHP 8.5",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881451"
+    },
+    {
+      "name": "PHP 8.4 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881493"
+    },
+    {
+      "name": "PHP 8.2 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881498"
+    },
+    {
+      "name": "PHP 8.1 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881501"
+    },
+    {
+      "name": "PHP 8.3 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881506"
+    },
+    {
+      "name": "Admin e Contatos / MariaDB 10.4",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881548"
+    },
+    {
+      "name": "PHP 8.5 / ubuntu-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881583"
+    },
+    {
+      "name": "Admin e Contatos / MariaDB 10.11",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881717"
+    },
+    {
+      "name": "PHP 8.3 / windows-latest",
+      "conclusion": "success",
+      "html_url": "https://github.com/Flavisnei/fxframework/actions/runs/34265550944/job/102193881951"
+    }
+  ],
+  "conclusion": "success"
+}

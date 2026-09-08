@@ -27,12 +27,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "4ef0263ce6a39d5e6f52e8752c3b14613cfa1bd4"
+                    "reference": "fb6ff86a6a140d2525738320e64168b1df4b7fe2"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/4ef0263ce6a39d5e6f52e8752c3b14613cfa1bd4.zip",
-                    "reference": "4ef0263ce6a39d5e6f52e8752c3b14613cfa1bd4"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/fb6ff86a6a140d2525738320e64168b1df4b7fe2.zip",
+                    "reference": "fb6ff86a6a140d2525738320e64168b1df4b7fe2"
                 }
             }
         },
@@ -55,12 +55,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "628e781fa8cd33f60a2867ce06ec1262442414c7"
+                    "reference": "927f7cf2dffbf1924cbe2c775d004abdb3a7873a"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/628e781fa8cd33f60a2867ce06ec1262442414c7.zip",
-                    "reference": "628e781fa8cd33f60a2867ce06ec1262442414c7"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/927f7cf2dffbf1924cbe2c775d004abdb3a7873a.zip",
+                    "reference": "927f7cf2dffbf1924cbe2c775d004abdb3a7873a"
                 }
             }
         },
@@ -93,12 +93,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "bf8e81bdaa14907395c8144ed22c7fd750e61865"
+                    "reference": "8917e9f5db585b76da61985ff6ab7af325090fb4"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/bf8e81bdaa14907395c8144ed22c7fd750e61865.zip",
-                    "reference": "bf8e81bdaa14907395c8144ed22c7fd750e61865"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/8917e9f5db585b76da61985ff6ab7af325090fb4.zip",
+                    "reference": "8917e9f5db585b76da61985ff6ab7af325090fb4"
                 }
             }
         },
@@ -121,12 +121,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "6a2c4d9b96bbf9f9e6684b7b0aaa13292eda221c"
+                    "reference": "9075632fc17fe2e0546c97a2cc27b3f11e8c5dc4"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/6a2c4d9b96bbf9f9e6684b7b0aaa13292eda221c.zip",
-                    "reference": "6a2c4d9b96bbf9f9e6684b7b0aaa13292eda221c"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/9075632fc17fe2e0546c97a2cc27b3f11e8c5dc4.zip",
+                    "reference": "9075632fc17fe2e0546c97a2cc27b3f11e8c5dc4"
                 }
             }
         },
@@ -149,12 +149,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "7e877942fa5ba9adb1789bfe84cecb83036a2480"
+                    "reference": "397983108f65fdff2a1f3fc4e3f953333f68ff8f"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/7e877942fa5ba9adb1789bfe84cecb83036a2480.zip",
-                    "reference": "7e877942fa5ba9adb1789bfe84cecb83036a2480"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/397983108f65fdff2a1f3fc4e3f953333f68ff8f.zip",
+                    "reference": "397983108f65fdff2a1f3fc4e3f953333f68ff8f"
                 }
             }
         },
@@ -181,12 +181,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "0a66aba66a7363ab39eaf94d58fccca69c23a0d7"
+                    "reference": "b9013fc0737d2b26f41e8e9b257af44671dcfc1f"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/0a66aba66a7363ab39eaf94d58fccca69c23a0d7.zip",
-                    "reference": "0a66aba66a7363ab39eaf94d58fccca69c23a0d7"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/b9013fc0737d2b26f41e8e9b257af44671dcfc1f.zip",
+                    "reference": "b9013fc0737d2b26f41e8e9b257af44671dcfc1f"
                 }
             }
         },
@@ -209,12 +209,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "5aa374d90ccbc4f74ea422a411845b09b59a7424"
+                    "reference": "81bb2d3a32379fa63f56081016281537a899eb7b"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/5aa374d90ccbc4f74ea422a411845b09b59a7424.zip",
-                    "reference": "5aa374d90ccbc4f74ea422a411845b09b59a7424"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/81bb2d3a32379fa63f56081016281537a899eb7b.zip",
+                    "reference": "81bb2d3a32379fa63f56081016281537a899eb7b"
                 }
             }
         },
@@ -237,12 +237,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "1ba202c833b8b283def098d0573b352c967ac4af"
+                    "reference": "a2b138cabd43fdfada9dbae30f9226f736786c82"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/1ba202c833b8b283def098d0573b352c967ac4af.zip",
-                    "reference": "1ba202c833b8b283def098d0573b352c967ac4af"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/a2b138cabd43fdfada9dbae30f9226f736786c82.zip",
+                    "reference": "a2b138cabd43fdfada9dbae30f9226f736786c82"
                 }
             }
         },
@@ -269,12 +269,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "fda2e4a0f2131227b5049ddbba9cff22cf214440"
+                    "reference": "008bcf690c74d54cd2a8328820dde30996bf771c"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/fda2e4a0f2131227b5049ddbba9cff22cf214440.zip",
-                    "reference": "fda2e4a0f2131227b5049ddbba9cff22cf214440"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/008bcf690c74d54cd2a8328820dde30996bf771c.zip",
+                    "reference": "008bcf690c74d54cd2a8328820dde30996bf771c"
                 }
             }
         },
@@ -296,12 +296,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "da2e55f8bd691e04da0074a8a33cd422209dd3dd"
+                    "reference": "56246619fe5b6c71c810fa749792a096efa2cfa1"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/da2e55f8bd691e04da0074a8a33cd422209dd3dd.zip",
-                    "reference": "da2e55f8bd691e04da0074a8a33cd422209dd3dd"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/56246619fe5b6c71c810fa749792a096efa2cfa1.zip",
+                    "reference": "56246619fe5b6c71c810fa749792a096efa2cfa1"
                 }
             }
         },
@@ -324,12 +324,12 @@
                 "source": {
                     "type": "git",
                     "url": "https://github.com/Flavisnei/fxframework.git",
-                    "reference": "ad53024969f82477cffb6a7f3a8108ba9bc1fe7a"
+                    "reference": "85a4fad2a18de89f2bbbf488b9da6748f1588ebc"
                 },
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/Flavisnei/fxframework/archive/ad53024969f82477cffb6a7f3a8108ba9bc1fe7a.zip",
-                    "reference": "ad53024969f82477cffb6a7f3a8108ba9bc1fe7a"
+                    "url": "https://github.com/Flavisnei/fxframework/archive/85a4fad2a18de89f2bbbf488b9da6748f1588ebc.zip",
+                    "reference": "85a4fad2a18de89f2bbbf488b9da6748f1588ebc"
                 }
             }
         }

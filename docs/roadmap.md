@@ -344,3 +344,7 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Suíte padrão SQLite: 117 testes, 619 assertions e um teste MariaDB explicitamente pulado; integração HTTP SQLite 34/34 aprovada. CI recebe jobs MariaDB 10.4/10.11.
 
 - Suíte completa com FX_TEST_ADMIN_MYSQL=1: 117 testes / 643 assertions, sem skips ou falhas. Vendor próprio de Contatos atualizado; ajuda com âncoras preservadas e busca conferida.
+
+- Distribuição atualizada: snapshots de 5bbb8c2 nas branches packages/*, sem force. Consumidor separado baixou os ZIPs; instalação, validação de credenciais e fila MariaDB aprovadas com autoload exclusivo. Nenhum email externo enviado.
+
+- CI 34265550944 da revisão 5bbb8c2: dez tarefas aprovadas, incluindo MariaDB 10.4/10.11, matriz PHP/Windows/Linux e dependências modernas. Evidência em docs/compatibility/github-actions-34265550944.json. O suporte foi validado no escopo dos casos documentados; transferência de dados SQLite e ensaio visual permanecem separados.

@@ -2,6 +2,10 @@
 
 ## Etapa 8K — Admin e Contatos em MariaDB — 2026-09-08
 
+- Dez tarefas da CI aprovadas, incluindo MariaDB 10.4/10.11; suíte local MariaDB 117/643 e integração HTTP 34/34.
+
+- Repositório Composer atualizado com snapshots de 5bbb8c2; pacote Admin baixado por ZIP validado em consumidor separado.
+
 - Admin 0.1.3 aceita database mysql via AdminConfig::connection, com SQLite anterior preservado. Schema InnoDB, bloqueios transacionais para operações críticas e fila cifrada compatível.
 - Contatos 0.1.1 aceita config/contacts.php e conexão MariaDB, preservando configuração SQLite padrão e controle de versão.
 - admin:init atualizado; DDL separado da primeira conta para respeitar commits implícitos do MariaDB. Não há transferência automática de dados entre bancos.
