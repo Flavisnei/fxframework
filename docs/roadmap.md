@@ -15,7 +15,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 5B | Ciclo de módulos | Contrato, ativação, desativação, reconhecimento de atualizações e diagnóstico | Concluída no escopo testado |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões e recuperação configurável | Entregue para SQLite; revisão visual pendente |
 | 7 | CRUD AJAX/JSON | Contatos: validação por campo, paginação, conflitos e ajuda | Entregue no escopo SQLite; revisão visual pendente |
-| 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | 8A entregue: referência CLI local; demais partes pendentes |
+| 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | 8A e 8B entregues localmente: benchmark, CI configurada e guia; matriz remota e distribuição pendentes |
 
 ## Evidências iniciais
 
@@ -218,3 +218,22 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Pendências da etapa 8: matriz de versões atuais, CI, atualização/distribuição,
   carga real e outros bancos. Revisão visual continua pendente; nenhum ganho sobre
   Laravel ou suporte a alta escala foi demonstrado.
+
+## Etapa 8B — CI configurada e guia de atualização — 2026-09-08
+
+- Workflow GitHub Actions com PHP 8.1–8.5 em Ubuntu e 8.3 em Windows, sem
+  continue-on-error, com permissões de leitura e actions fixadas por commit.
+- A raiz usa o lock versionado; exemplos isolados resolvem seus próprios vendors.
+- tools/verify.php oferece o mesmo ponto de entrada local/CI e propaga falhas.
+- Execução local Windows/PHP 8.1.12 passou nas sete etapas: PHPUnit 103 testes /
+  361 assertions, Core mínimo, HTTP isolado, módulos, Admin 18 verificações,
+  Contatos 34 e SMTP loopback 8. Nenhum email externo enviado.
+- Requisitos de plataforma local aprovados. YAML/matriz inspecionados; em fixture
+  temporária, vendor ausente e argumentos inválidos falham, e retorno 7 do primeiro
+  subprocesso é propagado sem executar a etapa seguinte.
+- Ajuda offline atualizada com requisitos, diagnóstico, homologação, backup
+  consistente SQLite, atualização Composer, reconhecimento de módulos e retorno.
+- Não houve publicação ou execução no GitHub. PHP 8.2–8.5 e Linux ainda não foram
+  verificados nesta máquina; matriz configurada não significa suporte certificado.
+- PHP 8.1 e Illuminate 10 permanecem no contrato histórico; modernização de
+  dependências, distribuição e testes de carga são pendências explícitas.

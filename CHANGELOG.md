@@ -1,5 +1,13 @@
 # Histórico
 
+## Etapa 8B — CI e atualização — 2026-09-08
+
+- Workflow GitHub Actions para PHP 8.1–8.5 em Ubuntu e 8.3 em Windows; configuração local, execução remota pendente.
+- tools/verify.php reúne sete verificações locais/isoladas e encerra no primeiro erro, sem instalar dependências nem enviar SMTP externo.
+- Ajuda HTML com requisitos reais, estado de compatibilidade e passos de atualização/retorno em homologação.
+- Contratos e dependências principais preservados. Modernização de Illuminate e certificação da matriz ainda pendentes.
+
+
 ## Etapa 8A — benchmark local — 2026-09-08
 
 - Ferramenta CLI sem dependências novas: Core mínimo/completo, JSON e contatos autenticados com dados sintéticos.
