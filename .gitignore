@@ -17,3 +17,5 @@
 /examples/admin/config/mail.local.json
 !storage/cache/.gitkeep
 !storage/logs/.gitkeep
+
+/examples/contacts/storage/

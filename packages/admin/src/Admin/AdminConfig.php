@@ -19,7 +19,7 @@ final class AdminConfig
         $file = $config['database'];
         if (!$create && !is_file($file)) { throw new \RuntimeException('Banco Admin ausente. Execute admin:init pelo CLI.'); }
         if ($create && !is_dir(dirname($file)) && !mkdir(dirname($file), 0770, true) && !is_dir(dirname($file))) { throw new \RuntimeException('Nao foi possivel criar storage do Admin.'); }
-        return new AdminStore(new \PDO('sqlite:' . $file));
+        return new AdminStore(new \PDO('sqlite:' . $file), $config['permissions'] ?? []);
     }
     public static function panel(string $root): Panel
     {

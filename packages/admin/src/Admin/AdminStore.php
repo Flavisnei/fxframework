@@ -11,14 +11,17 @@ final class AdminStore implements UserProvider
 {
     public const PERMISSIONS = ['dashboard.view', 'users.view', 'users.manage', 'roles.manage', 'modules.view', 'modules.manage'];
 
-    public function __construct(private readonly PDO $db)
+    public function __construct(private readonly PDO $db, private readonly array $extraPermissions = [])
     {
+        foreach ($extraPermissions as $permission) { if (!is_string($permission) || !preg_match('/^[a-z][a-z0-9_-]*\.[a-z][a-z0-9_.-]*$/D', $permission)) { throw new \InvalidArgumentException('Permissao adicional invalida.'); } }
         if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') { throw new \InvalidArgumentException('AdminStore exige SQLite nesta versao.'); }
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $db->exec('PRAGMA foreign_keys = ON');
         $db->exec('PRAGMA busy_timeout = 5000');
     }
+
+    public function permissionCatalog(): array { return array_values(array_unique([...self::PERMISSIONS, ...$this->extraPermissions])); }
 
     private function query(string $sql, array $values = []): \PDOStatement
     {
@@ -43,7 +46,7 @@ final class AdminStore implements UserProvider
             $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_limits (key TEXT PRIMARY KEY, hits INTEGER NOT NULL, expires INTEGER NOT NULL)');
             $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_resets (token TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES fx_admin_users(id), expires INTEGER NOT NULL)');
             if ((int) $this->query('SELECT COUNT(*) FROM fx_admin_users')->fetchColumn() > 0) { throw new \RuntimeException('Admin ja inicializado; nenhuma conta foi alterada.'); }
-            $this->query('INSERT OR IGNORE INTO fx_admin_roles (id,name,permissions) VALUES (1,?,?)', ['Administrador', json_encode(self::PERMISSIONS)]);
+            $this->query('INSERT OR IGNORE INTO fx_admin_roles (id,name,permissions) VALUES (1,?,?)', ['Administrador', json_encode($this->permissionCatalog())]);
             $this->writeUser(null, ['name' => $name, 'email' => $email, 'password' => $password, 'role_id' => 1, 'active' => true]);
         });
     }
@@ -71,12 +74,13 @@ final class AdminStore implements UserProvider
     }
     public function permissions(AdminUser $user): array
     {
+        if ((int) $user->data['role_id'] === 1) { return $this->permissionCatalog(); }
         $raw = $this->query('SELECT permissions FROM fx_admin_roles WHERE id=?', [$user->data['role_id']])->fetchColumn();
-        return $raw === false ? [] : json_decode($raw, true, 32, JSON_THROW_ON_ERROR);
+        return $raw === false ? [] : array_values(array_intersect(json_decode($raw, true, 32, JSON_THROW_ON_ERROR), $this->permissionCatalog()));
     }
     public function roles(): array
     {
-        return array_map(function (array $role): array { $role['permissions'] = json_decode($role['permissions'], true, 32, JSON_THROW_ON_ERROR); return $role; }, $this->query('SELECT * FROM fx_admin_roles ORDER BY id')->fetchAll());
+        return array_map(function (array $role): array { $role['permissions'] = (int) $role['id'] === 1 ? $this->permissionCatalog() : array_values(array_intersect(json_decode($role['permissions'], true, 32, JSON_THROW_ON_ERROR), $this->permissionCatalog())); return $role; }, $this->query('SELECT * FROM fx_admin_roles ORDER BY id')->fetchAll());
     }
     public function saveRole(?int $id, array $data): int
     {
@@ -84,7 +88,7 @@ final class AdminStore implements UserProvider
         $name = self::text($data, 'name', 2, 80);
         $permissions = $data['permissions'] ?? null;
         if (!is_array($permissions) || !array_is_list($permissions)) { throw new HttpException(422, 'permissions deve ser uma lista.'); }
-        foreach ($permissions as $permission) { if (!is_string($permission) || !in_array($permission, self::PERMISSIONS, true)) { throw new HttpException(422, 'Permissao desconhecida.'); } }
+        foreach ($permissions as $permission) { if (!is_string($permission) || !in_array($permission, $this->permissionCatalog(), true)) { throw new HttpException(422, 'Permissao desconhecida.'); } }
         if ($id !== null && !$this->query('SELECT id FROM fx_admin_roles WHERE id=?', [$id])->fetchColumn()) { throw new HttpException(404, 'Perfil nao encontrado.'); }
         try {
             $values = [$name, json_encode(array_values(array_unique($permissions)))];

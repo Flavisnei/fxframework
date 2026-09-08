@@ -14,6 +14,41 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 final class Panel
 {
+    private array $areas = [];
+
+    /** Somente providers confiaveis; a API da area ainda exige autorizacao propria. */
+    public function addArea(string $id, string $title, string $url, string $permission): void
+    {
+        if (!preg_match('/^[a-z][a-z0-9-]*$/D', $id) || isset($this->areas[$id]) || !preg_match('~^/[a-zA-Z0-9/_-]+$~D', $url) || str_starts_with($url, '//') || !in_array($permission, $this->store->permissionCatalog(), true) || trim($title) === '') { throw new \InvalidArgumentException('Area invalida, duplicada ou permissao nao configurada.'); }
+        $this->areas[$id] = compact('id', 'title', 'url', 'permission');
+    }
+
+    /** API JSON protegida pela mesma sessao, CSRF e permissoes do painel. null e reservado a rotas publicas. */
+    public function api(Router $router, string $method, string $path, ?string $permission, \Closure $action): void
+    {
+        $router->add([$method], '/admin/api/' . $path, function (Request $request) use ($permission, $action): Response {
+            try {
+                $this->session->start();
+                if (strlen($request->getContent()) > 16384) { throw new HttpException(413, 'Formulario excede o limite de tamanho.'); }
+                if (!$request->isMethodSafe() && !Csrf::validate($request->headers->get('X-CSRF-TOKEN'))) { throw new HttpException(403, 'Sessao do formulario expirou. Recarregue a pagina.'); }
+                $user = $this->session->user($this->store);
+                if ($permission !== null) {
+                    if ($user === null) { throw new HttpException(401, 'Entre para continuar.'); }
+                    $permissions = $this->store->permissions($user);
+                    if (!in_array('dashboard.view', $permissions, true) || !in_array($permission, $permissions, true)) { throw new HttpException(403, 'Acesso negado.'); }
+                }
+                $data = $request->isMethodSafe() ? [] : json_decode($request->getContent(), true, 32, JSON_THROW_ON_ERROR);
+                if (!is_array($data) || ($data !== [] && array_is_list($data))) { throw new HttpException(422, 'Envie um objeto JSON.'); }
+                $result = $action($request, $data, $user);
+                return new JsonResponse($result, 200, ['Cache-Control' => 'no-store', 'X-Content-Type-Options' => 'nosniff']);
+            } catch (\Throwable $error) {
+                $status = $error instanceof HttpExceptionInterface ? $error->getStatusCode() : ($error instanceof \JsonException ? 422 : 500);
+                if ($status >= 500) { $this->log('admin.error', ['type' => $error::class]); }
+                return new JsonResponse(($error instanceof FieldErrors ? ['errors' => $error->errors] : []) + ['message' => $status >= 500 ? 'Falha interna. Consulte o responsavel pelo sistema.' : ($error instanceof \JsonException ? 'JSON invalido.' : $error->getMessage())], $status, ['Cache-Control' => 'no-store'] + ($error instanceof HttpExceptionInterface ? $error->getHeaders() : []));
+            }
+        });
+    }
+
     /** delivery(email, token): deve enfileirar a mensagem. logger(evento, contexto): sem segredos. */
     public function __construct(private readonly AdminStore $store, private readonly AdminSession $session, private readonly ModuleManager $modules, private readonly ?\Closure $delivery = null, private readonly ?\Closure $logger = null) {}
 
@@ -23,30 +58,13 @@ final class Panel
         foreach (['/admin' => [$resources . '/index.html', 'text/html'], '/admin/admin.js' => [$resources . '/admin.js', 'text/javascript'], '/admin/admin.css' => [$resources . '/admin.css', 'text/css'], '/admin/fxwindows.js' => [Assets::directory() . '/fxwindows.js', 'text/javascript'], '/admin/fxwindows.css' => [Assets::directory() . '/fxwindows.css', 'text/css'], '/admin/help' => [dirname(__DIR__, 2) . '/docs/index.html', 'text/html']] as $uri => [$file, $type]) {
             $router->get($uri, fn () => new Response(file_get_contents($file), 200, ['Content-Type' => $type . '; charset=UTF-8', 'X-Content-Type-Options' => 'nosniff', 'Referrer-Policy' => 'no-referrer', 'X-Frame-Options' => 'SAMEORIGIN', 'Cache-Control' => 'no-store']));
         }
-        $route = function (string $method, string $path, ?string $permission, \Closure $action) use ($router): void {
-            $router->add([$method], '/admin/api/' . $path, function (Request $request) use ($permission, $action): Response {
-                try {
-                    $this->session->start();
-                    if (strlen($request->getContent()) > 16384) { throw new HttpException(413, 'Formulario excede o limite de tamanho.'); }
-                    if (!$request->isMethodSafe() && !Csrf::validate($request->headers->get('X-CSRF-TOKEN'))) { throw new HttpException(403, 'Sessao do formulario expirou. Recarregue a pagina.'); }
-                    $user = $this->session->user($this->store);
-                    if ($permission !== null) {
-                        if ($user === null) { throw new HttpException(401, 'Entre para continuar.'); }
-                        $permissions = $this->store->permissions($user);
-                        if (!in_array('dashboard.view', $permissions, true) || !in_array($permission, $permissions, true)) { throw new HttpException(403, 'Acesso negado.'); }
-                    }
-                    $data = $request->isMethodSafe() ? [] : json_decode($request->getContent(), true, 32, JSON_THROW_ON_ERROR);
-                    if (!is_array($data)) { throw new HttpException(422, 'Envie um objeto JSON.'); }
-                    $result = $action($request, $data, $user);
-                    return new JsonResponse($result, 200, ['Cache-Control' => 'no-store', 'X-Content-Type-Options' => 'nosniff']);
-                } catch (\Throwable $error) {
-                    $status = $error instanceof HttpExceptionInterface ? $error->getStatusCode() : ($error instanceof \JsonException ? 422 : 500);
-                    if ($status >= 500) { $this->log('admin.error', ['type' => $error::class]); }
-                    return new JsonResponse(['message' => $status >= 500 ? 'Falha interna. Consulte o responsavel pelo sistema.' : ($error instanceof \JsonException ? 'JSON invalido.' : $error->getMessage())], $status, ['Cache-Control' => 'no-store'] + ($error instanceof HttpExceptionInterface ? $error->getHeaders() : []));
-                }
-            });
-        };
-        $route('GET', 'session', null, fn ($request, $data, $user) => ['csrf' => Csrf::token(), 'user' => $user?->publicData(), 'permissions' => $user ? $this->store->permissions($user) : [], 'recovery' => $this->delivery !== null]);
+        $route = fn (string $method, string $path, ?string $permission, \Closure $action) => $this->api($router, $method, $path, $permission, $action);
+        $route('GET', 'session', null, function ($request, $data, $user): array {
+            $permissions = $user ? $this->store->permissions($user) : [];
+            $areas = in_array('dashboard.view', $permissions, true)
+                ? array_values(array_filter($this->areas, fn ($area) => in_array($area['permission'], $permissions, true))) : [];
+            return ['csrf' => Csrf::token(), 'user' => $user?->publicData(), 'permissions' => $permissions, 'recovery' => $this->delivery !== null, 'areas' => $areas];
+        });
         $route('POST', 'login', null, function (Request $request, array $data): array {
             $email = strtolower(AdminStore::text($data, 'email', 3, 254));
             $password = $data['password'] ?? null;
@@ -102,7 +120,7 @@ final class Panel
             $this->log('user.saved', ['actor' => $actor->getAuthIdentifier(), 'target' => $saved]);
             return ['id' => $saved];
         });
-        $route('GET', 'roles', 'dashboard.view', fn () => ['data' => $this->store->roles(), 'permissions' => AdminStore::PERMISSIONS]);
+        $route('GET', 'roles', 'dashboard.view', fn () => ['data' => $this->store->roles(), 'permissions' => $this->store->permissionCatalog()]);
         $route('POST', 'roles', 'roles.manage', function ($request, array $data, AdminUser $actor): array {
             $id = $data['id'] ?? null;
             if ($id !== null && (!is_int($id) || $id < 1)) { throw new HttpException(422, 'ID invalido.'); }

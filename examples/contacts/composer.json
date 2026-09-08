@@ -1,0 +1,28 @@
+{
+    "name": "fxfavalessa/example-contacts",
+    "description": "Modulo de contatos isolado com FX Admin.",
+    "license": "proprietary",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/*",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "fxfavalessa/fx-admin": "@dev",
+        "fxfavalessa/fx-console": "@dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": false
+    },
+    "autoload": {
+        "psr-4": {
+            "Example\\Contacts\\": "modules/contacts/src/"
+        }
+    }
+}

@@ -1,5 +1,14 @@
 # Histórico
 
+## Etapa 7 — Contatos e extensões Admin — 2026-09-08
+
+- Exemplo Contatos isolado: CRUD SQLite, AJAX/JSON, páginas de 20, erros por campo, email único e versão para conflitos de edição/exclusão.
+- Admin 0.1.2: addArea, api, FieldErrors e catálogo de permissões configurável. Sem dependências novas no Core.
+- Compatibilidade: Administrador reservado recebe todas as permissões explícitas da configuração; outros perfis exigem concessão. Sem alteração de esquema; atualizar pacote e executar module:refresh fx-admin.
+- contacts:init cria tabela sem apagar dados; module:enable contacts inclui fx-admin. Desativação preserva banco.
+- Ajuda offline central, do Admin e do módulo com instalação, uso, exemplos, problemas e limites.
+
+
 ## Configuração SMTP local — 2026-09-08
 
 - Exemplo Admin aceita config/mail.local.json ignorado pelo Git; ambiente não vazio

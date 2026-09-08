@@ -34,6 +34,8 @@
     $('#access').hidden=!!session.user||!!resetToken;$('#dashboard').hidden=!session.user||!can('dashboard.view')||!!resetToken;$('#reset').hidden=!resetToken;$('#recovery').hidden=!session.recovery;
     $('#title').textContent=session.user?'Seu trabalho, em um só lugar.':'Bem-vindo ao FX.';
     for(const [area,permission] of Object.entries({users:'users.view',roles:'roles.manage',modules:'modules.view'})) $('[data-area='+area+']').hidden=!can(permission);
+    document.querySelectorAll('[data-extension]').forEach(node=>node.remove());
+    for (const area of session.areas || []) { const button=el('button', area.title); button.dataset.extension=area.id; action(button,()=>windows.open({id:'module-'+area.id,title:area.title,url:area.url,width:920,height:640})); $('.cards').append(button); }
     notice(session.user?(can('dashboard.view')?'Escolha uma área abaixo.':'Seu perfil não permite acesso ao painel. Contate um administrador.'):'Entre com seu email e senha.');
   }
   async function userEditor(user={}) {

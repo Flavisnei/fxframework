@@ -14,7 +14,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 5A | Instalação e presets via Artisan | Composer real, simulação, conflitos e isolamento em projetos temporários | Concluída no escopo testado |
 | 5B | Ciclo de módulos | Contrato, ativação, desativação, reconhecimento de atualizações e diagnóstico | Concluída no escopo testado |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões e recuperação configurável | Entregue para SQLite; revisão visual pendente |
-| 7 | CRUD AJAX/JSON | Validação por campo, paginação, erros de rede e módulo exemplo completo | Pendente |
+| 7 | CRUD AJAX/JSON | Contatos: validação por campo, paginação, conflitos e ajuda | Entregue no escopo SQLite; revisão visual pendente |
 | 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | Pendente |
 
 ## Evidências iniciais
@@ -152,9 +152,9 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 - Limites: SQLite, prefixo /admin fixo, um perfil por usuário, sem MFA/OAuth,
   infraestrutura distribuída, benchmark ou serviço de email configurado.
 
-## Próxima parte: 7
+## Continuidade após etapa 7
 
-CRUD de domínio em módulo separado, com validação por campo e exemplo de negócio.
+CRUD de domínio entregue em examples/contacts.
 Revisão visual do painel permanece pendente de navegador disponível; escala,
 outros bancos e matriz de versões atuais continuam na etapa 8.
 
@@ -180,3 +180,22 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Configuração local privada excluída do Git; chave gerada aleatoriamente.
 - URL HTTPS do painel e validação de aceitação do remetente ainda pendentes.
 - A autenticação não comprova autorização do remetente nem entrega na caixa postal.
+
+## Etapa 7 — Contatos — 2026-09-08
+
+- Módulo de negócio separado do Core, sem novas dependências no núcleo.
+- Admin 0.1.2 oferece áreas em iframe FX Windows, APIs com sessão/CSRF e
+  permissões explicitamente configuradas; compatibilidade descrita na ajuda do pacote.
+- CRUD SQLite com email único, erros por campo, páginas de 20, detalhes sob demanda,
+  busca literal e controle otimista de versão em edições/exclusões.
+- contacts:init explícito, repetível sem apagar dados; ativação inclui fx-admin.
+- 103 testes / 361 assertions na suíte completa; cinco testes de Contatos cobrem
+  autorização por verbo, CSRF, entradas inválidas, duplicatas, conflitos e paginação.
+- 34 verificações reais HTTP/CLI com vendor exclusivo de examples/contacts:
+  instalação temporária, CRUD, assets, ajuda, desativação/reativação preservando
+  registros e inicialização repetida. Nenhum banco ou credencial existente alterado.
+- Sintaxe JS e links/âncoras da ajuda verificados. Navegador recusou conexão;
+  revisão visual, teclado e execução dos formulários em navegador permanecem pendentes.
+- Limites: SQLite, consulta compartilhada sem isolamento multiempresa, sem auditoria
+  específica de contatos, importação/anexos/lixeira ou benchmark. Pacotes locais
+  por path, sem catálogo remoto de módulos de negócio. Etapa 8 segue pendente.
