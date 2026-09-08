@@ -21,7 +21,7 @@ final class FxWindowsInstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $source = dirname(__DIR__, 3) . '/resources/fxwindows';
+        $source = \Fx\Framework\Windows\Assets::directory();
         $destination = rtrim($this->root, '/\\') . '/public/assets/fxwindows';
 
         if (!is_dir($source)) {

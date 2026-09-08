@@ -1,5 +1,25 @@
 # Histórico
 
+## Em desenvolvimento — etapa 3B — 2026-09-07
+
+- Pacotes independentes fx-http, fx-database, fx-view, fx-console, fx-auth,
+  fx-validation e fx-windows, além do Core já extraído.
+- Namespaces preservados. Fontes movidas para packages/*/src; pacote completo
+  inclui as mesmas fontes e declara replace de cada componente com self.version.
+- HTTP não exige banco ou Auth. O handler reconhece suas exceções quando presentes.
+  View exige somente Smarty; csrf_field informa a necessidade de HTTP quando usado.
+- Artisan básico exige Core e Symfony Console; comandos opcionais aparecem conforme
+  os pacotes instalados. make:crud requer HTTP, Database e View.
+- app:init funciona sem Database; bootstrap novo só inicializa Eloquent se disponível.
+  Aplicações antigas preservam seu bootstrap e precisam revisar essa chamada ao remover banco.
+- Assets movidos para fx-windows com localizador próprio; publicação pelo CLI funciona
+  tanto na distribuição completa quanto na instalação modular.
+- Nove cenários de instalação/verificação e sete guias HTML de componentes adicionados.
+- As versões do lock completo foram preservadas. HTTP Kernel e polyfill mbstring,
+  que já eram dependências transitivas, agora são requisitos diretos do completo.
+- Instalação e resolução ainda via Composer local; presets/download pelo Artisan,
+  publicação dos pacotes e dashboard continuam pendentes.
+
 ## Em desenvolvimento — etapa 3A — 2026-09-07
 
 - Pacote local fxfavalessa/fx-core extraído com container Illuminate, configuração

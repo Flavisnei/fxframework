@@ -9,7 +9,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 1 | Arquitetura e central de ajuda | Navegação, busca offline, exemplos atuais e planos separados | Entregue; revisão visual pendente |
 | 2 | Correções de comportamento | Regressões para validação, Request, 404; desenho e testes CSRF | Concluída |
 | 3A | Core independente | Instalar mínimo sem banco/view/admin; compatibilidade documentada | Concluída |
-| 3B | Pacotes opcionais | Separar HTTP, banco, views e CLI com instalação individual verificada | Pendente |
+| 3B | Pacotes opcionais | Separar HTTP, banco, views e CLI com instalação individual verificada | Concluída |
 | 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Pendente |
 | 5 | Módulos e presets via Artisan | Instalar, ativar, atualizar e diagnosticar dependências em ambiente temporário | Pendente |
 | 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões no servidor e recuperação de senha | Pendente |
@@ -60,8 +60,22 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 - O exemplo usa @dev intencionalmente durante desenvolvimento local; Composer
   avisa sobre restrição aberta. Releases publicadas continuam pendentes.
 
-## Próxima parte: 3B
+## Evidências da etapa 3B
 
-Iniciar etapa 3B pela separação dos componentes opcionais, preservando o pacote
-completo. Validar combinações de instalação e compatibilidade. A revisão
+- Nove instalações reais com vendor/autoload próprios: HTTP, Database, View,
+  Console, Auth, Validation, Windows, web sem banco e combinação modular completa.
+- Todas passaram verificando classes/dependências ausentes e uso de HTTP, SQLite,
+  renderização Smarty, validação, guard, CLI, bootstrap gerado e publicação de assets.
+- Guias HTML distribuídos por pacote, central atualizada e migração documentada.
+- Os nove manifestos (completo e oito componentes) passaram composer validate --strict.
+- O Core mínimo continuou passando sua verificação; suíte completa com 59 testes e
+  158 assertions. Nove guias HTML sem links locais quebrados nem IDs duplicados.
+- Executável Composer do CLI básico testado com list --raw, sem comandos opcionais.
+- A independência de instalação está entregue; HTTP continua usando Illuminate HTTP
+  e Database continua com Eloquent. Redução adicional de dependências exige outra revisão.
+
+## Próxima parte: 4
+
+Iniciar adaptador WordPress e plugin exemplo, reutilizando recursos do hospedeiro
+e verificando coexistência. A revisão
 visual da ajuda permanece pendente pela limitação registrada na etapa 1.

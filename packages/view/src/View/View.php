@@ -23,6 +23,9 @@ final class View
         $this->smarty->setLeftDelimiter('-{');
         $this->smarty->setRightDelimiter('}-');
         $this->smarty->registerPlugin('function', 'csrf_field', static function (): string {
+            if (!class_exists(Csrf::class)) {
+                throw new \RuntimeException('O helper csrf_field requer o pacote fxfavalessa/fx-http.');
+            }
             return '<input type="hidden" name="_csrf" value="'
                 . htmlspecialchars(Csrf::token(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">';
         }, false);

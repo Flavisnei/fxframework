@@ -12,7 +12,9 @@
         "illuminate/http": "^10.48",
         "smarty/smarty": "^4.5.7",
         "symfony/console": "^6.4",
-        "symfony/http-foundation": "^6.4"
+        "symfony/http-foundation": "^6.4",
+        "symfony/http-kernel": "^6.4",
+        "symfony/polyfill-mbstring": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5",
@@ -20,7 +22,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Fx\\Framework\\": ["src/", "packages/core/src/"]
+            "Fx\\Framework\\": [
+                "packages/core/src/",
+                "packages/http/src/",
+                "packages/database/src/",
+                "packages/view/src/",
+                "packages/console/src/",
+                "packages/auth/src/",
+                "packages/validation/src/",
+                "packages/windows/src/"
+            ]
         }
     },
     "autoload-dev": {
@@ -32,7 +43,14 @@
         "bin/fxartisan"
     ],
     "replace": {
-        "fxfavalessa/fx-core": "self.version"
+        "fxfavalessa/fx-core": "self.version",
+        "fxfavalessa/fx-http": "self.version",
+        "fxfavalessa/fx-database": "self.version",
+        "fxfavalessa/fx-view": "self.version",
+        "fxfavalessa/fx-console": "self.version",
+        "fxfavalessa/fx-auth": "self.version",
+        "fxfavalessa/fx-validation": "self.version",
+        "fxfavalessa/fx-windows": "self.version"
     },
     "config": {
         "optimize-autoloader": false,

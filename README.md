@@ -6,7 +6,8 @@
 
 O pacote independente `fxfavalessa/fx-core` está em `packages/core/` e contém
 container, configuração e providers. O pacote completo continua compatível e inclui
-esse mesmo código. A separação dos demais componentes ainda está em andamento.
+esse mesmo código. HTTP, Database, View, Console, Auth, Validation e Windows também
+possuem pacotes locais independentes. Consulte [os pacotes opcionais](docs/index.html#pacotes).
 
 ```bash
 composer install --working-dir=examples/minimal --no-dev
@@ -17,6 +18,27 @@ php examples/minimal/verify.php
 Leia [o guia do Core](packages/core/docs/index.html) ou a
 [ajuda de instalação mínima](docs/index.html#core). Após atualizar este checkout,
 execute `composer install` para atualizar o autoload dos arquivos movidos.
+
+### Componentes opcionais
+
+Na aplicação consumidora, configure um repositório Composer `path` apontando para
+`../fxframework/packages/*`. Escolha os requisitos `fxfavalessa/fx-http`,
+`fxfavalessa/fx-database`, `fxfavalessa/fx-view`, `fxfavalessa/fx-console`,
+`fxfavalessa/fx-auth`, `fxfavalessa/fx-validation` ou `fxfavalessa/fx-windows`.
+Durante o desenvolvimento local, use `@dev`, `minimum-stability: dev` e
+`prefer-stable: true` para resolver dependências FX transitivas. Não houve publicação.
+
+O Artisan básico não instala as camadas opcionais. Comandos são habilitados pelos
+pacotes presentes. Os nove cenários em `examples/` podem ser verificados com:
+
+```bash
+composer install --working-dir=examples/web --no-dev
+php examples/verify-package.php web
+```
+
+As classes foram movidas de `src/` para `packages/*/src/`, mantendo namespaces.
+Assets estão em `packages/windows/resources/fxwindows`; use
+`Fx\Framework\Windows\Assets::directory()` em integrações que precisem localizá-los.
 
 Abra [a central de ajuda HTML](docs/index.html) no navegador. Ela funciona offline,
 com busca, índice por assunto, exemplos e indicações do que ainda está planejado.

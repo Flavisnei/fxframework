@@ -156,7 +156,9 @@ use Fx\Framework\Foundation\Application;
 
 $app = new Application(dirname(__DIR__));
 $app->withDebug(filter_var(getenv('APP_DEBUG') ?: false, FILTER_VALIDATE_BOOL));
-Database::boot(require $app->basePath('config/database.php'));
+if (class_exists(Database::class)) {
+    Database::boot(require $app->basePath('config/database.php'));
+}
 require $app->basePath('routes/web.php');
 return $app;
 PHP);

@@ -1,0 +1,22 @@
+{
+    "name": "fxfavalessa/example-validation",
+    "description": "Verificacao isolada FX validation",
+    "license": "proprietary",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/*",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "fxfavalessa/fx-validation": "@dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": false
+    }
+}

@@ -36,20 +36,35 @@ final class Artisan extends SymfonyApplication
     private function registerFrameworkCommands(): void
     {
         $this->addCommands([
-            new AboutCommand($this->root), new RouteListCommand($this->root), new MigrationStatusCommand($this->root),
-            new MigrateFreshCommand($this->root), new MakeMiddlewareCommand($this->root), new ServeCommand($this->root),
-            new OptimizeClearCommand(), new FxWindowsInstallCommand($this->root),
-            new LegacyCommand('app:init', 'Cria a estrutura inicial da aplicacao'),
+            new AboutCommand($this->root), new OptimizeClearCommand(),
             new LegacyCommand('make:controller', 'Cria um controller', true),
-            new LegacyCommand('make:model', 'Cria um model Eloquent', true),
-            new LegacyCommand('make:request', 'Cria um request de validacao', true),
-            new LegacyCommand('make:migration', 'Cria uma migration', true),
-            new LegacyCommand('make:crud', 'Cria um CRUD completo', true),
-            new LegacyCommand('migrate', 'Executa migrations pendentes'),
-            new LegacyCommand('migrate:rollback', 'Reverte o ultimo lote de migrations'),
             new LegacyCommand('cache:clear', 'Limpa o cache da aplicacao'),
             new LegacyCommand('cache:cleartmp', 'Limpa arquivos temporarios'),
         ]);
+        $http = class_exists(\Fx\Framework\Foundation\Application::class);
+        $database = class_exists(\Fx\Framework\Database\Database::class);
+        if ($http) {
+            $this->addCommands([
+                new RouteListCommand($this->root), new MakeMiddlewareCommand($this->root), new ServeCommand($this->root),
+                new LegacyCommand('app:init', 'Cria a estrutura inicial da aplicacao'),
+                new LegacyCommand('make:request', 'Cria um request de validacao', true),
+            ]);
+        }
+        if ($database) {
+            $this->addCommands([
+                new MigrationStatusCommand($this->root), new MigrateFreshCommand($this->root),
+                new LegacyCommand('make:model', 'Cria um model Eloquent', true),
+                new LegacyCommand('make:migration', 'Cria uma migration', true),
+                new LegacyCommand('migrate', 'Executa migrations pendentes'),
+                new LegacyCommand('migrate:rollback', 'Reverte o ultimo lote de migrations'),
+            ]);
+        }
+        if ($http && $database && class_exists(\Fx\Framework\View\View::class)) {
+            $this->add(new LegacyCommand('make:crud', 'Cria um CRUD completo', true));
+        }
+        if (class_exists(\Fx\Framework\Windows\Assets::class)) {
+            $this->add(new FxWindowsInstallCommand($this->root));
+        }
     }
 
     private function registerApplicationCommands(): void

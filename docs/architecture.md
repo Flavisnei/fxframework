@@ -1,7 +1,7 @@
 # Arquitetura alvo do FX
 
-Estado: etapa 3A implementada. Core independente em packages/core, com o pacote
-completo preservado. Os demais componentes continuam agrupados; extração na etapa 3B.
+Estado: etapas 3A e 3B implementadas. Core e sete componentes independentes em
+packages/, com a distribuição completa preservada.
 
 ## Extração inicial
 
@@ -50,9 +50,28 @@ esse teste: ainda falta o adaptador e prova de coexistência entre plugins.
 | WordPress | Adaptação ao ambiente WordPress | Core; ambiente hospedeiro |
 | Artisan | Instalação, diagnóstico e geradores | Core; Console apenas no contexto CLI |
 
-O nome fx-core foi fixado; nomes dos demais pacotes e releases serão definidos na etapa 3B.
+Pacotes definidos: fx-core, fx-http, fx-database, fx-view, fx-console, fx-auth,
+fx-validation e fx-windows. Todos continuam em desenvolvimento local.
 Não trocar container ou ORM antes de comparar compatibilidade, tamanho e custo.
 O pacote completo é mantido como ponto de compatibilidade durante a extração.
+
+## Dependências entregues na etapa 3B
+
+- HTTP requer Core e Validation; não requer banco, Auth ou views. Seu handler usa
+  instanceof para reconhecer exceções opcionais sem carregar esses pacotes obrigatoriamente.
+- Database usa Eloquent; Core e HTTP não são requisitos. Separar ORM é trabalho futuro.
+- View usa somente Smarty. Helpers de CSRF exigem HTTP quando chamados, com mensagem
+  explícita se ausente; helpers FX Windows exigem assets publicados pela aplicação.
+- Console requer Core e Symfony Console. Comandos de cada camada só são registrados
+  quando suas classes estão disponíveis. CRUD exige HTTP, Database e View.
+- Auth requer HTTP; é composto pelas primitivas existentes, sem telas administrativas.
+- Validation usa polyfill mbstring. Windows inclui assets e localizador, sem bibliotecas PHP.
+- Os guias HTML de cada pacote são distribuídos em docs/index.html dentro do pacote.
+- A distribuição completa inclui todos os fontes com autoload único e replace por versão.
+
+Nove instalações isoladas em examples verificam limites e execução real. Os manifestos
+locais usam path com wildcard e minimum-stability dev, pois repositórios de dependências
+não são herdados pelo consumidor. Releases estáveis ainda serão preparadas.
 
 ## Módulos
 
