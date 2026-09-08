@@ -20,12 +20,14 @@ final class PackageCatalog
         'windows' => 'Assets FX Windows; sem painel',
         'wordpress' => 'Adaptador para o WordPress hospedeiro',
         'modules' => 'Registro, dependencias e ativacao de modulos',
+        'admin' => 'Painel FX Windows com usuarios, perfis e SQLite',
     ];
 
     public const PRESETS = [
         'minimal' => ['core'],
         'api' => ['http', 'console'],
         'wordpress' => ['wordpress'],
+        'admin' => ['admin', 'console'],
     ];
 
     public static function package(string $component): string
@@ -40,7 +42,7 @@ final class PackageCatalog
     public static function preset(string $preset): array
     {
         if (!isset(self::PRESETS[$preset])) {
-            throw new InvalidArgumentException('Preset indisponivel. Use minimal, api ou wordpress. Admin ainda esta em desenvolvimento.');
+            throw new InvalidArgumentException('Preset indisponivel. Use minimal, api, wordpress ou admin.');
         }
         return array_map(self::package(...), self::PRESETS[$preset]);
     }

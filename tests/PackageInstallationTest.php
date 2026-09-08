@@ -69,9 +69,9 @@ final class PackageInstallationTest extends TestCase
         self::assertStringNotContainsString('Pacotes instalados.', $output);
     }
 
-    public function testUnknownComponentsAndUnavailableAdminNeverInvokeComposer(): void
+    public function testUnknownComponentsAndPresetsNeverInvokeComposer(): void
     {
-        foreach ([['module:install', '--help'], ['module:install', 'core;echo'], ['preset:install', 'admin']] as [$command, $name]) {
+        foreach ([['module:install', '--help'], ['module:install', 'core;echo'], ['preset:install', 'unknown']] as [$command, $name]) {
             [$status] = $this->runCommand(['command' => $command, 'name' => $name]);
             self::assertNotSame(0, $status);
             self::assertFileDoesNotExist($this->directory . '/args.json');

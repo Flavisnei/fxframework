@@ -13,5 +13,6 @@
 /storage/framework/modules.json
 /storage/framework/modules.json.lock
 /examples/modules/storage/
+/examples/admin/storage/
 !storage/cache/.gitkeep
 !storage/logs/.gitkeep

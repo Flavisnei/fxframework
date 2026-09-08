@@ -22,7 +22,7 @@ final class PackageInstallCommand extends Command
     protected function configure(): void
     {
         $this->setDescription($this->preset ? 'Adiciona os pacotes de um preset via Composer' : 'Instala um componente do catalogo via Composer')
-            ->addArgument('name', InputArgument::REQUIRED, $this->preset ? 'minimal, api ou wordpress' : 'Componente listado em module:list')
+            ->addArgument('name', InputArgument::REQUIRED, $this->preset ? 'minimal, api, wordpress ou admin' : 'Componente listado em module:list')
             ->addOption('constraint', null, InputOption::VALUE_REQUIRED, 'Restricao Composer; use @dev somente no desenvolvimento local', '^1.0')
             ->addOption('composer', null, InputOption::VALUE_REQUIRED, 'Caminho do composer.phar ou executavel Unix')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Resolve dependencias sem instalar ou alterar manifesto/lock')

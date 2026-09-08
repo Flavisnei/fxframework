@@ -1,6 +1,6 @@
 # Arquitetura alvo do FX
 
-Estado: etapas 3A, 3B, 4, 5A e 5B implementadas. Core, componentes opcionais e adaptador
+Estado: etapas 3A, 3B, 4, 5A, 5B e 6 (SQLite) implementadas. Core, componentes opcionais e adaptador
 WordPress em packages/, com a distribuição completa preservada.
 
 ## Extração inicial
@@ -47,12 +47,12 @@ com hooks nativos; conflitos de versões entre plugins continuam fora dessa cobe
 | Auth | Contratos de identidade e autorização; adaptadores de sessão | Core, HTTP no adaptador web |
 | View | Templates e integração de helpers | Core |
 | FX Windows | Janelas e comportamento visual | Navegador; independente do Core |
-| Admin | Login, usuários, perfis, permissões, menu e dashboard | HTTP, Auth, Database, View e FX Windows |
+| Admin | Login, usuários, perfis, permissões, menu e dashboard | HTTP, Auth, Modules, FX Windows e PDO SQLite |
 | WordPress | Adaptação ao ambiente WordPress | Core; ambiente hospedeiro |
 | Artisan | Instalação, diagnóstico e geradores | Core; Console apenas no contexto CLI |
 
 Pacotes definidos: fx-core, fx-http, fx-database, fx-view, fx-console, fx-auth,
-fx-validation, fx-windows, fx-wordpress e fx-modules. Todos continuam em desenvolvimento local.
+fx-validation, fx-windows, fx-wordpress, fx-modules e fx-admin. Todos continuam em desenvolvimento local.
 Não trocar container ou ORM antes de comparar compatibilidade, tamanho e custo.
 O pacote completo é mantido como ponto de compatibilidade durante a extração.
 
@@ -95,14 +95,13 @@ A etapa 5B entrega fx-modules, dependente apenas do Core. Registro explícito em
 config/modules.json; estado de ativação em storage/framework/modules.json. Providers
 são registrados por dependência antes do boot. CLI opcional habilita status, doctor,
 enable, disable e refresh. Atualização do código permanece no Composer; refresh
-valida e reconhece versões após revisão, sem executar migrations ou conceder acesso. Não há create ou preset admin disponível.
+valida e reconhece versões após revisão, sem executar migrations ou conceder acesso. Não há create; preset admin adiciona Admin e Console, sem gerar configuração.
 
 ## Segurança e operação
 
 Etapa 2 implementa registro do Request antes de controllers/middleware, correções de
-validação, 404 de modelos ausentes e CSRF web. Antes do preset Admin, implementar
-sessões configuráveis, cookies adequados, logging, recuperação de senha e limitação
-de tentativas no módulo de autenticação. Permissões seguem recurso.acao, com negação
+validação, 404 de modelos ausentes e CSRF web. O Admin SQLite acrescenta sessão com expiração, cookies configuráveis, logging por
+callback, recuperação por integração de entrega e limitador persistente SQLite. Permissões seguem recurso.acao, com negação
 por padrão; acesso a registros pode exigir políticas adicionais.
 
 O adaptador WordPress delega hooks, REST, usuário, capabilities, wpdb e opções ao
@@ -121,6 +120,18 @@ dependências não demonstra, sozinha, menor latência ou maior escalabilidade.
 ## Documentação
 
 docs/index.html é a entrada pública atual. Cada módulo futuro deve fornecer ajuda
-com âncoras estáveis, exemplos e permissões. O Admin terá links contextuais e busca
-integrada; essa integração ainda não existe. A página inicial funciona sem servidor,
+com âncoras estáveis, exemplos e permissões. O Admin inclui links contextuais para seu manual. Busca unificada no painel ainda
+não existe; o manual usa índice e a central mantém busca local. A página inicial funciona sem servidor,
 com índice lateral e busca local. Mudanças de comportamento atualizam ajuda e changelog.
+
+## Admin inicial (etapa 6)
+
+fx-admin depende de Auth (que requer HTTP), Modules e Windows, além de PDO/SQLite.
+Não depende de Eloquent ou Smarty. O completo reúne as mesmas fontes e agora exige
+ext-pdo/ext-pdo_sqlite; o mínimo continua sem essas extensões obrigatórias.
+
+Schema e primeira conta são criados pelo admin:init; bootstrap nunca migra banco.
+Contas têm um perfil; consultas de identidade e permissões são renovadas por operação.
+Estado de módulos continua separado do banco. Recuperação precisa de callback de
+entrega configurado; os testes não enviam email. Backend distribuído, outros bancos,
+MFA, OAuth, prefixo customizável e benchmarks ficam fora deste escopo inicial.

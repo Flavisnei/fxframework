@@ -1,5 +1,17 @@
 # Histórico
 
+## Em desenvolvimento — etapa 6 (Admin SQLite) — 2026-09-07
+
+- fx-admin opcional com login, logout, contas, perfis, permissões e módulos em FX Windows.
+- Formulários JSON/CSRF, paginação, sessão com expiração e renovação, limites persistentes
+  de tentativas, proteção do último administrador e invalidação após mudanças na conta.
+- Recuperação com tokens aleatórios armazenados como hash, expiração e uso único;
+  entrega por callback configurável, sem envio real de mensagens nos testes.
+- preset admin e admin:init; exemplo standalone e ajuda HTML/contextual.
+- Compatibilidade: distribuição completa passa a requerer PDO/SQLite. Núcleo mínimo
+  permanece independente. Senhas iniciais nunca são predefinidas ou mostradas pelo CLI.
+- Escopo inicial SQLite, sem benchmark, revisão visual concluída ou email pré-configurado.
+
 ## Em desenvolvimento — etapa 5B — 2026-09-07
 
 - Novo fx-modules opcional, dependente somente do Core, incluído no completo.

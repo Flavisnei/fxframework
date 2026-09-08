@@ -13,7 +13,7 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 | 4 | Adaptador WordPress | Plugin exemplo e teste de coexistência sem kernel/sessão duplicados | Concluída no escopo testado |
 | 5A | Instalação e presets via Artisan | Composer real, simulação, conflitos e isolamento em projetos temporários | Concluída no escopo testado |
 | 5B | Ciclo de módulos | Contrato, ativação, desativação, reconhecimento de atualizações e diagnóstico | Concluída no escopo testado |
-| 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões no servidor e recuperação de senha | Pendente |
+| 6 | Auth e Admin FX Windows | Login, usuários, perfis, permissões e recuperação configurável | Entregue para SQLite; revisão visual pendente |
 | 7 | CRUD AJAX/JSON | Validação por campo, paginação, erros de rede e módulo exemplo completo | Pendente |
 | 8 | Escala e distribuição | Benchmarks reproduzíveis, versões suportadas, CI e guia de atualização | Pendente |
 
@@ -131,7 +131,29 @@ changelog. A conclusão depende de evidência, não de promessa de perfeição.
 - Manual do pacote, ajuda Console, central e exemplo atualizados. Revisão visual
   permanece pendente; os testes são de execução PHP e estrutura da documentação.
 
-## Próxima parte: 6
+## Evidências da etapa 6 (Admin SQLite)
 
-Auth e Admin FX Windows: sessões, login, usuários, perfis, permissões no servidor,
-recuperação de senha e ajuda contextual. O painel completo ainda não está entregue.
+- Pacote fx-admin opcional, sem Eloquent/Smarty, com FX Windows, contas, perfis,
+  permissões e operações de módulos já registrados. Preset admin e admin:init.
+- Sessão com cookies HttpOnly/SameSite, Secure configurável, ID/CSRF renovados,
+  expiração por tempo e invalidação após mudanças na conta. Permissões lidas por operação.
+- Recuperação com hash de token, expiração e uso único; callback de entrega e logger.
+  Nenhum email real enviado. Exemplo mantém entrega desabilitada até configurar.
+- Suíte: 90 testes / 282 assertions. Cobre autenticação, CSRF, acesso direto sem
+  permissão, último administrador, gestores delegados, contas inativas, expiração,
+  recuperação, rate limit persistente, paginação, conflitos e tipos inválidos.
+- 18 verificações HTTP/CLI reais usando autoload exclusivo de examples/admin:
+  conta aleatória em banco temporário, ativação de fx-admin, cookies, CSRF, renovação
+  do ID, consulta autenticada, recursos HTML/JS/CSS, ajuda e logout. Servidor encerrado.
+- Core mínimo continua verificado com quatro dependências externas. Nenhuma versão
+  de biblioteca do lock completo mudou; o completo passa a exigir PDO/SQLite.
+- Ajuda central e manuais atualizados; 19 tópicos, links/âncoras e busca conferidos.
+  Sintaxe JavaScript válida. Navegador integrado recusou conexão; não há teste visual.
+- Limites: SQLite, prefixo /admin fixo, um perfil por usuário, sem MFA/OAuth,
+  infraestrutura distribuída, benchmark ou serviço de email configurado.
+
+## Próxima parte: 7
+
+CRUD de domínio em módulo separado, com validação por campo e exemplo de negócio.
+Revisão visual do painel permanece pendente de navegador disponível; escala,
+outros bancos e matriz de versões atuais continuam na etapa 8.

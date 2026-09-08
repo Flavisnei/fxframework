@@ -7,6 +7,8 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.1",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*",
         "illuminate/container": "^10.48",
         "illuminate/database": "^10.48",
         "illuminate/http": "^10.48",
@@ -32,7 +34,8 @@
                 "packages/validation/src/",
                 "packages/windows/src/",
                 "packages/wordpress/src/",
-                "packages/modules/src/"
+                "packages/modules/src/",
+                "packages/admin/src/"
             ]
         }
     },
@@ -54,7 +57,8 @@
         "fxfavalessa/fx-validation": "self.version",
         "fxfavalessa/fx-windows": "self.version",
         "fxfavalessa/fx-wordpress": "self.version",
-        "fxfavalessa/fx-modules": "self.version"
+        "fxfavalessa/fx-modules": "self.version",
+        "fxfavalessa/fx-admin": "self.version"
     },
     "config": {
         "optimize-autoloader": false,

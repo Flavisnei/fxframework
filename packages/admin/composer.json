@@ -1,0 +1,13 @@
+{
+    "name": "fxfavalessa/fx-admin",
+    "description": "Painel opcional FX Windows com usuarios e permissoes, backend SQLite.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.1", "ext-pdo": "*", "ext-pdo_sqlite": "*",
+        "fxfavalessa/fx-auth": "^1.0 || dev-main",
+        "fxfavalessa/fx-modules": "^1.0 || dev-main",
+        "fxfavalessa/fx-windows": "^1.0 || dev-main"
+    },
+    "autoload": {"psr-4": {"Fx\\Framework\\": "src/"}}
+}

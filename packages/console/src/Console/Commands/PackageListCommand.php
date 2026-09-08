@@ -22,7 +22,7 @@ final class PackageListCommand extends Command
         $table->render();
         $output->writeln('Presets (aditivos, sem remover dependencias existentes):');
         foreach (PackageCatalog::PRESETS as $name => $components) { $output->writeln($name . ': ' . implode(', ', $components)); }
-        $output->writeln('Catalogo de pacotes, nao de modulos ativos. Admin ainda indisponivel. Pacotes locais requerem repositorio path e --constraint=@dev.');
+        $output->writeln('Catalogo de pacotes, nao de modulos ativos. Admin requer configuracao e admin:init. Pacotes locais requerem repositorio path e --constraint=@dev.');
         return self::SUCCESS;
     }
 }

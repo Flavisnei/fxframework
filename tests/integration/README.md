@@ -57,3 +57,18 @@ que scripts não rodaram e executa probes em processos com autoload próprio.
 Não acessa banco ou WordPress em execução. O teste WordPress deste arquivo apenas
 confere presença do adaptador sem camadas HTTP; os testes do host estão descritos
 acima. Validado com Composer 2.8.4, PHP 8.1.12 e Windows; Unix ainda não testado.
+
+## Admin via HTTP real
+
+Instale o vendor próprio de examples/admin e execute na raiz:
+
+~~~powershell
+php tests/integration/admin.php
+~~~
+
+Cria projeto e SQLite temporários, inicializa uma conta aleatória por admin:init,
+ativa fx-admin e inicia PHP em porta livre de 127.0.0.1. Verifica cookies HttpOnly
+e SameSite, CSRF, login com renovação de sessão, listagem, assets, ajuda e logout.
+Servidor termina em finally; arquivos ficam no temporário informado. Nenhum usuário
+existente é alterado. Exige proc_open, PDO/SQLite e allow_url_fopen para o cliente HTTP.
+O teste não controla navegador e não envia email.
