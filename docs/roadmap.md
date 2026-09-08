@@ -308,3 +308,14 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 
 - Complemento 8H: catálogo publicado lido por HTTPS na revisão fixa 097b04d com SHA-256 conferido; preset minimal instalado em consumidor temporário usando fonte path do Core e dependências resolvidas pelo Composer. Verificador do Core aprovado com somente o nome do consumidor ajustado na cópia temporária.
 - CI 34258207624 aprovada nas oito tarefas, incluindo instalação real por catálogo e as matrizes antiga/moderna. Evidência em docs/compatibility/github-actions-34258207624.json.
+
+
+## Etapa 8I — distribuição e homologação — 2026-09-08
+
+- Onze snapshots independentes publicados em packages/*, fonte fe285138b0c046c2facd5018c7f1c38038a583a7; metadados Composer com dist por commit fixo. Sem versão estável nova e sem publicação no Packagist.
+- MariaDB 10.4.27 iniciado com datadir e porta temporários, sem tocar nos bancos XAMPP. Dez verificações Database aprovadas; não representa portabilidade de Admin/Contatos para MySQL.
+- HTTP: quatro clientes, 50 consultas cada, 1.000 contatos, páginas de 20; 200 sucessos e zero erros. 14,96 req/s, p50 233,31 ms, p95 425,70 ms no servidor PHP embutido, Windows/PHP 8.1.12. Somente leituras e loopback; capacidade de produção não demonstrada.
+- SMTP: uma tentativa autorizada falhou. Diagnóstico sem DATA confirmou autenticação e recusa 553 em RCPT TO. Nenhuma entrega confirmada; depende do provedor. Credenciais não versionadas.
+- Revisão visual adiada pelo usuário; PostgreSQL, versões recentes de bancos, carga de produção e entrega SMTP seguem pendentes.
+
+- Consumidor Admin+Console instalou os oito pacotes FX necessários por ZIP do GitHub e suas dependências externas. Autoload e comandos admin:init/module:install/module:enable aprovados em processo independente, sem Eloquent ou Smarty. Repositório de metadados usado localmente nessa primeira conferência.

@@ -1,5 +1,12 @@
 # Histórico
 
+## Etapa 8I — distribuição e homologação — 2026-09-08
+
+- Preparador de snapshots independentes e repositório Composer próprio; onze branches packages/* com fontes e ajuda por pacote. Versões de desenvolvimento, sem Packagist.
+- Ferramenta de carga HTTP com sessões separadas, dados sintéticos e limpeza temporária; 200 consultas locais sem erros.
+- Teste Database em MariaDB: dez verificações aprovadas; Admin/Contatos permanecem SQLite.
+- SMTP autenticou; destinatário recusado com 553 antes de DATA. Entrega não confirmada. Ajuda inclui instalação, reprodução e limitações.
+
 ## Etapa 8H — catálogo de instalação extensível — 2026-09-08
 
 - Catálogo HTTPS e instalação do preset mínimo conferidos com revisão fixa; oito tarefas da CI 34258207624 aprovadas.

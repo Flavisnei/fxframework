@@ -19,3 +19,5 @@
 !storage/logs/.gitkeep
 
 /examples/contacts/storage/
+
+__pycache__/

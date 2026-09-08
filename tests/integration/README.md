@@ -100,3 +100,8 @@ sintéticos ao final. Não mede HTTP, capacidade máxima ou múltiplas máquinas
 ## Catálogo com Composer real
 
 Instale o vendor de examples/console e execute `php tests/integration/catalog.php C:/composer/composer.phar`, ajustando o caminho (opcional quando Composer está no PATH). O teste usa catálogo local e pacote sintético sem rede, verifica dry-run, instalação e autoload independente, scripts desabilitados e hash adulterado rejeitado sem alterar o consumidor. Os diretórios temporários são removidos ao terminar. Não comprova publicação no Packagist nem disponibilidade de um servidor HTTPS.
+
+
+## MySQL/MariaDB
+
+Instale examples/database e configure FX_TEST_MYSQL_PORT, FX_TEST_MYSQL_USER e FX_TEST_MYSQL_PASSWORD para um servidor exclusivo de testes em 127.0.0.1. Execute `php tests/integration/mysql.php`. Exige PDO MySQL e permissão CREATE/DROP DATABASE. Dez verificações com banco aleatório temporário; não migra Admin/Contatos, que exigem SQLite.

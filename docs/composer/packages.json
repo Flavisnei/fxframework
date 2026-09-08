@@ -1,0 +1,337 @@
+{
+    "packages": {
+        "fxfavalessa/fx-admin": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-admin",
+                "description": "Painel opcional FX Windows com usuarios e permissoes, backend SQLite.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "ext-pdo": "*",
+                    "ext-pdo_sqlite": "*",
+                    "fxfavalessa/fx-auth": "^1.0 || dev-main",
+                    "fxfavalessa/fx-modules": "^1.0 || dev-main",
+                    "fxfavalessa/fx-windows": "^1.0 || dev-main"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "suggest": {
+                    "symfony/mailer": "^6.4 para envio SMTP opcional",
+                    "ext-openssl": "Fila cifrada e transporte TLS"
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "4ef0263ce6a39d5e6f52e8752c3b14613cfa1bd4"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/4ef0263ce6a39d5e6f52e8752c3b14613cfa1bd4.zip",
+                    "reference": "4ef0263ce6a39d5e6f52e8752c3b14613cfa1bd4"
+                }
+            }
+        },
+        "fxfavalessa/fx-auth": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-auth",
+                "description": "Componente opcional FX: auth.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "fxfavalessa/fx-http": "^1.0 || dev-main"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "628e781fa8cd33f60a2867ce06ec1262442414c7"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/628e781fa8cd33f60a2867ce06ec1262442414c7.zip",
+                    "reference": "628e781fa8cd33f60a2867ce06ec1262442414c7"
+                }
+            }
+        },
+        "fxfavalessa/fx-console": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-console",
+                "description": "Componente opcional FX: console.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "fxfavalessa/fx-core": "^1.0 || dev-main",
+                    "symfony/console": "^6.4 || ^7.4"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "bin": [
+                    "bin/fxartisan"
+                ],
+                "suggest": {
+                    "fxfavalessa/fx-http": "Rotas, servidor e app:init",
+                    "fxfavalessa/fx-database": "Models e migrations",
+                    "fxfavalessa/fx-view": "Templates dos CRUDs",
+                    "fxfavalessa/fx-windows": "Publicacao de assets FX Windows"
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "bf8e81bdaa14907395c8144ed22c7fd750e61865"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/bf8e81bdaa14907395c8144ed22c7fd750e61865.zip",
+                    "reference": "bf8e81bdaa14907395c8144ed22c7fd750e61865"
+                }
+            }
+        },
+        "fxfavalessa/fx-core": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-core",
+                "description": "Nucleo minimo FX: container, configuracao e service providers, sem HTTP ou banco.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "illuminate/container": "^10.48 || ^13.0"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "6a2c4d9b96bbf9f9e6684b7b0aaa13292eda221c"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/6a2c4d9b96bbf9f9e6684b7b0aaa13292eda221c.zip",
+                    "reference": "6a2c4d9b96bbf9f9e6684b7b0aaa13292eda221c"
+                }
+            }
+        },
+        "fxfavalessa/fx-database": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-database",
+                "description": "Componente opcional FX: database.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "illuminate/database": "^10.48 || ^13.0"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "7e877942fa5ba9adb1789bfe84cecb83036a2480"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/7e877942fa5ba9adb1789bfe84cecb83036a2480.zip",
+                    "reference": "7e877942fa5ba9adb1789bfe84cecb83036a2480"
+                }
+            }
+        },
+        "fxfavalessa/fx-http": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-http",
+                "description": "Componente opcional FX: http.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "fxfavalessa/fx-core": "^1.0 || dev-main",
+                    "fxfavalessa/fx-validation": "^1.0 || dev-main",
+                    "illuminate/http": "^10.48 || ^13.0",
+                    "symfony/http-foundation": "^6.4 || ^7.4",
+                    "symfony/http-kernel": "^6.4 || ^7.4"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "0a66aba66a7363ab39eaf94d58fccca69c23a0d7"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/0a66aba66a7363ab39eaf94d58fccca69c23a0d7.zip",
+                    "reference": "0a66aba66a7363ab39eaf94d58fccca69c23a0d7"
+                }
+            }
+        },
+        "fxfavalessa/fx-modules": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-modules",
+                "description": "Registro explicito, dependencias e ciclo de ativacao de modulos FX.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "fxfavalessa/fx-core": "^1.0 || dev-main"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "5aa374d90ccbc4f74ea422a411845b09b59a7424"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/5aa374d90ccbc4f74ea422a411845b09b59a7424.zip",
+                    "reference": "5aa374d90ccbc4f74ea422a411845b09b59a7424"
+                }
+            }
+        },
+        "fxfavalessa/fx-validation": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-validation",
+                "description": "Componente opcional FX: validation.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "symfony/polyfill-mbstring": "^1.0"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "1ba202c833b8b283def098d0573b352c967ac4af"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/1ba202c833b8b283def098d0573b352c967ac4af.zip",
+                    "reference": "1ba202c833b8b283def098d0573b352c967ac4af"
+                }
+            }
+        },
+        "fxfavalessa/fx-view": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-view",
+                "description": "Componente opcional FX: view.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "smarty/smarty": "^4.5.7"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "suggest": {
+                    "fxfavalessa/fx-http": "Helper csrf_field",
+                    "fxfavalessa/fx-windows": "Assets dos helpers de janelas"
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "fda2e4a0f2131227b5049ddbba9cff22cf214440"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/fda2e4a0f2131227b5049ddbba9cff22cf214440.zip",
+                    "reference": "fda2e4a0f2131227b5049ddbba9cff22cf214440"
+                }
+            }
+        },
+        "fxfavalessa/fx-windows": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-windows",
+                "description": "Componente opcional FX: windows.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "da2e55f8bd691e04da0074a8a33cd422209dd3dd"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/da2e55f8bd691e04da0074a8a33cd422209dd3dd.zip",
+                    "reference": "da2e55f8bd691e04da0074a8a33cd422209dd3dd"
+                }
+            }
+        },
+        "fxfavalessa/fx-wordpress": {
+            "dev-main": {
+                "name": "fxfavalessa/fx-wordpress",
+                "description": "Adaptador FX Core para hooks, REST, capabilities e banco nativos do WordPress.",
+                "type": "library",
+                "license": "proprietary",
+                "require": {
+                    "php": "^8.1",
+                    "fxfavalessa/fx-core": "^1.0 || dev-main"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Fx\\Framework\\": "src/"
+                    }
+                },
+                "version": "dev-main",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Flavisnei/fxframework.git",
+                    "reference": "ad53024969f82477cffb6a7f3a8108ba9bc1fe7a"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/Flavisnei/fxframework/archive/ad53024969f82477cffb6a7f3a8108ba9bc1fe7a.zip",
+                    "reference": "ad53024969f82477cffb6a7f3a8108ba9bc1fe7a"
+                }
+            }
+        }
+    }
+}
