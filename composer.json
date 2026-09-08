@@ -1,0 +1,25 @@
+{
+    "name": "fxfavalessa/fx-console",
+    "description": "Componente opcional FX: console.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.1",
+        "fxfavalessa/fx-core": "^1.0 || dev-main",
+        "symfony/console": "^6.4 || ^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fx\\Framework\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/fxartisan"
+    ],
+    "suggest": {
+        "fxfavalessa/fx-http": "Rotas, servidor e app:init",
+        "fxfavalessa/fx-database": "Models e migrations",
+        "fxfavalessa/fx-view": "Templates dos CRUDs",
+        "fxfavalessa/fx-windows": "Publicacao de assets FX Windows"
+    }
+}

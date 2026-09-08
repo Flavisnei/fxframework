@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Fx\Framework\Console\Artisan;
+
+$autoloadCandidates = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+
+foreach ($autoloadCandidates as $autoload) {
+    if (is_file($autoload)) {
+        require $autoload;
+        exit(Artisan::fromCurrentDirectory()->run());
+    }
+}
+
+fwrite(STDERR, "Autoload do Composer nao encontrado. Execute composer install.\n");
+exit(1);

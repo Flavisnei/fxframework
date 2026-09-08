@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Fx\Framework\Console\Commands;
+
+use RuntimeException;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'fxwindows:install', description: 'Publica os assets do FX Windows na aplicacao')]
+final class FxWindowsInstallCommand extends Command
+{
+
+    public function __construct(private readonly string $root)
+    {
+        parent::__construct();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $source = \Fx\Framework\Windows\Assets::directory();
+        $destination = rtrim($this->root, '/\\') . '/public/assets/fxwindows';
+
+        if (!is_dir($source)) {
+            throw new RuntimeException("Assets do FX Windows nao encontrados: {$source}");
+        }
+
+        if (!is_dir($destination) && !mkdir($destination, 0775, true) && !is_dir($destination)) {
+            throw new RuntimeException("Nao foi possivel criar: {$destination}");
+        }
+
+        foreach (['fxwindows.js', 'fxwindows.css'] as $file) {
+            if (!copy($source . '/' . $file, $destination . '/' . $file)) {
+                throw new RuntimeException("Nao foi possivel publicar: {$file}");
+            }
+        }
+
+        $output->writeln("<info>FX Windows instalado:</info> {$destination}");
+        return Command::SUCCESS;
+    }
+}
