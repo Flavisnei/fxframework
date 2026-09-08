@@ -43,12 +43,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for example in minimal http modules admin contacts smtp; do
+          for example in minimal http console modules admin contacts smtp; do
             composer install --working-dir="examples/$example" --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
             composer check-platform-reqs --working-dir="examples/$example"
           done
       - name: Executar verificacoes locais e de integracao
         run: php tools/verify.php
+      - name: Catalogo com Composer real
+        run: php tests/integration/catalog.php
 
   modern:
     name: Dependencias modernas / PHP ${{ matrix.php }}
@@ -86,3 +88,5 @@ jobs:
           done
       - name: Suite e integracoes modernas
         run: php tools/verify.php
+      - name: Catalogo com Composer real
+        run: php tests/integration/catalog.php

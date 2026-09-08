@@ -294,3 +294,14 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Conexão com navegador tentada novamente e recusada pelo ambiente antes de abrir qualquer página. Login, janelas, formulários, teclado e revisão visual em navegador não foram executados nesta etapa e continuam pendentes.
 - Ajuda central contém roteiro manual com dados fictícios, pré-requisitos, cenários e diagnóstico. Nenhuma conta, configuração SMTP ou banco real foi modificado. Não houve alteração PHP nem repetição desnecessária da suíte aprovada.
 - Permanecem pendentes revisão visual real, catálogo remoto, carga HTTP, outros bancos e homologação SMTP externa.
+
+
+## Etapa 8H — catálogo extensível de instalação — 2026-09-08
+
+- Console aceita catálogo JSON local ou HTTPS selecionado explicitamente. SHA-256 obrigatório para HTTPS, validação TLS, recusa de redirecionamentos, limite de leitura e schema estrito. Nenhuma dependência nova no Core.
+- module:list, module:install e preset:install mantêm a seleção antiga quando não recebem --catalog. ComposerInstaller preserva os argumentos existentes, com catálogo opcional ao final. Catálogos não modificam repositórios nem ativam código ou migrations.
+- Suíte local PHP 8.1.12: 114 testes / 613 assertions aprovadas. Oito testes novos cobrem catálogo padrão, aliases/presets externos, hash adulterado, schema inválido, transporte sem proteção, limites, listagem e argumentos seguros do Composer.
+- Instalação real: oito verificações aprovadas com pacote sintético, Composer 2.8.4 e autoload exclusivo do Console. Dry-run preservou o consumidor; instalação funcionou em processo novo; scripts desabilitados; hash incorreto rejeitado sem alteração de manifesto/lock. Consumidor e pacote temporários removidos.
+- Vendor próprio de examples/console reinstalado e verificador de isolamento aprovado. Catálogo FX com onze componentes e quatro presets distribuído em docs/catalog.json. CI inclui o cenário com Composer real nas duas matrizes.
+- Publicação no Packagist e hospedagem de arquivos dos pacotes independentes continuam pendentes: catálogo remoto lista pacotes, enquanto o Composer usa as fontes configuradas na aplicação. Não anunciar instalação de pacotes FX sem preparar essas fontes.
+- Revisão visual adiada por solicitação do usuário. Carga HTTP, outros bancos e homologação SMTP externa permanecem trabalhos separados. Nenhum email externo enviado nesta etapa.

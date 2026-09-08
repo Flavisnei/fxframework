@@ -1,0 +1,65 @@
+{
+    "schema": 1,
+    "components": {
+        "core": {
+            "package": "fxfavalessa/fx-core",
+            "description": "Container, configuracao e providers"
+        },
+        "http": {
+            "package": "fxfavalessa/fx-http",
+            "description": "Rotas, requests, respostas e middleware"
+        },
+        "database": {
+            "package": "fxfavalessa/fx-database",
+            "description": "Banco, Eloquent e migrations"
+        },
+        "view": {
+            "package": "fxfavalessa/fx-view",
+            "description": "Templates Smarty"
+        },
+        "console": {
+            "package": "fxfavalessa/fx-console",
+            "description": "FX Artisan"
+        },
+        "auth": {
+            "package": "fxfavalessa/fx-auth",
+            "description": "Primitivas de autenticacao; sem painel"
+        },
+        "validation": {
+            "package": "fxfavalessa/fx-validation",
+            "description": "Validacao de dados"
+        },
+        "windows": {
+            "package": "fxfavalessa/fx-windows",
+            "description": "Assets FX Windows; sem painel"
+        },
+        "wordpress": {
+            "package": "fxfavalessa/fx-wordpress",
+            "description": "Adaptador para o WordPress hospedeiro"
+        },
+        "modules": {
+            "package": "fxfavalessa/fx-modules",
+            "description": "Registro, dependencias e ativacao de modulos"
+        },
+        "admin": {
+            "package": "fxfavalessa/fx-admin",
+            "description": "Painel FX Windows com usuarios, perfis e SQLite"
+        }
+    },
+    "presets": {
+        "minimal": [
+            "core"
+        ],
+        "api": [
+            "http",
+            "console"
+        ],
+        "wordpress": [
+            "wordpress"
+        ],
+        "admin": [
+            "admin",
+            "console"
+        ]
+    }
+}

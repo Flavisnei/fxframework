@@ -11,7 +11,7 @@ final class ComposerInstaller
 {
     public function __construct(private readonly string $root) {}
 
-    public function install(array $packages, string $constraint, ?string $composer, bool $dryRun, OutputInterface $output): int
+    public function install(array $packages, string $constraint, ?string $composer, bool $dryRun, OutputInterface $output, ?InstallCatalog $catalog = null): int
     {
         if (!is_file($this->root . '/composer.json')) {
             throw new RuntimeException('composer.json ausente. Execute na raiz da aplicacao; consulte a ajuda HTML do Console.');
@@ -27,7 +27,7 @@ final class ComposerInstaller
         }
         $requirements = [];
         foreach ($packages as $package) {
-            $requirements[] = PackageCatalog::package($package) . ':' . $constraint;
+            $requirements[] = ($catalog === null ? PackageCatalog::package($package) : $catalog->package($package)) . ':' . $constraint;
         }
         $command = [...$this->executable($composer), 'require', '--no-interaction', '--no-plugins', '--no-scripts'];
         if ($dryRun) { $command[] = '--dry-run'; }

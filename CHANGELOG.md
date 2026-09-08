@@ -1,5 +1,12 @@
 # Histórico
 
+## Etapa 8H — catálogo de instalação extensível — 2026-09-08
+
+- module:list, module:install e preset:install aceitam --catalog e --catalog-sha256. Arquivos locais e HTTPS com hash obrigatório; TLS verificado, sem redirecionamentos e com leitura limitada.
+- Formato schema 1 valida aliases, pacotes, descrições e presets. Nenhuma inclusão automática de repositórios, scripts, permissões ou migrations. Sem opções novas, comportamento anterior preservado.
+- API opcional InstallCatalog no Console; ComposerInstaller mantém argumentos anteriores e aceita catálogo como último argumento opcional. Nenhuma dependência nova no Core.
+- Catálogo FX distribuído em docs/catalog.json, ajuda central e do Console atualizadas. Testes cobrem rejeição antes do Composer e instalação real em consumidor temporário isolado.
+
 ## Etapa 8G — confirmação de CI e roteiro visual — 2026-09-08
 
 - Confirmadas oito tarefas aprovadas no GitHub Actions para o commit 9b6e01f; evidência com links por tarefa em docs/compatibility/github-actions-34233932875.json.

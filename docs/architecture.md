@@ -143,3 +143,8 @@ HTTP apenas enfileira; admin:mail processa em CLI, com reservas e tentativas lim
 Symfony Mailer é instalado pelo consumidor, sem dependência obrigatória no Core/Admin.
 TLS implícito obrigatório em produção; STARTTLS ainda não suportado. A fila tem
 semântica de entrega pelo menos uma vez, sem garantia de entrega na caixa postal.
+
+
+## Catálogos externos de instalação (etapa 8H)
+
+Console aceita catálogo JSON local ou HTTPS com SHA-256 obrigatório. A seleção é explícita por comando e não altera o catálogo padrão. Catálogo fornece apenas nomes, descrições e presets; repositórios e resolução de versões permanecem responsabilidade do Composer no consumidor. Catálogo remoto não equivale à publicação dos pacotes: fontes FX continuam no checkout por path. Nenhuma nova dependência do Core.

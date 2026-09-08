@@ -95,3 +95,8 @@ conteúdo final do vencedor e recusa de exclusão antiga. Retorna JSON e remove 
 sintéticos ao final. Não mede HTTP, capacidade máxima ou múltiplas máquinas.
 
 `php tools/verify.php` agora inclui esse teste como oitava etapa.
+
+
+## Catálogo com Composer real
+
+Instale o vendor de examples/console e execute `php tests/integration/catalog.php C:/composer/composer.phar`, ajustando o caminho (opcional quando Composer está no PATH). O teste usa catálogo local e pacote sintético sem rede, verifica dry-run, instalação e autoload independente, scripts desabilitados e hash adulterado rejeitado sem alterar o consumidor. Os diretórios temporários são removidos ao terminar. Não comprova publicação no Packagist nem disponibilidade de um servidor HTTPS.

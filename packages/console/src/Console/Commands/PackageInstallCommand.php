@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Fx\Framework\Console\Commands;
 
 use Fx\Framework\Console\Installation\ComposerInstaller;
-use Fx\Framework\Console\Installation\PackageCatalog;
+use Fx\Framework\Console\Installation\InstallCatalog;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +23,8 @@ final class PackageInstallCommand extends Command
     {
         $this->setDescription($this->preset ? 'Adiciona os pacotes de um preset via Composer' : 'Instala um componente do catalogo via Composer')
             ->addArgument('name', InputArgument::REQUIRED, $this->preset ? 'minimal, api, wordpress ou admin' : 'Componente listado em module:list')
+            ->addOption('catalog', null, InputOption::VALUE_REQUIRED, 'Arquivo JSON local ou URL HTTPS do catalogo')
+            ->addOption('catalog-sha256', null, InputOption::VALUE_REQUIRED, 'SHA-256 esperado; obrigatorio para HTTPS')
             ->addOption('constraint', null, InputOption::VALUE_REQUIRED, 'Restricao Composer; use @dev somente no desenvolvimento local', '^1.0')
             ->addOption('composer', null, InputOption::VALUE_REQUIRED, 'Caminho do composer.phar ou executavel Unix')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Resolve dependencias sem instalar ou alterar manifesto/lock')
@@ -32,7 +34,8 @@ final class PackageInstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = (string) $input->getArgument('name');
-        $packages = $this->preset ? PackageCatalog::preset($name) : [PackageCatalog::package($name)];
-        return (new ComposerInstaller($this->root))->install($packages, (string) $input->getOption('constraint'), $input->getOption('composer'), (bool) $input->getOption('dry-run'), $output);
+        $catalog = InstallCatalog::load($input->getOption('catalog'), $input->getOption('catalog-sha256'));
+        $packages = $this->preset ? $catalog->preset($name) : [$catalog->package($name)];
+        return (new ComposerInstaller($this->root))->install($packages, (string) $input->getOption('constraint'), $input->getOption('composer'), (bool) $input->getOption('dry-run'), $output, $catalog);
     }
 }
