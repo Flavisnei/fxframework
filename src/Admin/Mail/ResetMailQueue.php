@@ -15,28 +15,44 @@ final class ResetMailQueue
         if (!preg_match('/^[a-fA-F0-9]{64}$/D', $hexKey)) { throw new RuntimeException('FX_MAIL_KEY deve conter 32 bytes aleatorios em hexadecimal (64 caracteres).'); }
         $url = parse_url($adminUrl);
         if (!$url || !filter_var($adminUrl, FILTER_VALIDATE_URL) || preg_match('/[\x00-\x20]/', $adminUrl) || ($url['scheme'] ?? '') !== 'https' || empty($url['host']) || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment']) || ($url['path'] ?? '') !== '/admin') { throw new RuntimeException('FX_ADMIN_URL deve ser uma URL HTTPS fixa terminada em /admin, sem credenciais, query ou fragmento.'); }
-        if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') { throw new RuntimeException('A fila exige SQLite.'); }
+        if (!in_array($db->getAttribute(PDO::ATTR_DRIVER_NAME), ['sqlite','mysql'], true)) { throw new RuntimeException('A fila exige SQLite ou MySQL/MariaDB.'); }
         $this->key = hex2bin($hexKey);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $db->exec('PRAGMA busy_timeout = 5000');
+        if (!$this->mysql()) { $db->exec('PRAGMA busy_timeout = 5000'); }
     }
+    private function mysql(): bool { return $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'; }
     private function query(string $sql, array $values = []): \PDOStatement
     {
         $statement = $this->db->prepare($sql); $statement->execute($values); return $statement;
     }
     private function transaction(callable $callback): mixed
     {
-        $this->db->exec('BEGIN IMMEDIATE');
+        if ($this->mysql()) { $this->db->beginTransaction();
+            try { $this->query('SELECT id FROM fx_admin_mail_mutex WHERE id=1 FOR UPDATE')->fetchColumn(); }
+            catch (\Throwable $error) { $this->db->rollBack(); throw $error; }
+        } else { $this->db->exec('BEGIN IMMEDIATE'); }
         try { $result = $callback(); $this->db->exec('COMMIT'); return $result; }
         catch (\Throwable $error) { $this->db->exec('ROLLBACK'); throw $error; }
     }
     public function install(): void
     {
+        if ($this->mysql()) {
+            $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_mail_mutex (id INT PRIMARY KEY) ENGINE=InnoDB');
+            $this->db->exec('INSERT IGNORE INTO fx_admin_mail_mutex VALUES(1)');
+            $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_mail (id CHAR(32) PRIMARY KEY, recipient_hash CHAR(64) NOT NULL UNIQUE, payload TEXT NOT NULL, attempts INT NOT NULL DEFAULT 0, available BIGINT NOT NULL, expires BIGINT NOT NULL, lease CHAR(32), reserved_until BIGINT NOT NULL DEFAULT 0) ENGINE=InnoDB');
+            return;
+        }
         $this->db->exec('CREATE TABLE IF NOT EXISTS fx_admin_mail (id TEXT PRIMARY KEY, recipient_hash TEXT NOT NULL UNIQUE, payload TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, available INTEGER NOT NULL, expires INTEGER NOT NULL, lease TEXT, reserved_until INTEGER NOT NULL DEFAULT 0)');
     }
     public function assertReady(): void
     {
+        if ($this->mysql()) {
+            foreach (['fx_admin_mail', 'fx_admin_mail_mutex'] as $table) {
+                if (!$this->query('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?', [$table])->fetchColumn()) { throw new RuntimeException('Inicialize a fila pelo comando admin:mail --init.'); }
+            }
+            return;
+        }
         if (!$this->query("SELECT name FROM sqlite_master WHERE type='table' AND name='fx_admin_mail'")->fetchColumn()) { throw new RuntimeException('Inicialize a fila pelo comando admin:mail --init antes de habilitar recuperacao SMTP.'); }
     }
     public function enqueue(string $email, string $token): void
