@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "version": "1.1.0-rc.1",
+  "baseline": {
+    "account_preserved": true,
+    "core": true,
+    "no_eloquent_or_smarty": true
+  },
+  "upgraded": {
+    "account_preserved": true,
+    "core": true,
+    "no_eloquent_or_smarty": true
+  },
+  "restored": {
+    "account_preserved": true,
+    "core": true,
+    "no_eloquent_or_smarty": true
+  },
+  "original_packages": {
+    "fxfavalessa/fx-admin": {
+      "version": "dev-main",
+      "reference": "fb6ff86a6a140d2525738320e64168b1df4b7fe2"
+    },
+    "fxfavalessa/fx-auth": {
+      "version": "dev-main",
+      "reference": "927f7cf2dffbf1924cbe2c775d004abdb3a7873a"
+    },
+    "fxfavalessa/fx-console": {
+      "version": "dev-main",
+      "reference": "8917e9f5db585b76da61985ff6ab7af325090fb4"
+    },
+    "fxfavalessa/fx-core": {
+      "version": "dev-main",
+      "reference": "9075632fc17fe2e0546c97a2cc27b3f11e8c5dc4"
+    },
+    "fxfavalessa/fx-http": {
+      "version": "dev-main",
+      "reference": "b9013fc0737d2b26f41e8e9b257af44671dcfc1f"
+    },
+    "fxfavalessa/fx-modules": {
+      "version": "dev-main",
+      "reference": "81bb2d3a32379fa63f56081016281537a899eb7b"
+    },
+    "fxfavalessa/fx-validation": {
+      "version": "dev-main",
+      "reference": "a2b138cabd43fdfada9dbae30f9226f736786c82"
+    },
+    "fxfavalessa/fx-windows": {
+      "version": "dev-main",
+      "reference": "56246619fe5b6c71c810fa749792a096efa2cfa1"
+    }
+  },
+  "candidate_packages": {
+    "fxfavalessa/fx-admin": {
+      "version": "1.1.0-rc.1",
+      "reference": "04f80d04d24eeed27aa5a5d6720176d1b0f1dd40"
+    },
+    "fxfavalessa/fx-auth": {
+      "version": "1.1.0-rc.1",
+      "reference": "b757a6026824a8051b966c6383621d23f8ce901f"
+    },
+    "fxfavalessa/fx-console": {
+      "version": "1.1.0-rc.1",
+      "reference": "4a1d12462ff145f6640678aae1ad85ddef77e9af"
+    },
+    "fxfavalessa/fx-core": {
+      "version": "1.1.0-rc.1",
+      "reference": "040168e2ccf55b135b4d852450c8a9f370272553"
+    },
+    "fxfavalessa/fx-http": {
+      "version": "1.1.0-rc.1",
+      "reference": "0288460c80c298f29f12bdff5b3a5b12d88b056a"
+    },
+    "fxfavalessa/fx-modules": {
+      "version": "1.1.0-rc.1",
+      "reference": "d79dfb0745cfe4bf0330d961faaaaf2bafa97e27"
+    },
+    "fxfavalessa/fx-validation": {
+      "version": "1.1.0-rc.1",
+      "reference": "2cb58ea57fa1bc7eaa5cfeae47c8b987b03605ab"
+    },
+    "fxfavalessa/fx-windows": {
+      "version": "1.1.0-rc.1",
+      "reference": "63d3d875dec3697daf8e89a35888a9a61f857eec"
+    }
+  },
+  "lock_restored": true,
+  "scope": "Consumidor isolado Admin+Console; ZIPs remotos; conta MariaDB preservada; sem migration de schema."
+}

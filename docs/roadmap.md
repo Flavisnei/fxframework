@@ -356,3 +356,5 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Gerador de versões fixas com regressão sintética de preservação/recusa de regravação; 20 assertions. Sem mudança de contratos do runtime ou schema.
 - Revisão visual e SMTP permanecem reservados ao teste manual do usuário.
 - Suíte completa com MariaDB: 118 testes / 663 assertions aprovados. Ajuda: 31 tópicos, âncoras preservadas e busca funcional conferida (sem revisão visual).
+- WordPress 7.1/PHP 8.1.12/Illuminate 10.49.0: 28 verificações simples e 37 multisite aprovadas. Fontes oficiais com checksums conferidos, email bloqueado, instalações e bancos descartados.
+- Candidata 1.1.0-rc.1: onze snapshots/tags independentes publicados sem force; índice preserva dev-main anterior. Upgrade e retorno dos oito pacotes Admin+Console por Composer/ZIP remoto aprovados com conta MariaDB preservada. Nenhuma migration de schema executada.

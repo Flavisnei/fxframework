@@ -34,9 +34,10 @@ try:
         'name':database['database'],'username':database['user'],'password':database['password']}}
     manifest={'name':'fx-test/release','minimum-stability':'dev','prefer-stable':True,
         'repositories':[{'type':'composer','url':args.repository}],
-        'require':{'fxfavalessa/fx-admin':'dev-main','fxfavalessa/fx-console':'dev-main'}}
+        'require':{'fxfavalessa/fx-'+name:'dev-main' for name in ['admin','auth','console','core','http','modules','validation','windows']}}
     (directory/'composer.json').write_text(json.dumps(manifest),encoding='utf-8')
     composer('update'); baseline=probe('create'); original=refs()
+    if any(p['version']!='dev-main' for p in original.values()): raise RuntimeError('Baseline deve usar somente snapshots anteriores.')
     old_manifest=(directory/'composer.json').read_bytes(); old_lock=(directory/'composer.lock').read_bytes()
     manifest['minimum-stability']='RC'
     manifest['require']={name:args.version for name in manifest['require']}

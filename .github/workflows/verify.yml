@@ -122,10 +122,23 @@ jobs:
       - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
         with:
           php-version: '8.3'
-          extensions: mbstring, pdo_mysql, pdo_sqlite, dom, xml, xmlwriter, openssl, zip
+          extensions: mbstring, mysqli, pdo_mysql, pdo_sqlite, dom, xml, xmlwriter, openssl, zip
           coverage: none
           tools: composer:v2
       - run: composer install --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
       - run: composer install --working-dir=examples/contacts --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
       - run: php vendor/bin/phpunit --do-not-cache-result --filter 'AdminTest|ContactsTest|ResetMailQueueTest|MariaDbConcurrencyTest'
       - run: php tests/integration/contacts.php
+
+      - name: WordPress simples e multisite com container de outro plugin
+        if: matrix.database == '10.11'
+        shell: bash
+        run: |
+          set -euo pipefail
+          composer update --working-dir=examples/wordpress --with=illuminate/container:^10.48 --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
+          curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "$RUNNER_TEMP/wp-cli.phar"
+          php -r "if (hash_file('sha256', getenv('RUNNER_TEMP').'/wp-cli.phar') !== 'ce34ddd838f7351d6759068d09793f26755463b4a4610a5a5c0a97b68220d85c') { exit(1); }"
+          mkdir "$RUNNER_TEMP/fx-host"
+          composer init --working-dir="$RUNNER_TEMP/fx-host" --name=fx-test/host --require=illuminate/container:^13.0 --no-interaction
+          composer install --working-dir="$RUNNER_TEMP/fx-host" --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
+          python tests/integration/wordpress-matrix.py --wp-cli "$RUNNER_TEMP/wp-cli.phar" --version 7.1 --multisite --host-autoload "$RUNNER_TEMP/fx-host/vendor/autoload.php"

@@ -1,0 +1,22 @@
+{
+  "version": "7.1",
+  "host_autoload_first": false,
+  "checksums": "Success: WordPress installation verifies against checksums.",
+  "results": [
+    {
+      "multisite": false,
+      "checks": 28,
+      "illuminate_container": "10.49.0",
+      "diagnostics": ""
+    },
+    {
+      "multisite": true,
+      "checks": 37,
+      "illuminate_container": "10.49.0",
+      "diagnostics": ""
+    }
+  ],
+  "php": "8.1.12",
+  "wp_cli_sha256": "ce34ddd838f7351d6759068d09793f26755463b4a4610a5a5c0a97b68220d85c",
+  "scope": "WordPress real via CLI/REST interno; emails bloqueados; sem revisão visual."
+}
