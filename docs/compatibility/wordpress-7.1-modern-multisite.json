@@ -1,0 +1,19 @@
+{
+  "version": "7.1",
+  "host_autoload_first": true,
+  "checksums": "Success: WordPress installation verifies against checksums.",
+  "results": [
+    {
+      "multisite": false,
+      "output": "Illuminate container: v13.30.1\nWordPress 7.1: 28 verificacoes reais passaram.",
+      "diagnostics": ""
+    },
+    {
+      "multisite": true,
+      "output": "Illuminate container: v13.30.1\nWordPress 7.1: 37 verificacoes reais passaram.",
+      "diagnostics": ""
+    }
+  ],
+  "wp_cli_sha256": "ce34ddd838f7351d6759068d09793f26755463b4a4610a5a5c0a97b68220d85c",
+  "scope": "WordPress real via CLI/REST interno; email bloqueado por pre_wp_mail; sem revisão visual."
+}

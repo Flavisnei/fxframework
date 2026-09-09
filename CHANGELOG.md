@@ -6,7 +6,7 @@
 - Runner WordPress descartável com checksums oficiais e email bloqueado; verificações multisite de opções e permissões.
 - Gerador de repositório aceita SemVer/RC, fixa dependências internas, preserva versões e recusa regravação; publicação permanece explícita.
 - Candidata 1.1.0-rc.1 nos onze pacotes, com dependências FX exatas; upgrade/retorno de oito pacotes aprovado preservando conta MariaDB.
-- WordPress 7.1: 28 verificações simples e 37 multisite com Illuminate 10 aprovadas; CI inclui coexistência com Illuminate 13.
+- WordPress 7.1: 28 verificações simples e 37 multisite com Illuminate 10 aprovadas; Coexistência com Illuminate 13.30.1 carregado primeiro também passou (28/37); CI inclui o cenário.
 - Atualização/retorno requerem preservar manifesto, lock e backup do banco; sem alteração de schema nesta etapa.
 
 ## Etapa 8K — Admin e Contatos em MariaDB — 2026-09-08

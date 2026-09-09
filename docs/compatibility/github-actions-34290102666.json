@@ -1,0 +1,58 @@
+{
+  "run_id": 34290102666,
+  "commit": "5a5fedd72ebf132052e6944f37ada3a99aee192f",
+  "url": "https://github.com/Flavisnei/fxframework/actions/runs/34290102666",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Dependencias modernas / PHP 8.3",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Admin e Contatos / MariaDB 10.11",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "PHP 8.3 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Admin e Contatos / MariaDB 10.4",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "PHP 8.3 / windows-latest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Dependencias modernas / PHP 8.5",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "PHP 8.1 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "PHP 8.5 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "PHP 8.4 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "PHP 8.2 / ubuntu-latest",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

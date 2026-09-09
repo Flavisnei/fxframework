@@ -358,3 +358,6 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - Suíte completa com MariaDB: 118 testes / 663 assertions aprovados. Ajuda: 31 tópicos, âncoras preservadas e busca funcional conferida (sem revisão visual).
 - WordPress 7.1/PHP 8.1.12/Illuminate 10.49.0: 28 verificações simples e 37 multisite aprovadas. Fontes oficiais com checksums conferidos, email bloqueado, instalações e bancos descartados.
 - Candidata 1.1.0-rc.1: onze snapshots/tags independentes publicados sem force; índice preserva dev-main anterior. Upgrade e retorno dos oito pacotes Admin+Console por Composer/ZIP remoto aprovados com conta MariaDB preservada. Nenhuma migration de schema executada.
+- WordPress 7.1/PHP 8.3.33 com Illuminate 13.30.1 carregado antes do autoload do exemplo: 28 verificações simples e 37 multisite aprovadas, sem diagnósticos. Não certifica duas versões incompatíveis do mesmo namespace.
+- Core 1.1.0-rc.1 instalado em consumidor novo via metadados HTTPS e ZIP remoto: examples/minimal/verify.php passou sem alterações, com somente quatro dependências externas.
+- CI 34290102666 da revisão 5a5fedd: dez tarefas aprovadas, incluindo MariaDB 10.4/10.11, WordPress multisite com Illuminate 13 e matrizes PHP/Windows/Linux. Evidência versionada; revisão visual e SMTP continuam manuais.
