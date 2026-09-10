@@ -20,3 +20,16 @@ credenciais nem banco de examples/admin. Pacotes por path exigem este repositór
 
 
 MariaDB opcional: configure database em config/admin.php e config/contacts.php conforme [a ajuda de migração](modules/contacts/docs/index.html#mariadb-admin). Crie previamente o banco e execute os mesmos comandos de inicialização. Sem configuração de Contatos, permanece SQLite. Não há cópia automática de dados entre bancos.
+
+Se você já usava o exemplo e `composer install` avisar que o lock está desatualizado,
+execute nesta pasta:
+
+```powershell
+composer update "fxfavalessa/*" --minimal-changes --no-plugins --no-scripts
+composer install --no-plugins --no-scripts
+```
+
+Isso sincroniza os pacotes FX copiados de `../../packages` e o lock local do exemplo.
+O segundo comando deve terminar sem o aviso de lock desatualizado. Não apague o
+banco nem execute novamente a criação de contas para resolver esse aviso. Os locks
+dos exemplos são locais e ignorados pelo Git. A mensagem de financiamento é informativa.

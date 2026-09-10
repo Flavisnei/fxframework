@@ -361,3 +361,8 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 - WordPress 7.1/PHP 8.3.33 com Illuminate 13.30.1 carregado antes do autoload do exemplo: 28 verificações simples e 37 multisite aprovadas, sem diagnósticos. Não certifica duas versões incompatíveis do mesmo namespace.
 - Core 1.1.0-rc.1 instalado em consumidor novo via metadados HTTPS e ZIP remoto: examples/minimal/verify.php passou sem alterações, com somente quatro dependências externas.
 - CI 34290102666 da revisão 5a5fedd: dez tarefas aprovadas, incluindo MariaDB 10.4/10.11, WordPress multisite com Illuminate 13 e matrizes PHP/Windows/Linux. Evidência versionada; revisão visual e SMTP continuam manuais.
+
+## Correção de instalação local — 2026-09-09
+
+- Aviso de lock desatualizado reproduzido no exemplo Contatos. Atualização limitada aos oito pacotes FX sincronizou o lock e as cópias path; composer install repetido sem o aviso. Dependências externas não atualizadas.
+- Integração isolada de Contatos: 34 verificações HTTP/CLI aprovadas em ambiente temporário. Sem alteração PHP do framework ou dados/contas do exemplo. Ajuda e README atualizados; âncoras e links internos preservados.

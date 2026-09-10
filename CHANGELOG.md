@@ -1,5 +1,9 @@
 # Histórico
 
+## 2026-09-09 — Instalação existente do exemplo Contatos
+
+- Documentado como sincronizar o lock local e os pacotes FX de uma instalação anterior, sem apagar dados ou recriar contas.
+
 ## 2026-09-08 — Etapa 8L: homologação e versões fixas
 
 - Runner Apache/MariaDB com sessões Admin distintas, CSRF e CRUD JSON de Contatos; bancos descartáveis e evidência de 480 operações sem erros.
