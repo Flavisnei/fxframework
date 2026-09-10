@@ -33,3 +33,18 @@ Isso sincroniza os pacotes FX copiados de `../../packages` e o lock local do exe
 O segundo comando deve terminar sem o aviso de lock desatualizado. Não apague o
 banco nem execute novamente a criação de contas para resolver esse aviso. Os locks
 dos exemplos são locais e ignorados pelo Git. A mensagem de financiamento é informativa.
+
+## Recuperação de senha opcional
+
+O exemplo inclui o transporte symfony/mailer. A recuperação só aparece quando
+config/mail.local.json existe. Copie a estrutura de config/mail.php: informe dsn,
+from, admin_url HTTPS terminado em /admin e key com 64 caracteres hexadecimais.
+Guarde o arquivo fora do Git. Não troque a chave com mensagens pendentes.
+Execute `php vendor/bin/fxartisan admin:mail --init` antes de abrir o painel.
+Consulte `php vendor/bin/fxartisan admin:mail --status` sem enviar mensagens.
+Depois de solicitar recuperação para uma conta existente, execute
+`php vendor/bin/fxartisan admin:mail --limit=1` para tentar enviar uma mensagem.
+O comando de envio deve rodar em outro terminal, mantendo o servidor ativo.
+Confira entrada/spam e use o link em até 30 minutos. O link é de uso único.
+Falha SMTP não confirma entrega; confira remetente autorizado e regras do provedor.
+Este exemplo não compartilha contas nem fila com examples/admin.

@@ -1,5 +1,9 @@
 # Histórico
 
+## 2026-09-09 — Recuperação opcional no exemplo Contatos
+
+- Acrescentado transporte SMTP ao exemplo e configuração privada opcional para ativar recuperação. Nenhuma dependência adicionada ao Core. Documentados inicialização, consulta e envio da fila.
+
 ## 2026-09-09 — Instalação existente do exemplo Contatos
 
 - Documentado como sincronizar o lock local e os pacotes FX de uma instalação anterior, sem apagar dados ou recriar contas.

@@ -21,3 +21,5 @@
 /examples/contacts/storage/
 
 __pycache__/
+
+/examples/contacts/config/mail.local.json

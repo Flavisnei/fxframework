@@ -366,3 +366,6 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 
 - Aviso de lock desatualizado reproduzido no exemplo Contatos. Atualização limitada aos oito pacotes FX sincronizou o lock e as cópias path; composer install repetido sem o aviso. Dependências externas não atualizadas.
 - Integração isolada de Contatos: 34 verificações HTTP/CLI aprovadas em ambiente temporário. Sem alteração PHP do framework ou dados/contas do exemplo. Ajuda e README atualizados; âncoras e links internos preservados.
+
+- Preparação de email em Contatos: configuração privada isolada e ignorada pelo Git, fila inicializada vazia. Nenhuma mensagem externa enviada. Serviço HTTPS local preparado fora do versionamento; início automático bloqueado pelo ambiente, exige execução manual. Entrega real continua pendente.
+- Verificação: endpoint de sessão retornou recovery=true; 21 testes Admin/fila e 91 assertions aprovados. Certificado/chave de teste carregados e script TLS compilado; conexão HTTPS ainda depende do início manual. Âncoras da ajuda preservadas.

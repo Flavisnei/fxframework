@@ -26,7 +26,8 @@
     ],
     "require": {
         "fxfavalessa/fx-admin": "@dev",
-        "fxfavalessa/fx-console": "@dev"
+        "fxfavalessa/fx-console": "@dev",
+        "symfony/mailer": "^6.4"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
