@@ -15,7 +15,12 @@ function smtpCheck(bool $condition, string $message): void { global $checks; if 
 try {
     for ($i = 0; $i < 50 && !is_file($directory . '/address'); $i++) { usleep(100000); }
     $address = trim(file_get_contents($directory . '/address'));
-    $sender = new SmtpSender('smtp://' . $address, 'sender@example.test', true);
+    $sender = new SmtpSender('smtp://' . $address, 'sender@example.test', true, 'FX Test');
+    $sender->checkConnection();
+    smtpCheck(!is_file($directory . '/message'), 'Verificacao de conexao enviou mensagem.');
+    $sender->sendTest('test@example.test');
+    $testMessage = file_get_contents($directory . '/message');
+    smtpCheck(str_contains($testMessage, 'Teste de email - FX Framework') && str_contains($testMessage, 'FX Test'), 'Teste SMTP sem assunto ou nome.');
     $db = new PDO('sqlite:' . $directory . '/queue.sqlite');
     $queue = new ResetMailQueue($db, bin2hex(random_bytes(32)), 'https://example.test/admin');
     $queue->install();

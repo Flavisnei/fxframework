@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 return [
+    'mail_settings' => true,
     'database' => dirname(__DIR__) . '/storage/admin.sqlite',
     // Exemplo local HTTP. Use true em HTTPS; nao confie em headers arbitrarios de proxy.
     'secure_cookie' => false,

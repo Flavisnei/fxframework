@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-09-13 — Configuração de email pelo painel e .env
+
+- Tela restrita ao administrador principal, gravação protegida no .env, conexão SMTP e envio de teste explícito. Compatibilidade com configuração legada e senha preservada.
+- Trabalhador admin:mail --watch relê a configuração; feedback da recuperação aparece no formulário. Dotenv adicionado somente ao Admin e ao ambiente de desenvolvimento.
+- Ajuda documenta instalação, precedência, migração e operação do trabalhador.
+
+
 ## 2026-09-09 — Recuperação opcional no exemplo Contatos
 
 - Acrescentado transporte SMTP ao exemplo e configuração privada opcional para ativar recuperação. Nenhuma dependência adicionada ao Core. Documentados inicialização, consulta e envio da fila.

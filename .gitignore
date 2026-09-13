@@ -23,3 +23,9 @@
 __pycache__/
 
 /examples/contacts/config/mail.local.json
+
+/examples/*/.env
+/examples/*/.env.*
+!/examples/*/.env.example
+
+.fx-mail-*

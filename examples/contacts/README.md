@@ -48,3 +48,15 @@ O comando de envio deve rodar em outro terminal, mantendo o servidor ativo.
 Confira entrada/spam e use o link em até 30 minutos. O link é de uso único.
 Falha SMTP não confirma entrega; confira remetente autorizado e regras do provedor.
 Este exemplo não compartilha contas nem fila com examples/admin.
+
+### Configuração pelo painel
+
+Com o administrador principal, abra **Configurações de email**. Salve os dados SMTP no `.env` da raiz deste exemplo, teste conexão e entrega. Senha vazia preserva a atual. A ajuda completa está em `../../docs/index.html#mail-settings`. A configuração legada continua válida até a migração. Não copie `.env.example` sobre uma configuração existente.
+
+Para processar recuperação automaticamente, mantenha outro terminal aberto nesta pasta:
+
+```sh
+php vendor/bin/fxartisan admin:mail --watch
+```
+
+O comando relê `.env` a cada ciclo; encerre com Ctrl+C. Produção exige supervisor ou agendamento. O arquivo não é exportado automaticamente para outros programas.

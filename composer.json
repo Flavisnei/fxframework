@@ -14,6 +14,7 @@
         "illuminate/http": "^10.48 || ^13.0",
         "smarty/smarty": "^4.5.7",
         "symfony/console": "^6.4 || ^7.4",
+        "symfony/dotenv": "^6.4 || ^7.4",
         "symfony/http-foundation": "^6.4 || ^7.4",
         "symfony/http-kernel": "^6.4 || ^7.4",
         "symfony/polyfill-mbstring": "^1.0"

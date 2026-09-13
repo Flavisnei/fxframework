@@ -50,7 +50,7 @@ final class Panel
     }
 
     /** delivery(email, token): deve enfileirar a mensagem. logger(evento, contexto): sem segredos. */
-    public function __construct(private readonly AdminStore $store, private readonly AdminSession $session, private readonly ModuleManager $modules, private readonly ?\Closure $delivery = null, private readonly ?\Closure $logger = null) {}
+    public function __construct(private readonly AdminStore $store, private readonly AdminSession $session, private readonly ModuleManager $modules, private readonly ?\Closure $delivery = null, private readonly ?\Closure $logger = null, private readonly ?\Fx\Framework\Admin\Mail\MailSettings $mailSettings = null) {}
 
     public function mount(Router $router): void
     {
@@ -63,7 +63,7 @@ final class Panel
             $permissions = $user ? $this->store->permissions($user) : [];
             $areas = in_array('dashboard.view', $permissions, true)
                 ? array_values(array_filter($this->areas, fn ($area) => in_array($area['permission'], $permissions, true))) : [];
-            return ['csrf' => Csrf::token(), 'user' => $user?->publicData(), 'permissions' => $permissions, 'recovery' => $this->delivery !== null, 'areas' => $areas];
+            return ['csrf' => Csrf::token(), 'user' => $user?->publicData(), 'permissions' => $permissions, 'recovery' => $this->delivery !== null, 'mail_settings' => $this->mailSettings !== null && $user !== null && (int)$user->data['role_id'] === 1, 'areas' => $areas];
         });
         $route('POST', 'login', null, function (Request $request, array $data): array {
             $email = strtolower(AdminStore::text($data, 'email', 3, 254));
@@ -104,6 +104,32 @@ final class Panel
             $this->log('recovery.completed', []);
             return ['message' => 'Senha alterada. Entre novamente.', 'csrf' => Csrf::token()];
         });
+        if ($this->mailSettings !== null) {
+            $authorizeMail = static function($actor):void {
+                if (!$actor || (int)$actor->data['role_id'] !== 1) { throw new HttpException(403, 'Somente o perfil Administrador pode configurar email.'); }
+            };
+            $route('GET','mail/settings','dashboard.view',function($request,$data,$actor)use($authorizeMail):array {
+                $authorizeMail($actor);return $this->mailSettings->snapshot();
+            });
+            $route('POST','mail/settings','dashboard.view',function($request,$data,$actor)use($authorizeMail):array {
+                $authorizeMail($actor);$result=$this->mailSettings->save($data);
+                $this->log('mail.settings_saved',['actor'=>$actor->getAuthIdentifier()]);return $result;
+            });
+            foreach (['check','test'] as $operation) {
+                $route('POST','mail/'.$operation,'dashboard.view',function($request,$data,$actor)use($authorizeMail,$operation):array {
+                    $authorizeMail($actor);$this->store->throttle('mail-test:'.$actor->getAuthIdentifier(),5,300);
+                    $mail=$this->mailSettings->mail();
+                    if($mail===null)throw new HttpException(422,'Salve e habilite o email antes de testar.');
+                    $recipient=$data['recipient']??'';
+                    if($operation==='test' && (!is_string($recipient) || !filter_var($recipient,FILTER_VALIDATE_EMAIL)))throw new HttpException(422,'Informe o destinatario do teste.');
+                    try {
+                        $sender=\Fx\Framework\Admin\Mail\MailConfig::sender(['mail'=>$mail]);
+                        if($operation==='check')$sender->checkConnection();else $sender->sendTest($recipient);
+                    } catch(\RuntimeException $error) { throw new HttpException(422,$error->getMessage()); }
+                    return ['message'=>$operation==='check'?'Conexao TLS e autenticacao verificadas. Nenhum email enviado.':'O servidor SMTP aceitou a mensagem de teste. Confira entrada e spam.'];
+                });
+            }
+        }
         $route('GET', 'users', 'users.view', function (Request $request): array {
             $query = $request->query->all();
             $page = $query['page'] ?? '1'; $search = $query['q'] ?? '';

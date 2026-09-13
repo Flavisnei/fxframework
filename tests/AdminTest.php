@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 final class AdminTest extends TestCase
 {
     use DatabaseBackend;
+    private string $settingsRoot;
     private AdminStore $store;
     private \PDO $db;
     private Application $app;
@@ -33,12 +34,15 @@ final class AdminTest extends TestCase
         $this->db = $this->backend();
         $this->store = new AdminStore($this->db);
         $this->store->install('Admin', 'admin@example.test', self::PASSWORD);
+        $this->settingsRoot=sys_get_temp_dir().'/fx-admin-mail-api-'.bin2hex(random_bytes(8));mkdir($this->settingsRoot,0700);
         $this->app = new Application(__DIR__);
-        (new Panel($this->store, $this->session, new ModuleManager(__DIR__), function (string $email, string $token): void { $this->deliveries[] = [$email, $token]; }))->mount($this->app->make(Router::class));
+        (new Panel($this->store, $this->session, new ModuleManager(__DIR__), function (string $email, string $token): void { $this->deliveries[] = [$email, $token]; }, null, new \Fx\Framework\Admin\Mail\MailSettings($this->settingsRoot)))->mount($this->app->make(Router::class));
         $this->csrf = $this->body($this->request('GET', 'session'))['csrf'];
     }
     protected function tearDown(): void
     {
+        foreach (['.env','.env.lock'] as $file) { if(is_file($this->settingsRoot.'/'.$file))unlink($this->settingsRoot.'/'.$file); }
+        rmdir($this->settingsRoot);
         $_SESSION = [];
         if (session_status() === PHP_SESSION_ACTIVE) { session_destroy(); }
     }
@@ -52,6 +56,24 @@ final class AdminTest extends TestCase
         $response = $this->request('POST', 'login', ['email' => $email, 'password' => $password]);
         self::assertSame(200, $response->getStatusCode(), $response->getContent());
         $this->csrf = $this->body($response)['csrf'];
+    }
+    public function testMailSettingsRequireReservedAdminAndCsrfAndHideSecrets():void
+    {
+        self::assertSame(401,$this->request('GET','mail/settings')->getStatusCode());
+        $this->login();
+        $state=$this->body($this->request('GET','mail/settings'));
+        $data=['revision'=>$state['revision'],'enabled'=>true,'host'=>'smtp.example.test','port'=>'465','username'=>'test','password'=>'synthetic-secret','from'=>'sender@example.test','from_name'=>'FX','admin_url'=>'https://example.test/admin'];
+        self::assertSame(403,$this->request('POST','mail/settings',$data,false)->getStatusCode());
+        $saved=$this->request('POST','mail/settings',$data);self::assertSame(200,$saved->getStatusCode());
+        self::assertStringNotContainsString('synthetic-secret',$saved->getContent());
+        self::assertArrayNotHasKey('key',$this->body($saved));
+        self::assertSame(409,$this->request('POST','mail/settings',$data)->getStatusCode());
+        $role=$this->store->saveRole(null,['name'=>'Delegado','permissions'=>['dashboard.view','roles.manage','users.manage']]);
+        $this->store->saveUser(null,['name'=>'Delegado','email'=>'delegated@example.test','password'=>self::PASSWORD,'role_id'=>$role]);
+        $this->login('delegated@example.test');
+        self::assertFalse($this->body($this->request('GET','session'))['mail_settings']);
+        foreach(['mail/settings','mail/check','mail/test'] as $path)self::assertSame(403,$this->request('POST',$path,$data)->getStatusCode());
+        self::assertSame(403,$this->request('GET','mail/settings')->getStatusCode());
     }
     public function testLoginRotatesSessionAndCsrfAndDoesNotExposeHash(): void
     {

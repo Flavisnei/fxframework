@@ -11,6 +11,6 @@ final class MailConfig
     }
     public static function sender(array $admin): SmtpSender
     {
-        return new SmtpSender($admin['mail']['dsn'] ?? '', $admin['mail']['from'] ?? '', $admin['mail']['local_test'] ?? false);
+        return new SmtpSender($admin['mail']['dsn'] ?? '', $admin['mail']['from'] ?? '', $admin['mail']['local_test'] ?? false, $admin['mail']['from_name'] ?? '');
     }
 }
