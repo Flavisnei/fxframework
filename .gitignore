@@ -29,3 +29,5 @@ __pycache__/
 !/examples/*/.env.example
 
 .fx-mail-*
+
+/tests/js/node_modules/

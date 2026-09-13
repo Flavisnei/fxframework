@@ -375,3 +375,9 @@ outros bancos e matriz de versões atuais continuam na etapa 8.
 Implementados painel restrito, persistência .env e trabalhador contínuo. Testes cobrem concorrência de formulário, proteção de segredos, autorização e SMTP local sem entrega externa. O usuário confirmou recuperação real na etapa anterior. Revisão visual da nova tela permanece manual: integração do navegador indisponível. O trabalhador requer terminal ativo ou supervisor; não foi instalado serviço. A publicação anterior RC1 permanece imutável.
 
 Evidências finais: PHPUnit 125 testes/680 asserções (1 cenário MariaDB opt-in não executado nesta rodada); SMTP local 10 verificações; Admin isolado 18 e Contatos isolado 34 verificações HTTP/CLI. Sintaxe JavaScript e âncoras dos três manuais validadas. Configuração local de Contatos migrada preservando credenciais e chave; nenhum email externo enviado nesta rodada.
+
+## 2026-09-13 — FxSelect2 automático
+
+Padronizados selects simples e múltiplos ao carregar FX Windows, incluindo formulários inseridos por AJAX. Corrigida identificação do submit no Admin. Três testes DOM cobrem inicialização, duplicação, pesquisa, valores enviados, remoção/reinserção, campos e grupos desabilitados, reset e envio do formulário. Testes adicionados ao CI; dependências Node somente em tests/js. Revisão visual desta alteração permanece manual porque a conexão do navegador está indisponível. O usuário confirmou manualmente a tela e o envio de email da etapa anterior.
+
+Verificações adicionais: Admin isolado 18 e Contatos isolado 34 verificações HTTP/CLI aprovadas; pacote Windows validado com vendor próprio; sintaxe JS e âncoras dos manuais conferidas. Assets dos exemplos Admin e Contatos atualizados localmente.

@@ -13,6 +13,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  javascript:
+    name: FxSelect2 DOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: tests/js
+      - run: npm test
+        working-directory: tests/js
+
   verify:
     name: PHP ${{ matrix.php }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}

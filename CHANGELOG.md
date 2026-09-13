@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-09-13 — FxSelect2 automático
+
+- Campos de seleção recebem FxSelect2 ao carregar FX Windows, incluindo formulários AJAX e múltiplos. Reinicialização não duplica controles; remoção libera eventos.
+- Corrigido o envio do Admin para identificar Salvar mesmo com botões internos do seletor. Documentada migração e atualização dos assets.
+- Usuário confirmou acesso à nova configuração de email e recebimento do teste pelo painel.
+
+
 ## 2026-09-13 — Configuração de email pelo painel e .env
 
 - Tela restrita ao administrador principal, gravação protegida no .env, conexão SMTP e envio de teste explícito. Compatibilidade com configuração legada e senha preservada.

@@ -20,7 +20,7 @@
     return button;
   }
   function formSubmit(form, callback, status) {
-    form.addEventListener('submit', async event => { event.preventDefault(); const button=form.querySelector('button'); if(button.disabled)return; button.disabled=true; status.textContent=''; try { await callback(); } catch(error) { status.textContent=error.message; } finally { button.disabled=false; } });
+    form.addEventListener('submit', async event => { event.preventDefault(); const button=event.submitter || form.querySelector('button:not([type]),button[type=submit],input[type=submit]'); if(button.disabled)return; button.disabled=true; status.textContent=''; try { await callback(); } catch(error) { status.textContent=error.message; } finally { button.disabled=false; } });
   }
   function field(form,name,title,type='text',value='') {
     const label=el('label',title), input=el('input',null,{name,type,value}); label.append(input); form.append(label); return input;
@@ -43,7 +43,7 @@
     const name=field(form,'name','Nome','text',user.name||'');name.required=true;name.maxLength=120;
     const email=field(form,'email','Email','email',user.email||'');email.required=true;email.maxLength=254;
     const password=field(form,'password',user.id?'Nova senha (deixe vazia para manter)':'Senha','password');password.required=!user.id;password.minLength=12;password.maxLength=72;password.autocomplete='new-password';
-    const label=el('label','Perfil'),role=el('select');roles.data.forEach(item=>role.append(el('option',item.name,{value:String(item.id)})));if(user.role_id)role.value=String(user.role_id);label.append(role);form.append(label);
+    const label=el('label','Perfil'),role=el('select',null,{name:'role_id',required:true});roles.data.forEach(item=>role.append(el('option',item.name,{value:String(item.id)})));if(user.role_id)role.value=String(user.role_id);label.append(role);form.append(label);
     const active=field(form,'active','Conta ativa','checkbox');active.checked=user.active===undefined||!!user.active;
     form.append(el('button','Salvar'));const feedback=status(box);
     formSubmit(form,async()=>{await api('users',{...(user.id?{id:Number(user.id)}:{}),name:name.value,email:email.value,password:password.value,role_id:Number(role.value),active:active.checked});password.value='';feedback.textContent='Usuário salvo.';await showUsers();},feedback);
