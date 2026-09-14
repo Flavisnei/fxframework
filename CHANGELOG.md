@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-09-14 — Níveis do assistente
+
+- Menu de instalação mínima, completa, personalizada e WordPress; --profile e --components para automação. Execuções anteriores não interativas continuam mínimas.
+- Completa gera estrutura Admin e configure.php para criar o administrador e ativar o módulo. Personalizada resolve dependências pelo Composer; WordPress gera plugin integrado ao hospedeiro.
+- LEIA-ME e ajuda por perfil; mínima mantém banco opcional sem ORM ou tabelas. Interface visual ainda planejada.
+
+
 ## 2026-09-13 — Assistente mínimo e LEIA-ME personalizado
 
 - Novo setup:init cria uma aplicação mínima em pasta nova, pergunta se haverá banco, mostra plano e instala dependências via Composer.

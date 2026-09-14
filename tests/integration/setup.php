@@ -37,7 +37,50 @@ try {
     }
     $pdo=new PDO('sqlite:'.$sqlite);setupAssert((int)$pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type='table'")->fetchColumn()===0);$pdo=null;
     if($mysql){$statement=$mysql->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=?');$statement->execute([$database]);setupAssert((int)$statement->fetchColumn()===0);}
-    echo "OK: {$checks} verificacoes de instalacao real; bancos sem tabelas.\n";
+
+    foreach(['complete'=>[], 'custom'=>['--components=http,validation'], 'wordpress'=>[]] as $profile=>$extra) {
+        $target=$temporary.'/profile-'.$profile;
+        setupRun([PHP_BINARY,$root.'/examples/console/vendor/bin/fxartisan','setup:init',$target,'--profile='.$profile,'--database=none','--yes','--no-interaction','--core-path='.$root.'/packages/core','--composer='.$composer,...$extra],$root);
+        setupAssert(is_file($target.'/LEIA-ME.txt'));
+        if($profile==='complete') {
+            setupAssert(!is_file($target.'/storage/admin.sqlite'));
+            putenv('FX_SETUP_TEST_PASSWORD='.bin2hex(random_bytes(16)));
+            try {
+                setupRun([PHP_BINARY,'configure.php','--email=setup@example.test','--password-env=FX_SETUP_TEST_PASSWORD','--no-interaction'],$target);
+                $probe=<<<'PHP'
+<?php
+$app=require __DIR__.'/bootstrap.php';
+$db=new PDO('sqlite:'.__DIR__.'/storage/admin.sqlite');
+$user=$db->query('SELECT email,password FROM fx_admin_users')->fetch(PDO::FETCH_ASSOC);
+if($user['email']!=='setup@example.test' || !password_verify(getenv('FX_SETUP_TEST_PASSWORD'),$user['password']))exit(4);
+$response=$app->make(Fx\Framework\Http\Kernel::class)->handle(Fx\Framework\Http\Request::create('/admin','GET'));
+if($response->getStatusCode()!==200 || !str_contains($response->getContent(),'Entrar'))exit(5);
+PHP;
+                file_put_contents($target.'/probe.php',$probe);setupRun([PHP_BINARY,'probe.php'],$target);$checks++;
+            } finally {putenv('FX_SETUP_TEST_PASSWORD');}
+        } elseif($profile==='custom') {
+            setupAssert(str_contains(setupRun([PHP_BINARY,'public/index.php'],$target),'FX HTTP pronto'));
+            setupAssert(!is_file($target.'/configure.php'));
+        } else {
+            setupAssert(is_file($target.'/plugin.php') && !is_file($target.'/.env'));
+            setupAssert(setupRun([PHP_BINARY,'plugin.php'],$target)==='');
+            $probe=<<<'PHP'
+<?php
+$hooks=[];$menu=false;
+define('ABSPATH',__DIR__.'/');
+function add_action($hook,$callback,...$args){global $hooks;$hooks[$hook][]=$callback;}
+function plugin_basename($file){return 'fx-test/plugin.php';}
+function current_user_can($permission){return true;}
+function add_management_page($title,$label,$capability,$slug,$callback){global $menu;$menu=$capability==='manage_options';ob_start();$callback();$html=ob_get_clean();if(!str_contains($html,'Integracao ativa'))exit(7);}
+require __DIR__.'/plugin.php';
+foreach($hooks['plugins_loaded']??[] as $callback)$callback();
+foreach($hooks['admin_menu']??[] as $callback)$callback();
+if(!$menu)exit(6);
+PHP;
+            file_put_contents($target.'/probe.php',$probe);setupRun([PHP_BINARY,'probe.php'],$target);$checks++;
+        }
+    }
+    echo "OK: {$checks} verificacoes de instalacao real; minima sem tabelas e perfis adicionais verificados.\n";
 } finally {
     if($mysql)$mysql->exec('DROP DATABASE `'.$database.'`');$mysql=null;
     // Somente a pasta aleatoria criada por este teste.

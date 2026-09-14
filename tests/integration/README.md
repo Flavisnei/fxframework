@@ -114,3 +114,5 @@ Com FX_TEST_ADMIN_MYSQL=1 e FX_TEST_MYSQL_PORT/USER/PASSWORD definidos, `php tes
 ## Assistente mínimo
 
 Atualize o vendor de examples/console e execute `php tests/integration/setup.php C:/composer/composer.phar`. Cria projetos temporários sem banco e com SQLite, instala via Composer real e testa autoload/conexão sem ORM. Com `FX_TEST_SETUP_MYSQL=1`, inclui MariaDB local em 127.0.0.1:3306, root sem senha, usando banco aleatório descartado ao finalizar. Nunca use essa opção apontando para dados de produção.
+
+O runner setup.php também instala completa, personalizada HTTP e WordPress. Configura uma conta descartável e verifica a página de login da completa; valida JSON da personalizada e carregamento dos hooks do plugin em host simulado. Este último teste não substitui ativação em WordPress real.

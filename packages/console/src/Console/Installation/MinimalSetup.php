@@ -45,8 +45,10 @@ final class MinimalSetup
         } catch (\Throwable) { throw new RuntimeException('Nao foi possivel conectar. Confira servidor, banco existente, usuario e senha. Nenhuma tabela foi criada.'); }
     }
 
-    public function create(string $target, ?array $db, ?string $localCore = null): string
+    public function create(string $target, ?array $db, ?string $localCore = null, string $profile = 'minimal', array $components = []): string
     {
+        $components = SetupProfile::components($profile,$components);
+        if ($profile === 'wordpress' && $db !== null) throw new RuntimeException('WordPress usa a conexao do hospedeiro.');
         $target = self::validateTarget($target);
         if ($db !== null) { self::validateDatabase($db); }
         $repositories = [['type'=>'composer','url'=>'https://raw.githubusercontent.com/Flavisnei/fxframework/main/docs/composer']];
@@ -75,6 +77,7 @@ final class MinimalSetup
             $files['.env'] = $this->environment($db);
             $files['.env.example'] = $this->environment(array_replace($db,['password'=>'','username'=>'','database'=>$db['driver']==='sqlite'?'/caminho/banco.sqlite':'meu_banco']));
         }
+        $files = SetupProfile::files($files,$profile,$components,$db,$localCore);
         if (!mkdir($target,0700)) { throw new RuntimeException('Nao foi possivel criar a pasta do projeto.'); }
         foreach ($files as $name=>$content) {
             $path = $target . '/' . $name;

@@ -387,3 +387,9 @@ Verificações adicionais: Admin isolado 18 e Contatos isolado 34 verificações
 Implementado setup:init para instalação mínima em pasta nova, com banco opcional e LEIA-ME.txt personalizado. Sem banco não gera .env nem conexão. Com banco utiliza PDO e Dotenv na aplicação, sem ORM ou migrations; testa banco existente sem criar tabelas. Não modifica o Core nem o projeto Contatos. Completa, personalizada, WordPress, manutenção de instalações existentes e interface visual permanecem planejadas.
 
 Evidências: PHPUnit 130 testes / 703 asserções, com 1 cenário concorrente opt-in ignorado; integração nova com Composer real passou em 17 verificações (sem banco, SQLite e MariaDB local root sem senha). Projetos isolados executaram classes e conexão sem ORM; os bancos temporários terminaram sem tabelas e foram descartados. Teste sem banco/SQLite incluído no CI.
+
+## 2026-09-14 — Seleção dos níveis
+
+Menu e geração de quatro perfis no terminal implementados. Completa prepara o painel; configure.php inicializa a conta e ativa fx-admin. Personalizada instala componentes com integração manual para recursos além do scaffold HTTP/Admin. WordPress gera plugin e usa APIs do hospedeiro; ativação no WordPress real permanece manual. Interface visual e manutenção de projetos existentes seguem planejadas. Sem --profile, a automação antiga permanece mínima.
+
+Evidências: PHPUnit 133 testes / 718 asserções, 1 cenário concorrente opt-in ignorado. Integração com Composer real: 27 verificações, incluindo mínima sem banco/SQLite/MariaDB, completa com criação de conta e resposta da página de login, personalizada com JSON HTTP e WordPress com guarda de acesso direto e hooks simulados. Console validado com vendor isolado.

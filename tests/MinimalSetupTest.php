@@ -40,7 +40,7 @@ final class MinimalSetupTest extends TestCase
         $tester=new CommandTester((new \Fx\Framework\Console\Artisan($this->root))->find('setup:init'));
         self::assertSame(0,$tester->execute(['target'=>$this->root.'/dry','--database'=>'none','--dry-run'=>true],['interactive'=>false]));
         self::assertDirectoryDoesNotExist($this->root.'/dry');
-        $tester->setInputs(['n','n']);self::assertSame(0,$tester->execute(['target'=>$this->root.'/cancel']));
+        $tester->setInputs(['1','n','n']);self::assertSame(0,$tester->execute(['target'=>$this->root.'/cancel']));
         self::assertDirectoryDoesNotExist($this->root.'/cancel');
     }
     public function testMissingSqliteIsRejectedWithoutCreatingFileOrProject():void {
@@ -54,4 +54,30 @@ final class MinimalSetupTest extends TestCase
         self::assertSame(0,$tester->execute(['target'=>$this->root.'/generated','--database'=>'none','--yes'=>true,'--no-install'=>true],['interactive'=>false]));
         require $this->root.'/generated/app/Saudacao.php';self::assertSame('Olá, FX!',(new \App\Saudacao())->mensagem('FX'));
     }
+    public function testProfilesGenerateDistinctStructuresAndResolveAdminConsole():void {
+        $setup=new MinimalSetup();
+        $complete=$setup->create($this->root.'/complete',null,null,'complete');
+        self::assertFileExists($complete.'/configure.php');self::assertFileExists($complete.'/public/index.php');
+        self::assertFileDoesNotExist($complete.'/storage/admin.sqlite');
+        self::assertStringNotContainsString('Você escolheu SEM BANCO',file_get_contents($complete.'/LEIA-ME.txt'));
+        $manifest=json_decode(file_get_contents($complete.'/composer.json'),true);
+        self::assertArrayHasKey('fxfavalessa/fx-admin',$manifest['require']);self::assertArrayNotHasKey('fxfavalessa/fx-database',$manifest['require']);
+        $custom=$setup->create($this->root.'/custom',null,null,'custom',['http','validation']);
+        self::assertFileExists($custom.'/public/index.php');self::assertFileDoesNotExist($custom.'/configure.php');
+        $wordpress=$setup->create($this->root.'/wordpress',null,null,'wordpress');
+        self::assertFileExists($wordpress.'/plugin.php');self::assertFileDoesNotExist($wordpress.'/.env');
+        self::assertSame(['core','admin','console'],\Fx\Framework\Console\Installation\SetupProfile::components('custom',['admin']));
+    }
+    public function testInvalidProfileDoesNotCreateDestination():void {
+        try {(new MinimalSetup())->create($this->root.'/bad-profile',null,null,'unknown');self::fail('Perfil invalido aceito');}
+        catch(\RuntimeException) {self::assertDirectoryDoesNotExist($this->root.'/bad-profile');}
+    }
+    public function testInteractiveProfileSelectionSkipsDatabaseForWordpress():void {
+        $tester=new CommandTester((new \Fx\Framework\Console\Artisan($this->root))->find('setup:init'));
+        $tester->setInputs(['4','s']);
+        self::assertSame(0,$tester->execute(['target'=>$this->root.'/wp-menu','--no-install'=>true]));
+        self::assertFileExists($this->root.'/wp-menu/plugin.php');
+        self::assertStringNotContainsString('Deseja configurar uma conexao',$tester->getDisplay());
+    }
+
 }
