@@ -1,0 +1,47 @@
+Foi configurada somente a conexão PDO. Symfony Dotenv carrega .env; não há ORM.
+A senha não aparece neste guia. .env fica na raiz, fora de qualquer pasta pública.
+.env.example contém o modelo sem senha. Nunca substitua .env por esse modelo
+em uma instalação já configurada. Ambiente real tem prioridade sobre .env.
+App\Connection::open() lê os valores a cada chamada; não exporta variáveis
+para outros programas. Outro processo PHP pode usar a mesma classe e autoload.
+
+Conectar:
+require __DIR__ . '/vendor/autoload.php';
+$pdo = App\Connection::open();
+
+Criar uma tabela MANUALMENTE em banco descartável, se desejar:
+$pdo->exec('CREATE TABLE contatos (id INTEGER PRIMARY KEY, nome VARCHAR(120) NOT NULL)');
+O exemplo usa IDs explícitos para funcionar tanto em SQLite como MariaDB/MySQL.
+
+Inserir:
+$stmt = $pdo->prepare('INSERT INTO contatos (id, nome) VALUES (?, ?)');
+$stmt->execute([1, 'Maria']);
+
+Consultar:
+$stmt = $pdo->prepare('SELECT id, nome FROM contatos WHERE id = ?');
+$stmt->execute([1]);
+$contato = $stmt->fetch();
+
+Atualizar:
+$stmt = $pdo->prepare('UPDATE contatos SET nome = ? WHERE id = ?');
+$stmt->execute(['Maria Silva', 1]);
+
+Excluir:
+$stmt = $pdo->prepare('DELETE FROM contatos WHERE id = ?');
+$stmt->execute([1]);
+
+Transações para operações relacionadas:
+$pdo->beginTransaction();
+try {
+    // Execute aqui os INSERT/UPDATE necessários.
+    $pdo->commit();
+} catch (Throwable $erro) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    throw new RuntimeException('Não foi possível concluir a operação.');
+}
+
+Crie classes próprias, por exemplo App\ContatoRepository, recebendo PDO no
+construtor e contendo suas consultas. Use parâmetros para valores externos;
+nomes de tabelas/colunas devem vir de uma lista fixa permitida, nunca do usuário.
+SQLite exige arquivo já existente. MariaDB/MySQL exige banco já criado e
+extensão pdo_mysql. O assistente apenas testou a conexão; não criou tabelas.

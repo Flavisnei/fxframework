@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-09-13 — Assistente mínimo e LEIA-ME personalizado
+
+- Novo setup:init cria uma aplicação mínima em pasta nova, pergunta se haverá banco, mostra plano e instala dependências via Composer.
+- Sem banco: somente Core. Com banco: PDO e leitor Dotenv na aplicação, sem ORM, migrations ou criação de tabelas. Credenciais em .env privado.
+- LEIA-ME.txt e ajuda HTML gerados com classes, autoload, exemplos SQL manuais quando aplicável, erros e próximos passos. Outros perfis e assistente visual ainda planejados.
+
+
 ## 2026-09-13 — FxSelect2 automático
 
 - Campos de seleção recebem FxSelect2 ao carregar FX Windows, incluindo formulários AJAX e múltiplos. Reinicialização não duplica controles; remoção libera eventos.

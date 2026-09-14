@@ -54,6 +54,23 @@ final class ComposerInstaller
         return 0;
     }
 
+    /** Instala um projeto ja gerado, sem executar plugins ou scripts. */
+    public function installProject(?string $composer, OutputInterface $output): int
+    {
+        foreach (['COMPOSER','COMPOSER_VENDOR_DIR'] as $variable) {
+            if (getenv($variable) !== false && getenv($variable) !== '') throw new RuntimeException('Remova ' . $variable . ' do ambiente antes de instalar.');
+        }
+        try { $command = [...$this->executable($composer),'install','--no-interaction','--no-plugins','--no-scripts']; }
+        catch (RuntimeException $error) { $output->writeln('Arquivos preservados. Execute composer install na nova pasta para concluir.'); throw $error; }
+        $process = proc_open($command,[0=>['pipe','r'],1=>['pipe','w'],2=>['redirect',1]],$pipes,$this->root,null,['bypass_shell'=>true]);
+        if (!is_resource($process)) throw new RuntimeException('Composer nao iniciou; arquivos preservados para concluir manualmente.');
+        fclose($pipes[0]);
+        while (!feof($pipes[1])) { $chunk=fread($pipes[1],8192); if($chunk===false)break; $output->write($chunk,false,OutputInterface::OUTPUT_RAW); }
+        fclose($pipes[1]);$status=proc_close($process);
+        $output->writeln($status === 0 ? 'Instalacao concluida. Entre na nova pasta e execute php example.php. Consulte LEIA-ME.txt.' : 'Composer falhou. Arquivos preservados; corrija o problema e execute composer install --no-plugins --no-scripts na nova pasta.');
+        return $status === 0 ? 0 : 1;
+    }
+
     private function executable(?string $explicit): array
     {
         if ($explicit !== null) {

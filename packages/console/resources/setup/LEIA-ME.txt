@@ -1,0 +1,60 @@
+FX — INSTALAÇÃO MÍNIMA
+======================
+Este projeto contém a base FX Core. Não inclui painel, login, ORM ou migrations.
+A instalação não criou tabelas nem dados. Exemplos SQL abaixo só executam se você
+os copiar e executar explicitamente, em um banco de teste.
+
+1. COMEÇAR
+Se vendor ainda não existe, execute composer install --no-plugins --no-scripts.
+Execute: php example.php
+Resultado esperado: Olá, FX!
+Requer PHP 8.1 ou superior e Composer 2. A versão Core inicial é a candidata
+1.1.0-rc.1; ela não representa uma nova versão estável do framework.
+
+2. PASTAS E AUTOLOAD
+app/          Classes da aplicação (namespace App).
+example.php   Exemplo executável no terminal.
+vendor/       Dependências instaladas pelo Composer; não edite.
+composer.json Mapeamento App\ para app/ e dependências escolhidas.
+docs/         Ajuda HTML offline.
+LEIA-ME.txt   Este guia, adaptado à instalação.
+
+3. CRIAR UMA CLASSE
+Crie app/Saudacao.php:
+<?php
+namespace App;
+final class Saudacao {
+    public function mensagem(string $nome): string {
+        return 'Olá, ' . $nome . '!';
+    }
+}
+
+Use em um arquivo na raiz:
+<?php
+require __DIR__ . '/vendor/autoload.php';
+$servico = new App\Saudacao();
+echo $servico->mensagem('Maria');
+
+O caminho e as letras maiúsculas devem corresponder ao namespace e à classe.
+Classes em App são carregadas pelo Composer; não use require em cada classe.
+Se alterar o mapeamento no composer.json, execute composer dump-autoload.
+
+4. BANCO E CONFIGURAÇÃO
+{{DATABASE}}
+
+5. JSON E ERROS
+Em um endpoint PHP de sua autoria:
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode(['ok' => true, 'mensagem' => 'Concluído'], JSON_THROW_ON_ERROR);
+Não imprima mensagens de debug antes do JSON. Valide dados recebidos e trate
+exceções sem mostrar senha, SQL completo ou detalhes internos ao visitante.
+O perfil mínimo não configura rotas HTTP, autenticação nem proteção CSRF.
+Essas responsabilidades devem ser implementadas ao construir endpoints.
+
+6. DICAS E PROBLEMAS COMUNS
+Classe não encontrada: confira namespace, caminho e vendor/autoload.php.
+Permissão negada: confira acesso às pastas do projeto e ao banco.
+Não versione vendor, .env, logs ou dados de produção.
+Configure a raiz pública da hospedagem separada de app, vendor e .env.
+Guarde backups fora da pasta pública antes de mudar o banco.
+Abra docs/index.html para consultar a ajuda offline deste assistente.

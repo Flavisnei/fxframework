@@ -40,6 +40,7 @@ final class Artisan extends SymfonyApplication
             new \Fx\Framework\Console\Commands\PackageInstallCommand($this->root),
             new \Fx\Framework\Console\Commands\PackageInstallCommand($this->root, true),
             new AboutCommand($this->root), new OptimizeClearCommand(),
+            new \Fx\Framework\Console\Commands\SetupInitCommand(),
             new LegacyCommand('make:controller', 'Cria um controller', true),
             new LegacyCommand('cache:clear', 'Limpa o cache da aplicacao'),
             new LegacyCommand('cache:cleartmp', 'Limpa arquivos temporarios'),

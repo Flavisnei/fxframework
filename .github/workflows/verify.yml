@@ -60,6 +60,10 @@ jobs:
             composer install --working-dir="examples/$example" --prefer-dist --no-interaction --no-progress --no-plugins --no-scripts
             composer check-platform-reqs --working-dir="examples/$example"
           done
+      - name: Assistente minimo com Composer real
+        if: runner.os == 'Linux' && matrix.php == '8.1'
+        shell: bash
+        run: php tests/integration/setup.php "$(command -v composer)"
       - name: Executar verificacoes locais e de integracao
         run: php tools/verify.php
       - name: Catalogo com Composer real

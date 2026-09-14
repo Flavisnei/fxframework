@@ -381,3 +381,9 @@ Evidências finais: PHPUnit 125 testes/680 asserções (1 cenário MariaDB opt-i
 Padronizados selects simples e múltiplos ao carregar FX Windows, incluindo formulários inseridos por AJAX. Corrigida identificação do submit no Admin. Três testes DOM cobrem inicialização, duplicação, pesquisa, valores enviados, remoção/reinserção, campos e grupos desabilitados, reset e envio do formulário. Testes adicionados ao CI; dependências Node somente em tests/js. Revisão visual desta alteração permanece manual porque a conexão do navegador está indisponível. O usuário confirmou manualmente a tela e o envio de email da etapa anterior.
 
 Verificações adicionais: Admin isolado 18 e Contatos isolado 34 verificações HTTP/CLI aprovadas; pacote Windows validado com vendor próprio; sintaxe JS e âncoras dos manuais conferidas. Assets dos exemplos Admin e Contatos atualizados localmente.
+
+## 2026-09-13 — Primeira entrega do assistente
+
+Implementado setup:init para instalação mínima em pasta nova, com banco opcional e LEIA-ME.txt personalizado. Sem banco não gera .env nem conexão. Com banco utiliza PDO e Dotenv na aplicação, sem ORM ou migrations; testa banco existente sem criar tabelas. Não modifica o Core nem o projeto Contatos. Completa, personalizada, WordPress, manutenção de instalações existentes e interface visual permanecem planejadas.
+
+Evidências: PHPUnit 130 testes / 703 asserções, com 1 cenário concorrente opt-in ignorado; integração nova com Composer real passou em 17 verificações (sem banco, SQLite e MariaDB local root sem senha). Projetos isolados executaram classes e conexão sem ORM; os bancos temporários terminaram sem tabelas e foram descartados. Teste sem banco/SQLite incluído no CI.
