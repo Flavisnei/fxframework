@@ -1,5 +1,10 @@
 # Histórico
 
+## 2026-09-19 — Entrada pela raiz do projeto
+
+- No Apache com mod_rewrite, a raiz redireciona para public/; arquivos privados e listagem de diretórios permanecem bloqueados. Template do assistente e exemplos atualizados.
+
+
 ## 2026-09-19 — Admin em subpastas e XAMPP
 
 - Base pública automática em links, assets e AJAX do Admin e exemplo Contatos, com APP_URL opcional. Raiz administrativa redireciona ao painel e admite index.php/admin.

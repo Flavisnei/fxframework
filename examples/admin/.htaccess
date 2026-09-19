@@ -1,2 +1,11 @@
-# Exponha somente public. Bloqueia arquivos privados quando o projeto fica no htdocs.
+# A raiz redireciona para public; arquivos privados continuam bloqueados.
+Options -Indexes
 Require all denied
+<IfModule mod_rewrite.c>
+    # Apenas diretorios passam pela autorizacao para permitir o redirecionamento.
+    # Arquivos privados permanecem negados; public tem autorizacao propria.
+    Require expr "-d %{REQUEST_FILENAME}"
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} ^(/(?!/).*)/$
+    RewriteRule ^$ %1/public/ [R=302,L]
+</IfModule>
