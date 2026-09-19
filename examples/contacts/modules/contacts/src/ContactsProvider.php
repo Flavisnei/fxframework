@@ -21,7 +21,14 @@ final class ContactsProvider extends ServiceProvider
         $panel->api($router, 'PUT', 'contacts', 'contacts.update', fn ($request, $data) => $store->save(ContactStore::positiveId($data['id'] ?? null), $data));
         $panel->api($router, 'DELETE', 'contacts', 'contacts.delete', fn ($request, $data) => $store->delete(ContactStore::positiveId($data['id'] ?? null), ContactStore::positiveId($data['version'] ?? null, 'version')));
         foreach (['/contacts' => ['resources/index.html','text/html'], '/contacts/app.js' => ['resources/app.js','text/javascript'], '/contacts/help' => ['docs/index.html','text/html']] as $uri => [$file,$type]) {
-            $router->get($uri, fn () => new Response(file_get_contents(dirname(__DIR__) . '/' . $file), 200, ['Content-Type' => $type . '; charset=UTF-8', 'Cache-Control' => 'no-store', 'X-Content-Type-Options' => 'nosniff', 'X-Frame-Options' => 'SAMEORIGIN']));
+            $router->get($uri, function (\Fx\Framework\Http\Request $request) use ($file,$type,$uri): Response {
+                $content=file_get_contents(dirname(__DIR__).'/'.$file);
+                if($uri==='/contacts') {
+                    $base=htmlspecialchars(\Fx\Framework\Admin\AdminUrl::base($request,getenv('APP_URL')?:null),ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
+                    $content=str_replace(['data-fx-base=""','href="/admin','href="/contacts','src="/contacts'],['data-fx-base="'.$base.'"','href="'.$base.'/admin','href="'.$base.'/contacts','src="'.$base.'/contacts'],$content);
+                }
+                return new Response($content,200,['Content-Type'=>$type.'; charset=UTF-8','Cache-Control'=>'no-store','X-Content-Type-Options'=>'nosniff','X-Frame-Options'=>'SAMEORIGIN']);
+            });
         }
     }
 }

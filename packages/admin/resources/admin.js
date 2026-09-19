@@ -1,15 +1,16 @@
 'use strict';
 (() => {
+  const base = document.documentElement.dataset.fxBase || '';
   const $ = selector => document.querySelector(selector);
   const el = (tag, text = null, attrs = {}) => { const node = document.createElement(tag); if (text !== null) node.textContent = text; Object.assign(node, attrs); return node; };
   let session = {user:null,permissions:[]};
   let resetToken = new URLSearchParams(location.hash.slice(1)).get('reset');
-  if (resetToken) history.replaceState(null, '', '/admin');
+  if (resetToken) history.replaceState(null, '', base + '/admin');
   const windows = new FxWindowManager({updateHash:false}).start();
   const can = permission => session.permissions.includes(permission);
   function notice(text, error = false) { $('#notice').textContent = text; $('#notice').classList.toggle('error', error); }
   async function api(path, data) {
-    const response = await fetch('/admin/api/' + path, {method:data===undefined?'GET':'POST',credentials:'same-origin',headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':session.csrf||''},body:data===undefined?undefined:JSON.stringify(data)});
+    const response = await fetch(base + '/admin/api/' + path, {method:data===undefined?'GET':'POST',credentials:'same-origin',headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':session.csrf||''},body:data===undefined?undefined:JSON.stringify(data)});
     const result = await response.json();
     if (!response.ok) { if(response.status===401 && session.user) location.reload(); throw Error(result.message || 'Não foi possível concluir.'); }
     if (result.csrf) session.csrf = result.csrf;
@@ -25,7 +26,7 @@
   function field(form,name,title,type='text',value='') {
     const label=el('label',title), input=el('input',null,{name,type,value}); label.append(input); form.append(label); return input;
   }
-  function workspace(id,title,level=1) { const box=el('div',null,{className:'workspace'}); windows.open({id,title,element:box,width:920,height:620,level}); const topic=id==='mail-settings'?'mail-settings':id.startsWith('user')?'users':id.startsWith('role')?'roles':'modules';box.append(el('a','Ajuda desta etapa',{href:'/admin/help#'+topic,target:'_blank',rel:'noopener'})); return box; }
+  function workspace(id,title,level=1) { const box=el('div',null,{className:'workspace'}); windows.open({id,title,element:box,width:920,height:620,level}); const topic=id==='mail-settings'?'mail-settings':id.startsWith('user')?'users':id.startsWith('role')?'roles':'modules';box.append(el('a','Ajuda desta etapa',{href:base + '/admin/help#'+topic,target:'_blank',rel:'noopener'})); return box; }
   function status(box) { const node=el('p','');node.setAttribute('role','status');box.append(node);return node; }
   function table(box,headers) { const wrap=el('div',null,{className:'table-scroll'}), table=el('table'),head=el('thead'),row=el('tr'),body=el('tbody'); headers.forEach(text=>row.append(el('th',text)));head.append(row);table.append(head,body);wrap.append(table);box.append(wrap);return body; }
   async function loadSession() {
@@ -35,7 +36,7 @@
     $('#title').textContent=session.user?'Seu trabalho, em um só lugar.':'Bem-vindo ao FX.';
     for(const [area,permission] of Object.entries({users:'users.view',roles:'roles.manage',modules:'modules.view'})) $('[data-area='+area+']').hidden=!can(permission);
     document.querySelectorAll('[data-extension]').forEach(node=>node.remove());
-    for (const area of session.areas || []) { const button=el('button', area.title); button.dataset.extension=area.id; action(button,()=>windows.open({id:'module-'+area.id,title:area.title,url:area.url,width:920,height:640})); $('.cards').append(button); }
+    for (const area of session.areas || []) { const button=el('button', area.title); button.dataset.extension=area.id; action(button,()=>windows.open({id:'module-'+area.id,title:area.title,url:base + area.url,width:920,height:640})); $('.cards').append(button); }
     notice(session.user?(can('dashboard.view')?'Escolha uma área abaixo.':'Seu perfil não permite acesso ao painel. Contate um administrador.'):'Entre com seu email e senha.');
   }
   async function userEditor(user={}) {
@@ -99,7 +100,7 @@
   formSubmit($('#login'),async()=>{const form=$('#login');await api('login',{email:form.elements.email.value,password:form.elements.password.value});form.elements.password.value='';await loadSession();},$('#notice'));
   formSubmit($('#forgot'),async()=>{const feedback=$('#forgot-status');feedback.textContent='Solicitando recuperação…';const result=await api('forgot',{email:$('#forgot').elements.email.value});feedback.textContent=result.message;},$('#forgot-status'));
   formSubmit($('#reset'),async()=>{const result=await api('reset',{token:resetToken,password:$('#reset').elements.password.value});resetToken=null;$('#reset').reset();await loadSession();notice(result.message);},$('#notice'));
-  action($('#logout'),async()=>{await api('logout',{});location.replace('/admin');});
+  action($('#logout'),async()=>{await api('logout',{});location.replace(base + '/admin');});
   action($('[data-area=users]'),()=>showUsers());action($('[data-area=roles]'),showRoles);action($('[data-area=modules]'),showModules);
   loadSession().catch(error=>notice(error.message,true));
 })();

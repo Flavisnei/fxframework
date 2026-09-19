@@ -1,5 +1,12 @@
 # Histórico
 
+## 2026-09-19 — Admin em subpastas e XAMPP
+
+- Base pública automática em links, assets e AJAX do Admin e exemplo Contatos, com APP_URL opcional. Raiz administrativa redireciona ao painel e admite index.php/admin.
+- Gerador inclui .htaccess público e proteção da raiz privada para Apache 2.4. Recuperação HTTPS aceita subpastas.
+- Compatibilidade de construtores preservada; documentados atualização de aplicações existentes e requisitos do servidor.
+
+
 ## 2026-09-14 — Níveis do assistente
 
 - Menu de instalação mínima, completa, personalizada e WordPress; --profile e --components para automação. Execuções anteriores não interativas continuam mínimas.

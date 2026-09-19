@@ -87,7 +87,7 @@ final class MailSettings
             if(!preg_match('/\A[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\z/',$v['host']) || !ctype_digit($v['port']) || (int)$v['port']<1 || (int)$v['port']>65535)throw new HttpException(422,'Informe servidor SMTP e porta validos. Criptografia: SSL/TLS implicito.');
             if($v['username']==='' || $v['password']==='' || !filter_var($v['from'],FILTER_VALIDATE_EMAIL))throw new HttpException(422,'Informe autenticacao e remetente validos.');
             $url=parse_url($v['admin_url']);
-            if(!$url || !filter_var($v['admin_url'],FILTER_VALIDATE_URL) || ($url['scheme']??'')!=='https' || ($url['path']??'')!=='/admin' || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment']))throw new HttpException(422,'Use endereco HTTPS do painel terminado em /admin.');
+            if(!$url || !filter_var($v['admin_url'],FILTER_VALIDATE_URL) || ($url['scheme']??'')!=='https' || !\Fx\Framework\Admin\AdminUrl::recoveryPath($url['path']??'') || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment']))throw new HttpException(422,'Use endereco HTTPS do painel terminado em /admin.');
             if($v['key']==='')$v['key']=bin2hex(random_bytes(32));
             if(!preg_match('/\A[a-fA-F0-9]{64}\z/',$v['key']))throw new HttpException(422,'Chave da fila invalida; corrija FX_MAIL_KEY no ambiente.');
             if($this->prepare!==null)($this->prepare)(self::mailValues($v));

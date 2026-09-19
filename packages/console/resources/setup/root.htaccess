@@ -1,0 +1,2 @@
+# Exponha somente public. Bloqueia arquivos privados quando o projeto fica no htdocs.
+Require all denied

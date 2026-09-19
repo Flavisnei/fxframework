@@ -39,6 +39,23 @@ final class AdminTest extends TestCase
         (new Panel($this->store, $this->session, new ModuleManager(__DIR__), function (string $email, string $token): void { $this->deliveries[] = [$email, $token]; }, null, new \Fx\Framework\Admin\Mail\MailSettings($this->settingsRoot)))->mount($this->app->make(Router::class));
         $this->csrf = $this->body($this->request('GET', 'session'))['csrf'];
     }
+    public function testSubdirectoryAndIndexPhpKeepAssetsApiAndLoginUnderTheSameBase(): void
+    {
+        foreach (['/project/public','/project/public/index.php'] as $base) {
+            $server=['SCRIPT_NAME'=>'/project/public/index.php','SCRIPT_FILENAME'=>'/var/www/project/public/index.php','PHP_SELF'=>$base.'/admin'];
+            $request=Request::create($base.'/admin','GET',[],[],[],$server);
+            $response=$this->app->make(Kernel::class)->handle($request);
+            self::assertSame(200,$response->getStatusCode());
+            self::assertStringContainsString('data-fx-base="'.$base.'"',$response->getContent());
+            self::assertStringContainsString('src="'.$base.'/admin/admin.js"',$response->getContent());
+            $request=Request::create($base.'/admin/api/session','GET',[],[],[],$server);
+            $session=$this->body($this->app->make(Kernel::class)->handle($request));
+            $server+=['CONTENT_TYPE'=>'application/json','HTTP_X_CSRF_TOKEN'=>$session['csrf'],'REMOTE_ADDR'=>'127.0.0.1'];
+            $request=Request::create($base.'/admin/api/login','POST',[],[],[],$server,json_encode(['email'=>'admin@example.test','password'=>self::PASSWORD]));
+            self::assertSame(200,$this->app->make(Kernel::class)->handle($request)->getStatusCode());
+        }
+    }
+
     protected function tearDown(): void
     {
         foreach (['.env','.env.lock'] as $file) { if(is_file($this->settingsRoot.'/'.$file))unlink($this->settingsRoot.'/'.$file); }

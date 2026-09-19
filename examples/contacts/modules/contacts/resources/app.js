@@ -1,12 +1,13 @@
 'use strict';
 (() => {
+  const base = document.documentElement.dataset.fxBase || '';
   const $ = selector => document.querySelector(selector);
   const fields = ['name','email','phone','notes'];
   let session, page = 1, query = '', record = null, busy = false, saving = false;
   const can = permission => session?.permissions.includes('contacts.' + permission);
   function message(text) { $('#status').textContent = text; }
   async function api(path, method = 'GET', data) {
-    const response = await fetch('/admin/api/' + path, {method, credentials:'same-origin', headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':session?.csrf || ''},body:data === undefined ? undefined : JSON.stringify(data)});
+    const response = await fetch(base + '/admin/api/' + path, {method, credentials:'same-origin', headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':session?.csrf || ''},body:data === undefined ? undefined : JSON.stringify(data)});
     const result = await response.json();
     if (!response.ok) {
       const error = new Error(response.status === 401 ? 'Sessão encerrada. Entre novamente no painel e reabra Contatos.' : result.message || 'Falha na operação.');

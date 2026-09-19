@@ -393,3 +393,9 @@ Evidências: PHPUnit 130 testes / 703 asserções, com 1 cenário concorrente op
 Menu e geração de quatro perfis no terminal implementados. Completa prepara o painel; configure.php inicializa a conta e ativa fx-admin. Personalizada instala componentes com integração manual para recursos além do scaffold HTTP/Admin. WordPress gera plugin e usa APIs do hospedeiro; ativação no WordPress real permanece manual. Interface visual e manutenção de projetos existentes seguem planejadas. Sem --profile, a automação antiga permanece mínima.
 
 Evidências: PHPUnit 133 testes / 718 asserções, 1 cenário concorrente opt-in ignorado. Integração com Composer real: 27 verificações, incluindo mínima sem banco/SQLite/MariaDB, completa com criação de conta e resposta da página de login, personalizada com JSON HTTP e WordPress com guarda de acesso direto e hooks simulados. Console validado com vendor isolado.
+
+## 2026-09-19 — Portabilidade XAMPP
+
+Admin e Contatos usam a base pública da requisição; APP_URL opcional no Admin gerado. Templates Apache incluídos. No XAMPP existente, /fx-completo/public/ abriu o login; assets, ajuda e API responderam 200 nos modos com rewrite e index.php. .env, config/admin.php e vendor/autoload.php responderam 403. Nenhuma alteração na configuração global do Apache, nas contas ou nas credenciais. Revisão visual permanece manual; módulos externos devem adaptar suas URLs e servidores que ignoram .htaccess precisam de configuração equivalente.
+
+Evidências finais: suíte PHP 136 testes / 736 asserções (1 cenário opt-in ignorado); teste do gerador atualizado 8 testes / 40 asserções; integração real do assistente 21 verificações sem cenário MariaDB nesta rodada; Admin 18 e Contatos 34 verificações HTTP/CLI isoladas. Sintaxe JS e navegação por âncoras dos manuais verificadas.

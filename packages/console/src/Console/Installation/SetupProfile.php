@@ -45,13 +45,13 @@ final class SetupProfile
             $files['config/modules.json']=json_encode(['schema'=>1,'manifests'=>['vendor/fxfavalessa/fx-admin/fx-module.json']],JSON_THROW_ON_ERROR);
             $files['storage/.gitkeep']='';
             if($db===null) {
-                $files['.env']="APP_SECURE_COOKIE=0\nFX_MAIL_ENABLED=0\n";
+                $files['.env']="APP_SECURE_COOKIE=0\nFX_MAIL_ENABLED=0\nAPP_URL=\"\"\n";
                 $files['.env.example']=$files['.env'];
             } else {
-                $files['.env'].="APP_SECURE_COOKIE=0\nFX_MAIL_ENABLED=0\n";
-                $files['.env.example'].="APP_SECURE_COOKIE=0\nFX_MAIL_ENABLED=0\n";
+                $files['.env'].="APP_SECURE_COOKIE=0\nFX_MAIL_ENABLED=0\nAPP_URL=\"\"\n";
+                $files['.env.example'].="APP_SECURE_COOKIE=0\nFX_MAIL_ENABLED=0\nAPP_URL=\"\"\n";
             }
-            $instructions="PAINEL ADMINISTRATIVO\nExecute php configure.php para criar o primeiro administrador com senha oculta.\nEsse passo cria as tabelas administrativas, preservando contas existentes.\nDepois: php -S 127.0.0.1:8080 -t public public/index.php\nAbra http://127.0.0.1:8080/admin. O configure.php habilita o modulo fx-admin.\nSem banco externo, usa storage/admin.sqlite criado ao configurar.\nAmbiente local HTTP: APP_SECURE_COOKIE=0. Em producao HTTPS, altere para 1.\nConfigure SMTP depois no painel se a versao instalada oferecer essa tela.\nO SMTP fica desativado inicialmente. Nao ha contatos ou outros modulos de negocio.\n";
+            $instructions="PAINEL ADMINISTRATIVO\nExecute php configure.php para criar o primeiro administrador com senha oculta.\nEsse passo cria as tabelas administrativas, preservando contas existentes.\nDepois: php -S 127.0.0.1:8080 -t public public/index.php\nAbra http://127.0.0.1:8080/admin. No XAMPP, acesse /nome-do-projeto/public/; sem rewrite, /nome-do-projeto/public/index.php/admin. O configure.php habilita o modulo fx-admin.\nSem banco externo, usa storage/admin.sqlite criado ao configurar.\nAmbiente local HTTP: APP_SECURE_COOKIE=0. Em producao HTTPS, altere para 1.\nConfigure SMTP depois no painel se a versao instalada oferecer essa tela.\nO SMTP fica desativado inicialmente. Nao ha contatos ou outros modulos de negocio.\n";
         } elseif(in_array('http',$components,true)) {
             $files['public/index.php']=file_get_contents($resources.'/http-index.php');
             $instructions="HTTP\nExecute php -S 127.0.0.1:8080 -t public public/index.php e abra / para receber JSON.\nAcrescente manualmente rotas, autenticacao, validacao e demais componentes.\n";
@@ -59,6 +59,10 @@ final class SetupProfile
         if($profile==='wordpress') {
             $files['plugin.php']=file_get_contents($resources.'/wordpress-plugin.php');
             $instructions="WORDPRESS\nInstale as dependencias e copie esta pasta inteira, incluindo vendor, para wp-content/plugins.\nAtive FX Projeto no WordPress. Usa usuarios, permissoes e banco do WordPress; nao cria login paralelo.\nO menu Ferramentas > FX Projeto demonstra a integracao. Personalize Plugin Name e Text Domain.\nNao execute plugin.php diretamente. Nao instala nem altera o WordPress hospedeiro.\n";
+        }
+        if(isset($files['public/index.php'])) {
+            $files['public/.htaccess']=file_get_contents($resources.'/public.htaccess');
+            $files['.htaccess']=file_get_contents($resources.'/root.htaccess');
         }
         $list=implode(', ',$components);
         $files['composer.json']=json_encode($manifest,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_THROW_ON_ERROR)."\n";

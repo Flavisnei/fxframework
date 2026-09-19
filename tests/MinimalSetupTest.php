@@ -57,6 +57,7 @@ final class MinimalSetupTest extends TestCase
     public function testProfilesGenerateDistinctStructuresAndResolveAdminConsole():void {
         $setup=new MinimalSetup();
         $complete=$setup->create($this->root.'/complete',null,null,'complete');
+        self::assertFileExists($complete.'/.htaccess');self::assertFileExists($complete.'/public/.htaccess');
         self::assertFileExists($complete.'/configure.php');self::assertFileExists($complete.'/public/index.php');
         self::assertFileDoesNotExist($complete.'/storage/admin.sqlite');
         self::assertStringNotContainsString('Você escolheu SEM BANCO',file_get_contents($complete.'/LEIA-ME.txt'));

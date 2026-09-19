@@ -57,6 +57,6 @@ final class AdminConfig
             ? new \Fx\Framework\Admin\Mail\MailSettings($root, $config['mail'] ?? null, static function(array $mail)use($config):void {
                 \Fx\Framework\Admin\Mail\MailConfig::queue(array_replace($config,['mail'=>$mail]))->install();
             }) : null;
-        return new Panel(self::store($config), new AdminSession($config['secure_cookie'] ?? true, 1800, 28800, $config['session_name'] ?? ('FXA' . substr(hash('sha256', realpath($root) ?: $root), 0, 16))), new ModuleManager($root), $delivery, $config['logger'] ?? null, $settings);
+        return new Panel(self::store($config), new AdminSession($config['secure_cookie'] ?? true, 1800, 28800, $config['session_name'] ?? ('FXA' . substr(hash('sha256', realpath($root) ?: $root), 0, 16))), new ModuleManager($root), $delivery, $config['logger'] ?? null, $settings, $config['app_url'] ?? (getenv('APP_URL') ?: null));
     }
 }
