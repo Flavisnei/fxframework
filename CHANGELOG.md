@@ -1,5 +1,10 @@
 # Histórico
 
+## 2026-09-19 — FX Artisan na raiz
+
+- Atalho `php fxartisan` no checkout e nos novos projetos com Console, ancorado na pasta do próprio projeto. Mensagens para dependências ausentes e execução exclusiva no terminal.
+- Ajuda HTML e LEIA-ME explicam comandos, requisitos e migração opcional; executáveis antigos preservados. Perfis sem Console não recebem dependências adicionais.
+
 ## 2026-09-19 — Entrada pela raiz do projeto
 
 - No Apache com mod_rewrite, a raiz redireciona para public/; arquivos privados e listagem de diretórios permanecem bloqueados. Template do assistente e exemplos atualizados.

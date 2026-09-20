@@ -401,3 +401,10 @@ Admin e Contatos usam a base pública da requisição; APP_URL opcional no Admin
 Evidências finais: suíte PHP 136 testes / 736 asserções (1 cenário opt-in ignorado); teste do gerador atualizado 8 testes / 40 asserções; integração real do assistente 21 verificações sem cenário MariaDB nesta rodada; Admin 18 e Contatos 34 verificações HTTP/CLI isoladas. Sintaxe JS e navegação por âncoras dos manuais verificadas.
 
 Entrada pela raiz validada no XAMPP: /fx-completo e /fx-completo/ chegam ao login com HTTP 200; .env, config/admin.php, vendor/autoload.php e listagem config/ retornam 403. API de sessão permanece 200. Sem mod_rewrite, a raiz continua negada e o acesso deve usar public/index.php/admin.
+
+## 2026-09-19 — Entrada curta do FX Artisan
+
+- Implementado `php fxartisan` no checkout e no gerador para perfis com Console. O atalho ancora o diretório de trabalho no projeto e informa dependências ausentes.
+- Compatibilidade: os executáveis anteriores permanecem; mínima e WordPress não ganham Console automaticamente. Projetos existentes exigem cópia explícita do template, documentada na ajuda.
+- Evidências: PHPUnit com 137 testes, 760 assertions e um teste opcional ignorado; regressões cobrem execução a partir de outra pasta, ajuda, dependências ausentes e preservação de controller existente. Console isolado aprovado. Instalação real com Composer: 21 verificações aprovadas nos perfis; busca e navegação da ajuda aprovadas via DOM.
+- Limites: esta etapa não porta os geradores específicos do fxcorrente. Nenhum projeto externo foi alterado. Revisão visual da ajuda não realizada nesta etapa.

@@ -18,7 +18,7 @@ final class MinimalSetupTest extends TestCase
         $target=(new MinimalSetup())->create($this->root.'/minimal',null);
         $manifest=json_decode(file_get_contents($target.'/composer.json'),true);
         self::assertSame(['php','fxfavalessa/fx-core'],array_keys($manifest['require']));
-        self::assertFileDoesNotExist($target.'/.env');self::assertFileDoesNotExist($target.'/app/Connection.php');
+        self::assertFileDoesNotExist($target.'/fxartisan');self::assertFileDoesNotExist($target.'/.env');self::assertFileDoesNotExist($target.'/app/Connection.php');
         self::assertStringContainsString('SEM BANCO',file_get_contents($target.'/LEIA-ME.txt'));
         self::assertStringContainsString('App\\',file_get_contents($target.'/LEIA-ME.txt'));
         $this->expectException(\RuntimeException::class);(new MinimalSetup())->create($target,null);
@@ -58,13 +58,13 @@ final class MinimalSetupTest extends TestCase
         $setup=new MinimalSetup();
         $complete=$setup->create($this->root.'/complete',null,null,'complete');
         self::assertFileExists($complete.'/.htaccess');self::assertFileExists($complete.'/public/.htaccess');
-        self::assertFileExists($complete.'/configure.php');self::assertFileExists($complete.'/public/index.php');
+        self::assertFileExists($complete.'/fxartisan');self::assertFileExists($complete.'/configure.php');self::assertFileExists($complete.'/public/index.php');
         self::assertFileDoesNotExist($complete.'/storage/admin.sqlite');
         self::assertStringNotContainsString('Você escolheu SEM BANCO',file_get_contents($complete.'/LEIA-ME.txt'));
         $manifest=json_decode(file_get_contents($complete.'/composer.json'),true);
         self::assertArrayHasKey('fxfavalessa/fx-admin',$manifest['require']);self::assertArrayNotHasKey('fxfavalessa/fx-database',$manifest['require']);
         $custom=$setup->create($this->root.'/custom',null,null,'custom',['http','validation']);
-        self::assertFileExists($custom.'/public/index.php');self::assertFileDoesNotExist($custom.'/configure.php');
+        self::assertFileDoesNotExist($custom.'/fxartisan');self::assertFileExists($custom.'/public/index.php');self::assertFileDoesNotExist($custom.'/configure.php');
         $wordpress=$setup->create($this->root.'/wordpress',null,null,'wordpress');
         self::assertFileExists($wordpress.'/plugin.php');self::assertFileDoesNotExist($wordpress.'/.env');
         self::assertSame(['core','admin','console'],\Fx\Framework\Console\Installation\SetupProfile::components('custom',['admin']));
@@ -79,6 +79,36 @@ final class MinimalSetupTest extends TestCase
         self::assertSame(0,$tester->execute(['target'=>$this->root.'/wp-menu','--no-install'=>true]));
         self::assertFileExists($this->root.'/wp-menu/plugin.php');
         self::assertStringNotContainsString('Deseja configurar uma conexao',$tester->getDisplay());
+    }
+
+    public function testRootLauncherUsesItsProjectEvenFromAnotherDirectory():void {
+        $target=(new MinimalSetup())->create($this->root.'/console-app',null,null,'custom',['console']);
+        [$code,$output]=$this->launch($target,['list']);
+        self::assertSame(1,$code);self::assertStringContainsString('composer install',$output);
+        mkdir($target.'/vendor');
+        file_put_contents($target.'/vendor/autoload.php',"<?php\n");
+        [$code,$output]=$this->launch($target,['list']);
+        self::assertSame(1,$code);self::assertStringContainsString('FX Console nao esta instalado',$output);
+        file_put_contents($target.'/vendor/autoload.php','<?php require '.var_export(dirname(__DIR__).'/vendor/autoload.php',true).';');
+        [$code,$output]=$this->launch($target,['make:controller','Exemplo']);
+        self::assertSame(0,$code,$output);
+        self::assertFileExists($target.'/app/Controllers/ExemploController.php');
+        self::assertDirectoryDoesNotExist($this->root.'/app');
+        $original=file_get_contents($target.'/app/Controllers/ExemploController.php');
+        [$code,$output]=$this->launch($target,['make:controller','Exemplo']);
+        self::assertNotSame(0,$code,$output);
+        self::assertSame($original,file_get_contents($target.'/app/Controllers/ExemploController.php'));
+        [$code,$output]=$this->launch($target,[]);
+        self::assertSame(0,$code,$output);self::assertStringContainsString('make:controller',$output);
+        [$code,$output]=$this->launch($target,['help','make:controller']);
+        self::assertSame(0,$code,$output);self::assertStringContainsString('name',$output);
+    }
+
+    private function launch(string $target,array $arguments):array {
+        $process=proc_open([PHP_BINARY,$target.'/fxartisan',...$arguments],[0=>['pipe','r'],1=>['pipe','w'],2=>['redirect',1]],$pipes,$this->root,null,['bypass_shell'=>true]);
+        self::assertIsResource($process);fclose($pipes[0]);
+        $output=stream_get_contents($pipes[1]);fclose($pipes[1]);
+        return [proc_close($process),$output];
     }
 
 }

@@ -38,6 +38,10 @@ final class SetupProfile
         }
         $resources=dirname(__DIR__,3).'/resources/setup';
         $instructions='';
+        if(in_array('console',$components,true)) {
+            $files['fxartisan']=file_get_contents($resources.'/fxartisan');
+            $files['LEIA-ME.txt'].="\nFX ARTISAN — TERMINAL\nNa raiz: php fxartisan (lista comandos), php fxartisan help make:controller (ajuda), php fxartisan make:controller Exemplo (gera uma classe).\nRequer PHP 8.1 ou superior e composer install concluido. O atalho sempre trabalha na pasta onde esta salvo.\nOs comandos dependem dos componentes instalados. php vendor/bin/fxartisan continua disponivel, executado na raiz.\nSe aparecer Could not open input file, entre na pasta do projeto ou informe o caminho completo do arquivo fxartisan.\nNao coloque este arquivo em public. Consulte docs/index.html para instalacao e exemplos.\n";
+        }
         if(in_array('admin',$components,true)) {
             $manifest['require']['symfony/dotenv']='^6.4 || ^7.4';
             $manifest['require']['symfony/mailer']='^6.4';
