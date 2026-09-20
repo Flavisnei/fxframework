@@ -13,6 +13,11 @@ $autoloadCandidates = [
 foreach ($autoloadCandidates as $autoload) {
     if (is_file($autoload)) {
         require $autoload;
+        if (($argv[1] ?? null) === '-v') {
+            fwrite(STDOUT, "FX Artisan: " . \Fx\Framework\Console\Application::VERSION . PHP_EOL);
+            fwrite(STDOUT, "FX Framework: " . \Fx\Framework\Console\Application::VERSION . PHP_EOL);
+            exit(0);
+        }
         exit(Artisan::fromCurrentDirectory()->run());
     }
 }

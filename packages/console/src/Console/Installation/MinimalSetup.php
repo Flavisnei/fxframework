@@ -64,10 +64,25 @@ final class MinimalSetup
         $manifest = ['name'=>'app/'.strtolower(basename($target)),'type'=>'project','license'=>'proprietary','repositories'=>$repositories,'require'=>$requirements,'autoload'=>['psr-4'=>['App\\'=>'app/']],'minimum-stability'=>$localCore === null ? 'RC' : 'dev','prefer-stable'=>true,'config'=>['allow-plugins'=>false]];
         $resources = dirname(__DIR__, 3) . '/resources/setup';
         $databaseHelp = $db === null ? 'Você escolheu SEM BANCO. Nenhum componente de banco, .env ou classe de conexão foi gerado. Para adicionar depois, habilite PDO e o driver PHP apropriado, crie sua classe de conexão e configure as credenciais fora da pasta pública. Não é necessário instalar ORM. O assistente não modifica projetos existentes; não o execute sobre esta pasta.' : file_get_contents($resources . '/database.txt');
+        $greeting = <<<'PHP'
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+class Saudacao
+{
+    public function mensagem(string $nome): string
+    {
+        return 'Olá, ' . $nome . '!';
+    }
+}
+PHP;
         $files = [
             'composer.json'=>json_encode($manifest, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_THROW_ON_ERROR)."\n",
             '.gitignore'=>"/vendor/\n/.env\n/.env.*\n!/.env.example\n/storage/\n",
-            'app/Saudacao.php'=>"<?php\ndeclare(strict_types=1);\nnamespace App;\nfinal class Saudacao { public function mensagem(string \$nome): string { return 'Olá, ' . \$nome . '!'; } }\n",
+            'app/Saudacao.php'=>$greeting . "\n",
             'example.php'=>"<?php\nrequire __DIR__ . '/vendor/autoload.php';\necho (new App\\Saudacao())->mensagem('FX') . PHP_EOL;\n",
             'LEIA-ME.txt'=>str_replace('{{DATABASE}}', $databaseHelp, file_get_contents($resources . '/LEIA-ME.txt')),
             'docs/index.html'=>file_get_contents(dirname(__DIR__,3) . '/docs/index.html'),

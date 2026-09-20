@@ -24,6 +24,7 @@ final class Artisan extends SymfonyApplication
         parent::__construct('FX Artisan', Application::VERSION);
         $this->registerFrameworkCommands();
         $this->registerApplicationCommands();
+        $this->addUsageHelp();
     }
 
     public static function fromCurrentDirectory(): self
@@ -90,6 +91,33 @@ final class Artisan extends SymfonyApplication
         foreach ($commands as $command) {
             if (!$command instanceof Command) { throw new RuntimeException('Comando personalizado invalido.'); }
             $this->add($command);
+        }
+    }
+
+    private function addUsageHelp(): void
+    {
+        $examples = [
+            'about' => 'fxartisan about', 'app:init' => 'fxartisan app:init',
+            'cache:clear' => 'fxartisan cache:clear', 'cache:cleartmp' => 'fxartisan cache:cleartmp',
+            'fxwindows:install' => 'fxartisan fxwindows:install',
+            'make:controller' => 'fxartisan make:controller Cliente', 'make:crud' => 'fxartisan make:crud Cliente',
+            'make:middleware' => 'fxartisan make:middleware Auth', 'make:migration' => 'fxartisan make:migration create_clientes_table',
+            'make:model' => 'fxartisan make:model Cliente', 'make:request' => 'fxartisan make:request Cliente',
+            'migrate' => 'fxartisan migrate', 'migrate:fresh' => 'fxartisan migrate:fresh',
+            'migrate:rollback' => 'fxartisan migrate:rollback', 'migrate:status' => 'fxartisan migrate:status',
+            'module:disable' => 'fxartisan module:disable exemplo', 'module:doctor' => 'fxartisan module:doctor',
+            'module:enable' => 'fxartisan module:enable exemplo', 'module:install' => 'fxartisan module:install http',
+            'module:list' => 'fxartisan module:list', 'module:refresh' => 'fxartisan module:refresh',
+            'module:status' => 'fxartisan module:status', 'optimize:clear' => 'fxartisan optimize:clear',
+            'preset:install' => 'fxartisan preset:install complete', 'route:list' => 'fxartisan route:list',
+            'serve' => 'fxartisan serve --port=8080', 'setup:init' => 'fxartisan setup:init C:/Projetos/minha-app --profile=complete',
+            'setup:upgrade' => 'fxartisan setup:upgrade --profile=complete --dry-run',
+        ];
+
+        foreach ($this->all() as $command) {
+            $name = $command->getName();
+            $example = $examples[$name] ?? 'fxartisan ' . $name;
+            $command->setHelp("Uso:\n  {$example}\n\nExemplo:\n  {$example}\n\nConsulte as opcoes com:\n  {$example} --help");
         }
     }
 }

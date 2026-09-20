@@ -34,6 +34,11 @@ final class GeneratedApplicationTest extends TestCase
             require $root . '/app/Models/CsrfRecord.php';
             require $root . '/app/Requests/CsrfRecordRequest.php';
             require $root . '/app/Controllers/CsrfRecordController.php';
+            $controllerSource = file_get_contents($root . '/app/Controllers/CsrfRecordController.php');
+            self::assertIsString($controllerSource);
+            self::assertStringContainsString("class CsrfRecordController\n", $controllerSource);
+            self::assertStringNotContainsString('final class CsrfRecordController', $controllerSource);
+            self::assertStringContainsString("public function index(): array\n    {\n", $controllerSource);
             $app = require $root . '/bootstrap/app.php';
             $connection = Capsule::connection();
             (new Migrator($connection, $root . '/database/migrations'))->migrate();

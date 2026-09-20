@@ -192,6 +192,11 @@ declare(strict_types=1);
 use Fx\Framework\Console\Artisan;
 
 require __DIR__ . '/vendor/autoload.php';
+if (($argv[1] ?? null) === '-v') {
+    fwrite(STDOUT, "FX Artisan: " . \Fx\Framework\Console\Application::VERSION . PHP_EOL);
+    fwrite(STDOUT, "FX Framework: " . \Fx\Framework\Console\Application::VERSION . PHP_EOL);
+    exit(0);
+}
 exit((new Artisan(__DIR__))->run());
 PHP);
         $this->writeNew($root . '/server.php', <<<'PHP'
@@ -238,7 +243,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-final class {{name}} extends Model
+class {{name}} extends Model
 {
     protected $guarded = [];
 }
@@ -252,7 +257,7 @@ namespace App\Requests;
 
 use Fx\Framework\Http\Request;
 
-final class {{name}}Request extends Request
+class {{name}}Request extends Request
 {
     public function validatedData(): array
     {
@@ -346,13 +351,37 @@ namespace App\Controllers;
 use App\Models\{{name}};
 use App\Requests\{{name}}Request;
 
-final class {{name}}Controller
+class {{name}}Controller
 {
-    public function index(): array { return {{name}}::query()->paginate()->toArray(); }
-    public function show(string $id): array { return {{name}}::query()->findOrFail($id)->toArray(); }
-    public function store({{name}}Request $request): array { return {{name}}::query()->create($request->validatedData())->toArray(); }
-    public function update({{name}}Request $request, string $id): array { $model = {{name}}::query()->findOrFail($id); $model->update($request->validatedData()); return $model->toArray(); }
-    public function destroy(string $id): array { {{name}}::query()->findOrFail($id)->delete(); return ['deleted' => true]; }
+    public function index(): array
+    {
+        return {{name}}::query()->paginate()->toArray();
+    }
+
+    public function show(string $id): array
+    {
+        return {{name}}::query()->findOrFail($id)->toArray();
+    }
+
+    public function store({{name}}Request $request): array
+    {
+        return {{name}}::query()->create($request->validatedData())->toArray();
+    }
+
+    public function update({{name}}Request $request, string $id): array
+    {
+        $model = {{name}}::query()->findOrFail($id);
+        $model->update($request->validatedData());
+
+        return $model->toArray();
+    }
+
+    public function destroy(string $id): array
+    {
+        {{name}}::query()->findOrFail($id)->delete();
+
+        return ['deleted' => true];
+    }
 }
 PHP);
     }

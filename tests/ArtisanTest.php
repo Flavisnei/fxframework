@@ -44,4 +44,13 @@ final class ArtisanTest extends TestCase
         self::assertSame(0, $status);
         self::assertStringContainsString('FX Framework', $output->fetch());
     }
+
+    public function testCommandsExposeUsageAndExampleHelp(): void
+    {
+        $artisan = new Artisan(__DIR__);
+        foreach ($artisan->all() as $command) {
+            self::assertStringContainsString('Uso:', $command->getHelp(), $command->getName());
+            self::assertStringContainsString('Exemplo:', $command->getHelp(), $command->getName());
+        }
+    }
 }

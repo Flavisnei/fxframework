@@ -1,5 +1,16 @@
 # Histórico
 
+## 2026-09-20 — Ajuda e versão do FX Artisan
+
+- `fxartisan -v` exibe somente as versões do FX Artisan e do FX Framework.
+- A ajuda de todos os comandos inclui seção de uso, exemplo e consulta das opções.
+
+## 2026-09-20 — Templates do FX Artisan
+
+- Controllers, models, requests e middlewares gerados para a aplicação não são mais declarados como `final` por padrão.
+- Métodos do controller gerado por `make:crud` agora saem formatados em blocos legíveis.
+- Mantida a extensão `.tpl` nas views do CRUD, pois elas usam Smarty.
+
 ## 2026-09-19 — Ajuda acessível pelo painel
 
 - Ajuda do Admin agora inclui instalação mínima/completa/personalizada/WordPress, Artisan, estrutura, upgrade e uso de tema próprio. Busca local sem CDN e índice preservado.

@@ -3,6 +3,16 @@
 Cada etapa inclui implementação, testes pertinentes, revisão do diff, ajuda HTML e
 changelog. A conclusão depende de evidência, não de promessa de perfeição.
 
+Revisão da etapa atual: os templates do `fxartisan` foram auditados. A geração de
+classes da aplicação não aplica `final` por padrão, o controller de `make:crud` é
+emitido com indentação por blocos e as views continuam em `.tpl` por usarem Smarty.
+O teste de aplicação gerada verifica a forma do controller; não foram alterados os
+componentes internos do Console, que continuam podendo usar `final`.
+
+Na mesma revisão, `fxartisan -v` foi reservado para a versão curta e a ajuda
+registrada em cada comando passou a informar uso e exemplo, inclusive para comandos
+condicionais aos pacotes instalados.
+
 | Etapa | Entrega | Critério de revisão | Estado |
 | --- | --- | --- | --- |
 | 0 | Git local e marco v1.0.01 | Código original preservado em tag anotada | Concluída |
