@@ -13,6 +13,10 @@ Na mesma revisão, `fxartisan -v` foi reservado para a versão curta e a ajuda
 registrada em cada comando passou a informar uso e exemplo, inclusive para comandos
 condicionais aos pacotes instalados.
 
+README, ajuda central e manual distribuído do Console agora documentam a instalação
+GitHub da tag `1.1.0`, a geração `complete` e o perfil `wordpress`, com requisitos,
+comandos, resultados esperados e limitações.
+
 | Etapa | Entrega | Critério de revisão | Estado |
 | --- | --- | --- | --- |
 | 0 | Git local e marco v1.0.01 | Código original preservado em tag anotada | Concluída |

@@ -114,5 +114,11 @@ database/migrations/  Disponível com o componente database</code></pre>
 <h3>Onde consultar e como atualizar</h3>
 <p>No painel, abra Ajuda (/admin/help, respeitando a subpasta da instalação). A central do projeto fica em docs/index.html. Consulte também LEIA-ME.txt, LEIA-ME-ESTRUTURA.txt quando gerado e vendor/fxfavalessa/fx-console/docs/index.html. Estes arquivos podem ser abertos offline. A busca do painel ignora acentos; Ctrl+F também funciona.</p>
 <p>Projetos já instalados mantêm as cópias antigas até que os pacotes/documentos sejam atualizados. A ajuda do painel vem de fx-admin; os comandos novos vêm de fx-console. O assistente não sobrescreve manuais próprios, e as releases antigas não ganham recursos automaticamente. As mudanças recentes estão no checkout atualizado do framework. Não edite arquivos dentro de vendor; atualize a origem do pacote pelo Composer e revise a documentação copiada.</p>
-<p>Em caso de comando ausente, confira <code>php fxartisan list</code>, a versão/origem instalada de fx-console e sua ajuda. Repositórios locais devem oferecer todos os componentes escolhidos; use --constraint=@dev somente nesse cenário. Veja os tópicos seguintes para exemplos completos, requisitos e limitações.</p>
+<p>Em caso de comando ausente, confira <code>php fxartisan list</code>, a versão/origem instalada de fx-console e sua ajuda. Repositórios locais devem oferecer todos os componentes escolhidos; use --constraint=@dev somente nesse cenário. Veja os tópicos seguintes para exemplos completos, requisitos e limitações.</p><h3>Instalação pelo GitHub</h3><p>Em uma pasta vazia, use a tag estável <code>1.1.0</code> no <code>composer.json</code> com o repositório VCS do GitHub. Depois execute:</p><pre><code>composer install --no-dev --prefer-dist --optimize-autoloader
+php vendor/bin/fxartisan -v
+php vendor/bin/fxartisan setup:init C:/Projetos/minha-aplicacao --profile=complete
+cd C:/Projetos/minha-aplicacao
+composer install --no-dev --prefer-dist --optimize-autoloader
+php configure.php
+php fxartisan serve</code></pre><p>Para WordPress, use <code>php vendor/bin/fxartisan setup:init C:/Projetos/meu-plugin-fx --profile=wordpress --yes --no-interaction</code>, instale o Composer na pasta gerada e copie o plugin para <code>wp-content/plugins/</code>. Consulte qualquer comando com <code>php vendor/bin/fxartisan help NOME</code> ou <code>php vendor/bin/fxartisan NOME --help</code>.</p>
 </section></body></html>

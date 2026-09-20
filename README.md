@@ -95,6 +95,57 @@ composer install
 
 O diretorio `vendor/` nao faz parte do framework e e gerado pelo comando acima.
 
+### Instalar uma versão publicada pelo GitHub
+
+Em uma pasta vazia, crie `composer.json` na raiz:
+
+```json
+{
+    "name": "empresa/minha-aplicacao",
+    "type": "project",
+    "repositories": [{"type": "vcs", "url": "https://github.com/Flavisnei/fxframework.git"}],
+    "require": {"php": "^8.1", "fxfavalessa/fx-framework": "1.1.0"}
+}
+```
+
+Instale e confira:
+
+```bash
+composer install --no-dev --prefer-dist --optimize-autoloader
+php vendor/bin/fxartisan -v
+```
+
+Mantenha `composer.lock` versionado. A tag `v1.1.0` é a versão estável validada; não use `dev-main` em produção.
+
+### Criar uma aplicação completa
+
+```bash
+php vendor/bin/fxartisan setup:init C:/Projetos/minha-aplicacao --profile=complete
+cd C:/Projetos/minha-aplicacao
+composer install --no-dev --prefer-dist --optimize-autoloader
+php configure.php
+php fxartisan serve
+```
+
+O destino do `setup:init` deve ser uma pasta nova. O perfil completo inclui HTTP, banco/Eloquent, migrations, Smarty, validação e Admin quando selecionado. Para uma estrutura básica na pasta atual use `php vendor/bin/fxartisan app:init`.
+
+### Criar um plugin WordPress
+
+```bash
+php vendor/bin/fxartisan setup:init C:/Projetos/meu-plugin-fx --profile=wordpress --yes --no-interaction
+cd C:/Projetos/meu-plugin-fx
+composer install --no-dev --prefer-dist --optimize-autoloader
+```
+
+Copie a pasta gerada para `wp-content/plugins/` e ative o plugin no WordPress. O perfil usa banco, usuários e permissões do WordPress hospedeiro, sem criar banco ou sessão paralelos.
+
+Para consultar comandos:
+
+```bash
+php vendor/bin/fxartisan help setup:init
+php vendor/bin/fxartisan setup:init --help
+```
+
 ## Uso local no FX Corrente
 
 No `composer.json` da aplicacao, adicione:

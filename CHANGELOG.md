@@ -1,5 +1,11 @@
 # Histórico
 
+## 2026-09-20 — Guia de instalação pelo GitHub
+
+- Documentados os passos para instalar a versão `1.1.0` via GitHub.
+- Documentados os perfis `complete` e `wordpress`, incluindo verificação e próximos passos.
+- README, ajuda central e manual distribuído do Console agora usam os mesmos comandos.
+
 ## 2026-09-20 — Ajuda e versão do FX Artisan
 
 - `fxartisan -v` exibe somente as versões do FX Artisan e do FX Framework.

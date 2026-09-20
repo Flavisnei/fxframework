@@ -328,4 +328,12 @@ database/migrations/  Disponível com o componente database</code></pre>
 <p>Para conferir as versões, execute <code>php fxartisan -v</code>; o resultado mostra somente FX Artisan e FX Framework. Para consultar um comando, use <code>php fxartisan help make:crud</code> ou <code>php fxartisan make:crud --help</code>; a ajuda apresenta o uso e um exemplo.</p>
 <p>Em caso de comando ausente, confira <code>php fxartisan list</code>, a versão/origem instalada de fx-console e sua ajuda. Repositórios locais devem oferecer todos os componentes escolhidos; use --constraint=@dev somente nesse cenário. Veja os tópicos seguintes para exemplos completos, requisitos e limitações.</p>
 <p>Nota sobre os geradores: o código PHP emitido pelo <code>fxartisan</code> usa indentação por blocos e as classes da aplicação não são <code>final</code> por padrão. As views do CRUD continuam em <code>.tpl</code> porque são templates Smarty; arquivos <code>.php</code> ficam reservados às views PHP simples.</p>
-</section></main></div></body></html>
+</section><section id="instalacao-github"><span class="tag">Disponível · v1.1.0</span><h2>Instalar pelo GitHub e criar aplicações</h2><p>Requer PHP 8.1+, Composer 2 e uma pasta vazia. A versão estável publicada é <code>1.1.0</code>; mantenha <code>composer.lock</code> no controle de versão e não use <code>dev-main</code> em produção.</p><h3>Aplicação completa</h3><pre><code>composer install --no-dev --prefer-dist --optimize-autoloader
+php vendor/bin/fxartisan -v
+php vendor/bin/fxartisan setup:init C:/Projetos/minha-aplicacao --profile=complete
+cd C:/Projetos/minha-aplicacao
+composer install --no-dev --prefer-dist --optimize-autoloader
+php configure.php
+php fxartisan serve</code></pre><p>O destino do <code>setup:init</code> deve ser novo. Para uma estrutura básica na pasta atual use <code>php vendor/bin/fxartisan app:init</code>.</p><h3>Plugin WordPress</h3><pre><code>php vendor/bin/fxartisan setup:init C:/Projetos/meu-plugin-fx --profile=wordpress --yes --no-interaction
+cd C:/Projetos/meu-plugin-fx
+composer install --no-dev --prefer-dist --optimize-autoloader</code></pre><p>Copie a pasta gerada para <code>wp-content/plugins/</code> e ative-a. O perfil WordPress usa o banco, usuários e permissões do hospedeiro e não cria banco ou sessão paralelos. Consulte qualquer comando com <code>php vendor/bin/fxartisan help NOME</code> ou <code>--help</code>.</p></section></main></div></body></html>
