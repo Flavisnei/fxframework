@@ -14,8 +14,18 @@ if (!chdir(__DIR__)) {
     exit(1);
 }
 
-$autoload = __DIR__ . '/vendor/autoload.php';
-if (!is_file($autoload)) {
+$autoloadCandidates = [
+    __DIR__ . '/vendor/autoload.php',
+    __DIR__ . '/../../../../autoload.php',
+];
+$autoload = null;
+foreach ($autoloadCandidates as $candidate) {
+    if (is_file($candidate)) {
+        $autoload = $candidate;
+        break;
+    }
+}
+if ($autoload === null) {
     fwrite(STDERR, "Dependencias ausentes. Execute composer install na pasta do projeto.\n");
     exit(1);
 }

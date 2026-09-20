@@ -1,5 +1,10 @@
 # Histórico
 
+## 2026-09-20 — Launcher Composer instalado como dependência
+
+- Corrigido o `vendor/bin/fxartisan` para localizar o autoload da aplicação quando o framework é instalado via Composer VCS.
+- Acrescido teste manual do fluxo documentado de instalação em pasta nova.
+
 ## 2026-09-20 — Admin independente do diretório de instalação
 
 - Corrigida a publicação dos links de CSS, JavaScript, ajuda e API do Admin para respeitar a base pública detectada na requisição.
