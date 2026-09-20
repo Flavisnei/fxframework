@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Este arquivo pertence a raiz da aplicacao, fora de public/.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
+if (!chdir(__DIR__)) {
+    fwrite(STDERR, "Nao foi possivel acessar a pasta do projeto.\n");
+    exit(1);
+}
+
+$autoload = __DIR__ . '/vendor/autoload.php';
+if (!is_file($autoload)) {
+    fwrite(STDERR, "Dependencias ausentes. Execute composer install na pasta do projeto.\n");
+    exit(1);
+}
+require $autoload;
+
+if (!class_exists(\Fx\Framework\Console\Artisan::class)) {
+    fwrite(STDERR, "FX Console nao esta instalado. Consulte a ajuda de instalacao do componente console.\n");
+    exit(1);
+}
+
+exit((new \Fx\Framework\Console\Artisan(__DIR__))->run());

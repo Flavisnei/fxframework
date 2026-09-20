@@ -33,7 +33,7 @@ namespace App\Middleware;
 use Fx\Framework\Http\Request;
 use Fx\Framework\Middleware\Middleware;
 
-final class {{name}} implements Middleware
+class {{name}} implements Middleware
 {
     public function process(Request $request, callable $next): mixed
     {

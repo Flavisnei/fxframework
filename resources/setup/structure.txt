@@ -1,0 +1,73 @@
+ESTRUTURA E EVOLUÇÃO DO PROJETO FX
+Requisitos: PHP 8.1+, Composer 2, componentes instalados e public como pasta pública.
+
+A completa inclui HTTP, Console, banco/Eloquent/migrations, views/Smarty, validação,
+autenticação, módulos, FX Windows e, por padrão, Admin. WordPress é um perfil separado.
+Escolha --without-admin para uma nova completa sem dashboard, login pronto ou contas.
+Auth fornece primitivas; adicionar seu tema não implementa autenticação automaticamente.
+
+ESTRUTURA WEB
+app/Controllers: entrada das requisições. HomeController chama o serviço Page.
+app/Services: regras/serviços. Page renderiza resources/views/home.php usando PHP.
+app/Models: classes de domínio; Eloquent somente com componente database.
+app/Requests e app/Middleware: validação e processamento de requisições.
+routes/web.php: páginas. routes/api.php: exemplo GET /api/status retorna JSON.
+resources/views: seus templates. public/assets: CSS, JS e imagens locais.
+bootstrap/app.php: liga rotas, CSRF, views e componentes opcionais.
+storage: cache, templates compilados, logs e temporários.
+database/migrations: migrations quando database estiver instalado.
+
+Execute php fxartisan serve e acesse http://127.0.0.1:8000/.
+No XAMPP use /nome-do-projeto/public/; sem rewrite use public/index.php/.
+A página inicial da aplicação não redireciona mais para o Admin.
+Com Admin, execute php configure.php e acesse /admin explicitamente.
+Use php fxartisan route:list para conferir as rotas.
+As rotas da aplicação têm CSRF nos métodos de escrita. APIs com tokens precisam
+ter sua política de autenticação definida; este exemplo não é uma API autenticada.
+
+SEU TEMA (ACE OU OUTRO)
+Coloque os arquivos licenciados do tema em public/assets e adapte home.php.
+Use htmlspecialchars nos dados dinâmicos. O tema não é baixado pelo instalador.
+Use a base da requisição ($base no exemplo) nos links para suportar subpastas.
+A view PHP funciona sem Smarty. Com view instalado, Fx\Framework\View\View é
+registrado no container e renderiza .tpl em resources/views, com delimitadores -{ }-.
+Outro motor pode ser ligado no serviço Page ou registrado no container manualmente.
+As telas do Admin FX Windows são independentes: trocar home.php não troca o Admin.
+
+BANCO
+Ter Models e instalar ORM não abre conexão nem cria tabelas automaticamente.
+config/database.php lê DB_DRIVER, DB_DATABASE, DB_HOST, DB_PORT, DB_USERNAME e
+DB_PASSWORD do .env; variáveis do processo têm prioridade. Sem DB_DATABASE, ORM
+não é inicializado. Configure um banco existente antes de usar models/migrations.
+SQLite exige arquivo existente e caminho absoluto. Exemplo (ajuste o caminho):
+DB_DRIVER=sqlite
+DB_DATABASE="C:/Projetos/minha-app/storage/aplicacao.sqlite"
+Depois: php fxartisan make:migration create_exemplos_table
+Revise a migration, então php fxartisan migrate e php fxartisan migrate:status.
+O SQLite do Admin criado por configure.php é independente se DB_DATABASE não foi
+configurado. Não execute migrations de exemplo em dados reais sem revisão.
+
+EVOLUIR SEM RECRIAR
+php fxartisan setup:upgrade --profile=complete --without-admin --dry-run
+php fxartisan setup:upgrade --profile=complete --without-admin --yes
+php fxartisan setup:upgrade --profile=custom --components=http,view --yes
+php fxartisan module:install validation --constraint=1.1.0-rc.1
+setup:upgrade acrescenta componentes e estrutura; module:install somente pacotes.
+Componentes existentes nunca são removidos. --without-admin não desinstala Admin.
+Use --constraint=@dev e repositórios path para desenvolvimento local.
+A mínima mantém apenas Core. Para ampliá-la a partir do checkout do framework:
+php fxartisan setup:upgrade --target=C:/Projetos/minha-app --profile=complete --without-admin --yes
+O fxartisan acima é o do FRAMEWORK; --target indica a aplicação que receberá a mudança.
+Ou instale fx-console via Composer na mínima e use php vendor/bin/fxartisan setup:upgrade.
+O comando cria o atalho local fxartisan se ausente. Nenhum comando requer editar vendor.
+
+PRESERVAÇÃO E PROBLEMAS
+Faça commit/backup antes de ampliar. Use --dry-run: apenas mostra plano local, sem rede.
+Arquivos existentes são preservados. Entradas bootstrap/public incompatíveis impedem
+a operação antes do Composer: integre manualmente conforme templates do pacote.
+.env, views, rotas, contas e dados não são sobrescritos. Revise itens preservados:
+configuração própria de módulos pode exigir registrar fx-admin manualmente.
+Falha do Composer: nenhum arquivo de estrutura é publicado; confira manifesto/lock/vendor.
+Interrupções não oferecem rollback completo. Reexecute após corrigir o problema.
+setup:init sempre cria uma pasta nova; setup:upgrade opera sobre uma pasta existente.
+WordPress não deve ser convertido em uma aplicação web pelo assistente.
