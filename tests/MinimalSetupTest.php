@@ -62,7 +62,7 @@ final class MinimalSetupTest extends TestCase
         self::assertFileDoesNotExist($complete.'/storage/admin.sqlite');
         self::assertStringNotContainsString('Você escolheu SEM BANCO',file_get_contents($complete.'/LEIA-ME.txt'));
         $manifest=json_decode(file_get_contents($complete.'/composer.json'),true);
-        self::assertArrayHasKey('fxfavalessa/fx-admin',$manifest['require']);self::assertArrayNotHasKey('fxfavalessa/fx-database',$manifest['require']);
+        self::assertArrayHasKey('fxfavalessa/fx-admin',$manifest['require']);self::assertArrayHasKey('fxfavalessa/fx-database',$manifest['require']);
         $custom=$setup->create($this->root.'/custom',null,null,'custom',['http','validation']);
         self::assertFileDoesNotExist($custom.'/fxartisan');self::assertFileExists($custom.'/public/index.php');self::assertFileDoesNotExist($custom.'/configure.php');
         $wordpress=$setup->create($this->root.'/wordpress',null,null,'wordpress');
@@ -102,6 +102,39 @@ final class MinimalSetupTest extends TestCase
         self::assertSame(0,$code,$output);self::assertStringContainsString('make:controller',$output);
         [$code,$output]=$this->launch($target,['help','make:controller']);
         self::assertSame(0,$code,$output);self::assertStringContainsString('name',$output);
+    }
+
+
+    public function testCompleteWithoutAdminAndUpgradePreserveApplicationFiles():void {
+        $setup=new MinimalSetup();
+        $target=$setup->create($this->root.'/without-admin',null,null,'complete',[],true);
+        $manifest=json_decode(file_get_contents($target.'/composer.json'),true);
+        self::assertArrayNotHasKey('fxfavalessa/fx-admin',$manifest['require']);
+        foreach(['http','view','database','auth','modules','console'] as $component)self::assertArrayHasKey('fxfavalessa/fx-'.$component,$manifest['require']);
+        foreach(['app/Controllers/HomeController.php','app/Services/Page.php','resources/views/home.php','routes/web.php','routes/api.php','bootstrap/app.php','database/migrations/.gitkeep'] as $file)self::assertFileExists($target.'/'.$file);
+        self::assertFileDoesNotExist($target.'/config/admin.php');
+        $minimal=$setup->create($this->root.'/to-upgrade',null);
+        file_put_contents($minimal.'/.env',"PRESERVE=1\n");
+        $components=\Fx\Framework\Console\Installation\SetupProfile::components('complete');
+        $upgrade=new \Fx\Framework\Console\Installation\ProjectUpgrade($minimal);
+        $plan=$upgrade->plan($components);
+        self::assertContains('.env',$plan['preserve']);
+        self::assertFileDoesNotExist($minimal.'/bootstrap/app.php');
+        $upgrade->publish($plan['create']);
+        self::assertSame("PRESERVE=1\n",file_get_contents($minimal.'/.env'));
+        self::assertSame([], $upgrade->plan($components)['create']);
+        file_put_contents($minimal.'/bootstrap.php',"<?php // minha entrada\n");
+        $this->expectException(\RuntimeException::class);$upgrade->plan($components);
+    }
+
+    public function testUpgradeDryRunDoesNotModifyMinimalProject():void {
+        $target=(new MinimalSetup())->create($this->root.'/dry-upgrade',null);
+        $original=file_get_contents($target.'/composer.json');
+        $tester=new CommandTester((new \Fx\Framework\Console\Artisan($target))->find('setup:upgrade'));
+        self::assertSame(0,$tester->execute(['--without-admin'=>true,'--dry-run'=>true],['interactive'=>false]));
+        self::assertSame($original,file_get_contents($target.'/composer.json'));
+        self::assertDirectoryDoesNotExist($target.'/public');
+        self::assertStringContainsString('routes/web.php',$tester->getDisplay());
     }
 
     private function launch(string $target,array $arguments):array {

@@ -45,9 +45,9 @@ final class MinimalSetup
         } catch (\Throwable) { throw new RuntimeException('Nao foi possivel conectar. Confira servidor, banco existente, usuario e senha. Nenhuma tabela foi criada.'); }
     }
 
-    public function create(string $target, ?array $db, ?string $localCore = null, string $profile = 'minimal', array $components = []): string
+    public function create(string $target, ?array $db, ?string $localCore = null, string $profile = 'minimal', array $components = [], bool $withoutAdmin = false): string
     {
-        $components = SetupProfile::components($profile,$components);
+        $components = SetupProfile::components($profile,$components,$withoutAdmin);
         if ($profile === 'wordpress' && $db !== null) throw new RuntimeException('WordPress usa a conexao do hospedeiro.');
         $target = self::validateTarget($target);
         if ($db !== null) { self::validateDatabase($db); }

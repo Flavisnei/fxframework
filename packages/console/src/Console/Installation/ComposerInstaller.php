@@ -11,7 +11,7 @@ final class ComposerInstaller
 {
     public function __construct(private readonly string $root) {}
 
-    public function install(array $packages, string $constraint, ?string $composer, bool $dryRun, OutputInterface $output, ?InstallCatalog $catalog = null): int
+    public function install(array $packages, string $constraint, ?string $composer, bool $dryRun, OutputInterface $output, ?InstallCatalog $catalog = null, bool $setupDependencies = false): int
     {
         if (!is_file($this->root . '/composer.json')) {
             throw new RuntimeException('composer.json ausente. Execute na raiz da aplicacao; consulte a ajuda HTML do Console.');
@@ -28,6 +28,10 @@ final class ComposerInstaller
         $requirements = [];
         foreach ($packages as $package) {
             $requirements[] = ($catalog === null ? PackageCatalog::package($package) : $catalog->package($package)) . ':' . $constraint;
+        }
+        if ($setupDependencies) {
+            $requirements[] = 'symfony/dotenv:^6.4 || ^7.4';
+            if (in_array('fxfavalessa/fx-admin', $packages, true)) $requirements[] = 'symfony/mailer:^6.4';
         }
         $command = [...$this->executable($composer), 'require', '--no-interaction', '--no-plugins', '--no-scripts'];
         if ($dryRun) { $command[] = '--dry-run'; }

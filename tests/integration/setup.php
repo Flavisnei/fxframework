@@ -35,6 +35,30 @@ try {
         setupAssert(is_file($target.'/.env')===($name!=='none'));
         setupAssert(str_contains(file_get_contents($target.'/LEIA-ME.txt'),$name==='none'?'SEM BANCO':'UPDATE contatos'));
     }
+    // Evolucao da minima: repositorio local completo apenas no consumidor temporario.
+    $target=$temporary.'/none';
+    $manifest=json_decode(file_get_contents($target.'/composer.json'),true);
+    $versions=[];foreach(glob($root.'/packages/*/composer.json') as $file){$package=json_decode(file_get_contents($file),true);$versions[$package['name']]='dev-main';}
+    $manifest['repositories']=[['type'=>'path','url'=>str_replace('\\','/',$root).'/packages/*','options'=>['symlink'=>false,'versions'=>$versions]]];
+    file_put_contents($target.'/composer.json',json_encode($manifest,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+    file_put_contents($target.'/.env',"PRESERVE_TEST=1\n");
+    setupRun([PHP_BINARY,$root.'/fxartisan','setup:upgrade','--target='.$target,'--without-admin','--constraint=@dev','--yes','--no-interaction','--composer='.$composer],$root);
+    setupAssert(file_get_contents($target.'/.env')==="PRESERVE_TEST=1\n");
+    setupAssert(!is_file($target.'/config/admin.php'));
+    setupAssert(str_contains(setupRun([PHP_BINARY,$target.'/fxartisan','route:list'],$root),'/api/status'));
+    $probe=<<<'PHP'
+<?php
+$app=require __DIR__.'/bootstrap/app.php';
+if(class_exists(Fx\Framework\Admin\Panel::class))exit(10);
+$kernel=$app->make(Fx\Framework\Http\Kernel::class);
+$response=$kernel->handle(Fx\Framework\Http\Request::create('/','GET'));
+if($response->getStatusCode()!==200 || !str_contains($response->getContent(),'Controller, serviço e view'))exit(11);
+$response=$kernel->handle(Fx\Framework\Http\Request::create('/api/status','GET'));
+if(json_decode($response->getContent(),true)['status']!=='ok')exit(12);
+file_put_contents(__DIR__.'/resources/views/probe.tpl','Olá -{$nome|escape}-');
+if($app->make(Fx\Framework\View\View::class)->render('probe.tpl',['nome'=>'<FX>'])!=='Olá &lt;FX&gt;')exit(13);
+PHP;
+    file_put_contents($target.'/probe-upgrade.php',$probe);setupRun([PHP_BINARY,'probe-upgrade.php'],$target);$checks++;
     $pdo=new PDO('sqlite:'.$sqlite);setupAssert((int)$pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type='table'")->fetchColumn()===0);$pdo=null;
     if($mysql){$statement=$mysql->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=?');$statement->execute([$database]);setupAssert((int)$statement->fetchColumn()===0);}
 

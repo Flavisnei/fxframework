@@ -23,6 +23,7 @@ final class SetupInitCommand extends Command
         $this->setDescription('Assistente de instalacao em uma NOVA pasta: escolha o perfil')
             ->addArgument('target', InputArgument::REQUIRED, 'Nova pasta do projeto (o pai deve existir)')
             ->addOption('profile',null,InputOption::VALUE_REQUIRED,'minimal, complete, custom ou wordpress')
+            ->addOption('without-admin',null,InputOption::VALUE_NONE,'Completa sem painel padrao; conserva a estrutura e os demais componentes')
             ->addOption('components',null,InputOption::VALUE_REQUIRED,'Componentes separados por virgula no perfil custom')
             ->addOption('database',null,InputOption::VALUE_REQUIRED,'none, mariadb, mysql ou sqlite; sem opcao, pergunta')
             ->addOption('db-host',null,InputOption::VALUE_REQUIRED,'Servidor do banco')
@@ -57,7 +58,9 @@ final class SetupInitCommand extends Command
             $question=(new ChoiceQuestion('Escolha componentes (indices ou nomes separados por virgula); core sempre incluido',$choices))->setMultiselect(true);
             $components=$ask($question);
         }
-        $selected=SetupProfile::components($profile,$components);
+        $withoutAdmin=(bool)$input->getOption('without-admin');
+        if($profile==='complete' && !$withoutAdmin && $input->isInteractive())$withoutAdmin=!$ask(new ConfirmationQuestion('Incluir o painel padrao FX Admin? [S/n] ',true,'/^(s|sim|y|yes)/i'));
+        $selected=SetupProfile::components($profile,$components,$withoutAdmin);
         $admin=in_array('admin',$selected,true);
         $driver = $input->getOption('database');
         if($profile==='wordpress') {
@@ -100,18 +103,18 @@ final class SetupInitCommand extends Command
         $output->writeln('Perfil: '.SetupProfile::LABELS[$profile].'. Destino: ' . $target,OutputInterface::OUTPUT_RAW);
         $output->writeln('Componentes diretos: '.implode(', ',$selected).'. Composer resolve as dependencias.');
         $output->writeln($db === null ? ($admin ? 'Painel: SQLite local; configure.php criara tabelas e administrador.' : ($profile==='wordpress' ? 'Banco e usuarios do WordPress hospedeiro.' : 'Sem conexao de banco configurada.')) : 'Conexao PDO: ' . $driver . '. Tabelas administrativas somente ao executar configure.php, se houver Admin.');
-        if(in_array('database',$selected,true))$output->writeln('Eloquent e migrations selecionados explicitamente; integracao manual.');
+        if(in_array('database',$selected,true))$output->writeln('Eloquent e migrations incluidos; configure .env antes de usar o ORM.');
         $output->writeln('Serao criados: composer.json, app/Saudacao.php, example.php, LEIA-ME.txt e ajuda HTML.' . ($db === null ? '' : ' Tambem .env, .env.example e app/Connection.php.'));
         if($admin)$output->writeln('Tambem: bootstrap.php, config/admin.php, public/index.php e configure.php. Administrador sera criado no passo configure.php.');
         elseif($profile==='wordpress')$output->writeln('Tambem: plugin.php para ativacao no WordPress.');
-        elseif(in_array('http',$selected,true))$output->writeln('Tambem: public/index.php com resposta JSON inicial.');
+        elseif(in_array('http',$selected,true))$output->writeln('Tambem: controllers, services, views, rotas web/API e bootstrap/app.php.');
         if ($input->getOption('dry-run')) { $output->writeln('Simulacao concluida. Nenhum arquivo, conexao ou download realizado.'); return self::SUCCESS; }
         if (!$input->getOption('yes')) {
             if (!$input->isInteractive()) { throw new \RuntimeException('Revise com --dry-run e use --yes para executar sem interacao.'); }
             if (!$ask(new ConfirmationQuestion('Confirmar instalacao? [s/N] ',false,'/^(s|sim|y|yes)/i'))) { $output->writeln('Cancelado. Nenhum arquivo criado.'); return self::SUCCESS; }
         }
         if ($db !== null) { MinimalSetup::testDatabase($db); $output->writeln('Conexao testada; nenhuma tabela criada.'); }
-        $path = (new MinimalSetup())->create($target,$db,$input->getOption('core-path'),$profile,$components);
+        $path = (new MinimalSetup())->create($target,$db,$input->getOption('core-path'),$profile,$components,$withoutAdmin);
         $output->writeln('Projeto gerado. Credenciais nao foram incluidas no LEIA-ME.txt.');
         if ($input->getOption('no-install')) { $output->writeln('Entre na nova pasta e execute composer install --no-plugins --no-scripts; consulte LEIA-ME.txt.' . ($admin ? ' Depois execute php configure.php.' : '')); return self::SUCCESS; }
         $status=(new ComposerInstaller($path))->installProject($input->getOption('composer'),$output);

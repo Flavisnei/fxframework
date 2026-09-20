@@ -1,5 +1,11 @@
 # Histórico
 
+## 2026-09-19 — Estrutura web e evolução de projetos
+
+- Completa agora inclui os componentes da aplicação, com Admin opcional por --without-admin. HTTP gera controllers, services, requests, models, views e rotas web/API conectadas. WordPress permanece separado.
+- setup:upgrade acrescenta pacotes e arquivos ausentes, com simulação local, preservação de arquivos e recusa de entradas incompatíveis. Mínimas sem Console podem usar o comando do checkout com --target.
+- Compatibilidade: / passa a renderizar a aplicação; Admin permanece em /admin e JSON inicial em /api/status. ORM e Smarty incluídos na completa; conexão e migrations continuam explícitas. Temas externos não são baixados.
+
 ## 2026-09-19 — FX Artisan na raiz
 
 - Atalho `php fxartisan` no checkout e nos novos projetos com Console, ancorado na pasta do próprio projeto. Mensagens para dependências ausentes e execução exclusiva no terminal.

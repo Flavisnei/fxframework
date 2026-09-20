@@ -408,3 +408,11 @@ Entrada pela raiz validada no XAMPP: /fx-completo e /fx-completo/ chegam ao logi
 - Compatibilidade: os executáveis anteriores permanecem; mínima e WordPress não ganham Console automaticamente. Projetos existentes exigem cópia explícita do template, documentada na ajuda.
 - Evidências: PHPUnit com 137 testes, 760 assertions e um teste opcional ignorado; regressões cobrem execução a partir de outra pasta, ajuda, dependências ausentes e preservação de controller existente. Console isolado aprovado. Instalação real com Composer: 21 verificações aprovadas nos perfis; busca e navegação da ajuda aprovadas via DOM.
 - Limites: esta etapa não porta os geradores específicos do fxcorrente. Nenhum projeto externo foi alterado. Revisão visual da ajuda não realizada nesta etapa.
+
+## 2026-09-19 — Estrutura completa com painel opcional e upgrade
+
+- Completa inclui estrutura web conectada e componentes opcionais reunidos; --without-admin permite usar tema próprio sem painel padrão. Custom com HTTP também recebe controllers, serviços, view PHP e rotas web/API. Mínima continua sem dependências extras no Core.
+- setup:upgrade acrescenta componentes e arquivos ausentes, mostra plano local, preserva arquivos e recusa bootstrap/entradas incompatíveis. Projetos mínimos sem CLI podem usar o Console do checkout com --target.
+- PHPUnit: 139 testes, 784 assertions, um teste opcional ignorado. Testes cobrem perfil sem Admin, simulação sem alterações, preservação de .env, reaplicação e conflito de entrada. Console isolado aprovado; busca e navegação da ajuda verificadas via DOM.
+- Integração real com Composer: 25 verificações aprovadas, incluindo mínima ampliada para completa sem Admin, preservação de .env, route:list, resposta HTML/JSON e renderização Smarty, além de completa com Admin e perfis custom/WordPress.
+- Limites: temas externos não são baixados; login próprio exige implementação; WordPress não é convertido em aplicação web. Repositórios devem resolver os pacotes escolhidos. Entradas personalizadas exigem integração manual. Sem revisão visual no navegador nesta etapa.

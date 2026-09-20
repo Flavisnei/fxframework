@@ -58,3 +58,13 @@ Não versione vendor, .env, logs ou dados de produção.
 Configure a raiz pública da hospedagem separada de app, vendor e .env.
 Guarde backups fora da pasta pública antes de mudar o banco.
 Abra docs/index.html para consultar a ajuda offline deste assistente.
+
+EVOLUIR DEPOIS
+A mínima não instala Console. Você pode ampliá-la pelo fxartisan do checkout do framework:
+php fxartisan setup:upgrade --target=C:/Projetos/minha-app --profile=complete --without-admin --dry-run
+Após revisar, troque --dry-run por --yes. Ajuste --target para a pasta real.
+Para selecionar componentes: --profile=custom --components=http,view,validation
+Use --constraint=@dev somente com repositórios locais configurados para todos os pacotes.
+Ou instale fx-console via Composer e use php vendor/bin/fxartisan setup:upgrade na aplicação.
+A atualização cria o atalho local, preserva arquivos existentes e não executa migrations.
+Consulte a ajuda HTML, seção Estrutura e evolução, para requisitos e conflitos.
