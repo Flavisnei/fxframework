@@ -416,3 +416,10 @@ Entrada pela raiz validada no XAMPP: /fx-completo e /fx-completo/ chegam ao logi
 - PHPUnit: 139 testes, 784 assertions, um teste opcional ignorado. Testes cobrem perfil sem Admin, simulação sem alterações, preservação de .env, reaplicação e conflito de entrada. Console isolado aprovado; busca e navegação da ajuda verificadas via DOM.
 - Integração real com Composer: 25 verificações aprovadas, incluindo mínima ampliada para completa sem Admin, preservação de .env, route:list, resposta HTML/JSON e renderização Smarty, além de completa com Admin e perfis custom/WordPress.
 - Limites: temas externos não são baixados; login próprio exige implementação; WordPress não é convertido em aplicação web. Repositórios devem resolver os pacotes escolhidos. Entradas personalizadas exigem integração manual. Sem revisão visual no navegador nesta etapa.
+
+## 2026-09-19 — Ajuda de instalação e evolução no painel
+
+- Orientações de instalação, níveis, Artisan, upgrade, estrutura e tema próprio incluídas no manual servido por /admin/help, além da central e manual Console. Guia de escolha explica ORM/PDO, pastas, painel opcional e atualização dos manuais existentes.
+- Busca do Admin incorporada no próprio HTML, sem rede/CDN, com índice, indicação de resultados, botão Limpar e Escape. Âncoras anteriores preservadas; sem JavaScript permanece disponível o índice e Ctrl+F.
+- Verificação DOM: tópicos únicos, links do índice válidos, pesquisas Ace/mínima/setup:upgrade/PDO/WordPress, nenhum resultado e restauração pela navegação. Admin isolado: 18 verificações HTTP/CLI aprovadas, incluindo a rota de ajuda.
+- Somente documentação e busca da ajuda alteradas. Sem alteração de projetos externos; instalações existentes precisam atualizar fx-admin para receber o manual. Revisão visual no navegador não realizada nesta etapa.

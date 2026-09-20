@@ -1,5 +1,10 @@
 # Histórico
 
+## 2026-09-19 — Ajuda acessível pelo painel
+
+- Ajuda do Admin agora inclui instalação mínima/completa/personalizada/WordPress, Artisan, estrutura, upgrade e uso de tema próprio. Busca local sem CDN e índice preservado.
+- Guia de escolha na central, Console e Admin reúne pastas, comandos, ORM/PDO, painel opcional e atualização de projetos já instalados.
+
 ## 2026-09-19 — Estrutura web e evolução de projetos
 
 - Completa agora inclui os componentes da aplicação, com Admin opcional por --without-admin. HTTP gera controllers, services, requests, models, views e rotas web/API conectadas. WordPress permanece separado.
