@@ -1,5 +1,11 @@
 # Histórico
 
+## 2026-09-20 — Admin independente do diretório de instalação
+
+- Corrigida a publicação dos links de CSS, JavaScript, ajuda e API do Admin para respeitar a base pública detectada na requisição.
+- O painel agora funciona em subpastas e em instalações com `public/index.php`, sem exigir ajuste manual de caminhos ao mover a aplicação.
+- Acrescidos testes de regressão para assets e links do painel em ambos os formatos de URL.
+
 ## 2026-09-20 — Guia de instalação pelo GitHub
 
 - Documentados os passos para instalar a versão `1.1.0` via GitHub.

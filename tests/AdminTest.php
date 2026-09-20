@@ -48,6 +48,10 @@ final class AdminTest extends TestCase
             self::assertSame(200,$response->getStatusCode());
             self::assertStringContainsString('data-fx-base="'.$base.'"',$response->getContent());
             self::assertStringContainsString('src="'.$base.'/admin/admin.js"',$response->getContent());
+            self::assertStringContainsString('href="'.$base.'/admin/admin.css"',$response->getContent());
+            self::assertStringContainsString('href="'.$base.'/admin/fxwindows.css"',$response->getContent());
+            self::assertStringContainsString('src="'.$base.'/admin/fxwindows.js"',$response->getContent());
+            self::assertStringContainsString('href="'.$base.'/admin/help"',$response->getContent());
             $request=Request::create($base.'/admin/api/session','GET',[],[],[],$server);
             $session=$this->body($this->app->make(Kernel::class)->handle($request));
             $server+=['CONTENT_TYPE'=>'application/json','HTTP_X_CSRF_TOKEN'=>$session['csrf'],'REMOTE_ADDR'=>'127.0.0.1'];
