@@ -769,13 +769,19 @@ class FxFormValidator {
 }
 
 class FxSelect2 {
+  static instances = new WeakMap();
   constructor(select) {
-    this.select = select;
     if (!(select instanceof HTMLSelectElement)) throw new TypeError("FxSelect2 requer um elemento select.");
+    return FxSelect2.instances.get(select) || Object.assign(this, { select });
   }
 
   start() {
-    if (this.select.dataset.fxSelect2Ready || this.select.multiple) return this;
+    if (FxSelect2.instances.has(this.select)) return FxSelect2.instances.get(this.select);
+    FxSelect2.instances.set(this.select, this);
+    this.events = new AbortController();
+    this.originalTabIndex = this.select.getAttribute("tabindex");
+    this.label = this.select.getAttribute("aria-label") || [...(this.select.labels || [])].map(label => { const copy = label.cloneNode(true); copy.querySelectorAll("select,.fx-select2").forEach(node => node.remove()); return copy.textContent.trim(); }).join(" ");
+    this.select.tabIndex = -1;
     this.select.dataset.fxSelect2Ready = "true";
     this.wrapper = document.createElement("div");
     this.wrapper.className = "fx-select2";
@@ -783,6 +789,7 @@ class FxSelect2 {
     this.button.type = "button";
     this.button.className = "fx-select2-button pula";
     this.button.setAttribute("aria-haspopup", "listbox");
+    this.button.setAttribute("aria-expanded", "false");
     this.clear = document.createElement("button");
     this.clear.type = "button";
     this.clear.className = "select2-selection__clear";
@@ -796,6 +803,7 @@ class FxSelect2 {
     this.search.type = "search";
     this.search.className = "fx-select2-search";
     this.search.placeholder = "Pesquisar...";
+    this.search.setAttribute("aria-label", "Pesquisar opções");
     this.list = document.createElement("div");
     this.list.className = "fx-select2-options";
     this.list.setAttribute("role", "listbox");
@@ -804,23 +812,28 @@ class FxSelect2 {
     this.wrapper.append(this.select, this.button, this.clear, this.panel);
     this.select.classList.add("fx-select2-native");
     this.render();
-    this.button.addEventListener("click", () => this.toggle());
-    this.button.addEventListener("keydown", (event) => {
+    this.listen(this.button, "click", () => this.toggle());
+    this.listen(this.button, "keydown", (event) => {
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         event.preventDefault();
         if (this.panel.hidden) this.open();
         this.moveHighlight(event.key === "ArrowDown" ? 1 : -1);
       }
     });
-    this.clear.addEventListener("click", () => {
-      const emptyOption = [...this.select.options].find((option) => option.value === "");
-      this.select.value = emptyOption ? "" : this.select.options[0]?.value || "";
+    this.listen(this.clear, "click", () => {
+      if (this.select.matches(":disabled")) return;
+      if (this.select.multiple) { for (const option of this.select.options) option.selected = false; }
+      else {
+        const available = [...this.select.options].filter(option => !option.disabled && option.parentElement?.disabled !== true);
+        const emptyOption = available.find(option => option.value === "");
+        this.select.value = (emptyOption || available[0])?.value || "";
+      }
       this.select.dispatchEvent(new Event("change", { bubbles: true }));
-      this.sync();
+      this.render();
       this.button.focus();
     });
-    this.search.addEventListener("input", () => this.render(this.search.value));
-    this.search.addEventListener("keydown", (event) => {
+    this.listen(this.search, "input", () => this.render(this.search.value));
+    this.listen(this.search, "keydown", (event) => {
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         event.preventDefault();
         this.moveHighlight(event.key === "ArrowDown" ? 1 : -1);
@@ -833,14 +846,31 @@ class FxSelect2 {
         this.button.focus();
       }
     });
-    this.list.addEventListener("click", (event) => {
+    this.listen(this.list, "click", (event) => {
       const option = event.target.closest("button[data-value]");
       if (!option) return;
       this.selectValue(option.dataset.value);
     });
-    this.select.addEventListener("change", () => this.sync());
-    document.addEventListener("pointerdown", (event) => { if (!this.wrapper.contains(event.target)) this.close(); });
+    this.listen(this.select, "change", () => this.render(this.search.value));
+    this.listen(this.select, "invalid", () => { this.button.focus(); });
+    if (this.select.form) this.listen(this.select.form, "reset", () => queueMicrotask(() => this.render()));
+    this.observer = new MutationObserver(() => this.render(this.search.value));
+    this.observer.observe(this.select, { subtree: true, childList: true, characterData: true, attributes: true });
+    this.listen(document, "pointerdown", (event) => { if (!this.wrapper.contains(event.target)) this.close(); });
     return this;
+  }
+
+  listen(target, type, handler) { target.addEventListener(type, handler, { signal: this.events.signal }); }
+
+  destroy() {
+    this.events?.abort(); this.observer?.disconnect();
+    if (!this.wrapper) return;
+    this.wrapper.before(this.select); this.wrapper.remove();
+    this.select.classList.remove("fx-select2-native");
+    delete this.select.dataset.fxSelect2Ready;
+    if (this.originalTabIndex === null) this.select.removeAttribute("tabindex");
+    else this.select.setAttribute("tabindex", this.originalTabIndex);
+    FxSelect2.instances.delete(this.select);
   }
 
   render(filter = "") {
@@ -852,29 +882,33 @@ class FxSelect2 {
         button.type = "button";
         button.dataset.value = option.value;
         button.textContent = option.text;
-        button.disabled = option.disabled;
+        button.disabled = option.disabled || option.parentElement?.disabled === true;
         button.classList.toggle("is-selected", option.selected);
         button.setAttribute("role", "option");
         button.setAttribute("aria-selected", String(option.selected));
         return button;
       });
     this.list.replaceChildren(...buttons);
-    this.highlightedIndex = Math.max(0, buttons.findIndex((button) => button.classList.contains("is-selected")));
+    this.highlightedIndex = Math.max(0, buttons.filter(button => !button.disabled).findIndex((button) => button.classList.contains("is-selected")));
     this.updateHighlight();
     this.sync();
   }
 
   sync() {
-    this.button.textContent = this.select.selectedOptions[0]?.text || "Selecione";
-    this.button.disabled = this.select.disabled;
-    const invalid = this.select.required && !this.select.checkValidity();
+    this.button.textContent = [...this.select.options].filter(option => option.selected).map(option => option.text).join(", ") || "Selecione";
+    if (this.label) this.button.setAttribute("aria-label", this.label + ": " + this.button.textContent);
+    this.button.disabled = this.select.matches(":disabled");
+    this.clear.disabled = this.button.disabled;
+    this.list.setAttribute("aria-multiselectable", String(this.select.multiple));
+    if (this.button.disabled) this.close();
+    const invalid = this.select.required && !this.select.validity.valid;
     this.button.classList.toggle("fx-select2-invalid", invalid);
     this.button.classList.toggle("fx-select2-valid", !invalid);
     this.button.setAttribute("aria-invalid", String(invalid));
   }
 
   toggle() { this.panel.hidden ? this.open() : this.close(); }
-  open() { this.panel.hidden = false; this.button.setAttribute("aria-expanded", "true"); this.search.value = ""; this.render(); this.search.focus(); }
+  open() { if (this.select.matches(":disabled")) return; this.panel.hidden = false; this.button.setAttribute("aria-expanded", "true"); this.search.value = ""; this.render(); this.search.focus(); }
   close() { this.panel.hidden = true; this.button.setAttribute("aria-expanded", "false"); }
 
   moveHighlight(direction) {
@@ -897,11 +931,14 @@ class FxSelect2 {
   }
 
   selectValue(value) {
-    this.select.value = value;
+    if (this.select.matches(":disabled")) return;
+    const option = [...this.select.options].find(option => option.value === value);
+    if (!option || option.disabled || option.parentElement?.disabled === true) return;
+    if (this.select.multiple) option.selected = !option.selected;
+    else this.select.value = value;
     this.select.dispatchEvent(new Event("change", { bubbles: true }));
-    this.close();
-    this.sync();
-    this.focusNext();
+    if (this.select.multiple) { this.render(this.search.value); this.search.focus(); }
+    else { this.close(); this.sync(); this.button.focus(); this.focusNext(); }
   }
 
   focusNext() {
@@ -1194,6 +1231,28 @@ const alertify = {
 };
 
 Object.assign(window, { FxAlerts, alertify });
+
+// Um observador por documento atende também formulários inseridos por AJAX.
+function startFxSelects(root = document) {
+  const active = new Set();
+  const scan = node => {
+    if (!(node instanceof Element) && node !== document) return;
+    const selects = [...(node.matches?.("select") ? [node] : []), ...node.querySelectorAll("select")];
+    for (const select of selects) if (select.isConnected) active.add(new FxSelect2(select).start());
+  };
+  scan(root);
+  const observer = new MutationObserver(records => {
+    for (const record of records) {
+      for (const node of record.addedNodes) scan(node);
+      if (record.type === "attributes" && record.target.tagName === "FIELDSET") for (const instance of active) instance.sync();
+    }
+    for (const instance of active) if (!instance.select.isConnected) { instance.destroy(); active.delete(instance); }
+  });
+  observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled"] });
+  return { disconnect() { observer.disconnect(); for (const instance of active) instance.destroy(); active.clear(); } };
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => startFxSelects(), { once: true });
+else startFxSelects();
 
 Object.assign(window, { FxWindowManager, FxFormNavigation, FxFormValidator, FxSelect2, FxAlertManager, FxAlerts, alertify, startFxForms });
 })();
