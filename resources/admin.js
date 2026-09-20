@@ -1,15 +1,16 @@
 'use strict';
 (() => {
+  const base = document.documentElement.dataset.fxBase || '';
   const $ = selector => document.querySelector(selector);
   const el = (tag, text = null, attrs = {}) => { const node = document.createElement(tag); if (text !== null) node.textContent = text; Object.assign(node, attrs); return node; };
   let session = {user:null,permissions:[]};
   let resetToken = new URLSearchParams(location.hash.slice(1)).get('reset');
-  if (resetToken) history.replaceState(null, '', '/admin');
+  if (resetToken) history.replaceState(null, '', base + '/admin');
   const windows = new FxWindowManager({updateHash:false}).start();
   const can = permission => session.permissions.includes(permission);
   function notice(text, error = false) { $('#notice').textContent = text; $('#notice').classList.toggle('error', error); }
   async function api(path, data) {
-    const response = await fetch('/admin/api/' + path, {method:data===undefined?'GET':'POST',credentials:'same-origin',headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':session.csrf||''},body:data===undefined?undefined:JSON.stringify(data)});
+    const response = await fetch(base + '/admin/api/' + path, {method:data===undefined?'GET':'POST',credentials:'same-origin',headers:{Accept:'application/json','Content-Type':'application/json','X-CSRF-TOKEN':session.csrf||''},body:data===undefined?undefined:JSON.stringify(data)});
     const result = await response.json();
     if (!response.ok) { if(response.status===401 && session.user) location.reload(); throw Error(result.message || 'Não foi possível concluir.'); }
     if (result.csrf) session.csrf = result.csrf;
@@ -20,22 +21,22 @@
     return button;
   }
   function formSubmit(form, callback, status) {
-    form.addEventListener('submit', async event => { event.preventDefault(); const button=form.querySelector('button'); if(button.disabled)return; button.disabled=true; status.textContent=''; try { await callback(); } catch(error) { status.textContent=error.message; } finally { button.disabled=false; } });
+    form.addEventListener('submit', async event => { event.preventDefault(); const button=event.submitter || form.querySelector('button:not([type]),button[type=submit],input[type=submit]'); if(button.disabled)return; button.disabled=true; status.textContent=''; try { await callback(); } catch(error) { status.textContent=error.message; } finally { button.disabled=false; } });
   }
   function field(form,name,title,type='text',value='') {
     const label=el('label',title), input=el('input',null,{name,type,value}); label.append(input); form.append(label); return input;
   }
-  function workspace(id,title,level=1) { const box=el('div',null,{className:'workspace'}); windows.open({id,title,element:box,width:920,height:620,level}); const topic=id.startsWith('user')?'users':id.startsWith('role')?'roles':'modules';box.append(el('a','Ajuda desta etapa',{href:'/admin/help#'+topic,target:'_blank',rel:'noopener'})); return box; }
+  function workspace(id,title,level=1) { const box=el('div',null,{className:'workspace'}); windows.open({id,title,element:box,width:920,height:620,level}); const topic=id==='mail-settings'?'mail-settings':id.startsWith('user')?'users':id.startsWith('role')?'roles':'modules';box.append(el('a','Ajuda desta etapa',{href:base + '/admin/help#'+topic,target:'_blank',rel:'noopener'})); return box; }
   function status(box) { const node=el('p','');node.setAttribute('role','status');box.append(node);return node; }
   function table(box,headers) { const wrap=el('div',null,{className:'table-scroll'}), table=el('table'),head=el('thead'),row=el('tr'),body=el('tbody'); headers.forEach(text=>row.append(el('th',text)));head.append(row);table.append(head,body);wrap.append(table);box.append(wrap);return body; }
   async function loadSession() {
     session=await api('session');
     $('#identity').textContent=session.user?.name||'';$('#logout').hidden=!session.user;
-    $('#access').hidden=!!session.user||!!resetToken;$('#dashboard').hidden=!session.user||!can('dashboard.view')||!!resetToken;$('#reset').hidden=!resetToken;$('#recovery').hidden=!session.recovery;
+    $('#access').hidden=!!session.user||!!resetToken;$('#dashboard').hidden=!session.user||!can('dashboard.view')||!!resetToken;$('#reset').hidden=!resetToken;$('#recovery').hidden=!session.recovery;$('#mail-settings').hidden=!session.mail_settings;
     $('#title').textContent=session.user?'Seu trabalho, em um só lugar.':'Bem-vindo ao FX.';
     for(const [area,permission] of Object.entries({users:'users.view',roles:'roles.manage',modules:'modules.view'})) $('[data-area='+area+']').hidden=!can(permission);
     document.querySelectorAll('[data-extension]').forEach(node=>node.remove());
-    for (const area of session.areas || []) { const button=el('button', area.title); button.dataset.extension=area.id; action(button,()=>windows.open({id:'module-'+area.id,title:area.title,url:area.url,width:920,height:640})); $('.cards').append(button); }
+    for (const area of session.areas || []) { const button=el('button', area.title); button.dataset.extension=area.id; action(button,()=>windows.open({id:'module-'+area.id,title:area.title,url:base + area.url,width:920,height:640})); $('.cards').append(button); }
     notice(session.user?(can('dashboard.view')?'Escolha uma área abaixo.':'Seu perfil não permite acesso ao painel. Contate um administrador.'):'Entre com seu email e senha.');
   }
   async function userEditor(user={}) {
@@ -43,7 +44,7 @@
     const name=field(form,'name','Nome','text',user.name||'');name.required=true;name.maxLength=120;
     const email=field(form,'email','Email','email',user.email||'');email.required=true;email.maxLength=254;
     const password=field(form,'password',user.id?'Nova senha (deixe vazia para manter)':'Senha','password');password.required=!user.id;password.minLength=12;password.maxLength=72;password.autocomplete='new-password';
-    const label=el('label','Perfil'),role=el('select');roles.data.forEach(item=>role.append(el('option',item.name,{value:String(item.id)})));if(user.role_id)role.value=String(user.role_id);label.append(role);form.append(label);
+    const label=el('label','Perfil'),role=el('select',null,{name:'role_id',required:true});roles.data.forEach(item=>role.append(el('option',item.name,{value:String(item.id)})));if(user.role_id)role.value=String(user.role_id);label.append(role);form.append(label);
     const active=field(form,'active','Conta ativa','checkbox');active.checked=user.active===undefined||!!user.active;
     form.append(el('button','Salvar'));const feedback=status(box);
     formSubmit(form,async()=>{await api('users',{...(user.id?{id:Number(user.id)}:{}),name:name.value,email:email.value,password:password.value,role_id:Number(role.value),active:active.checked});password.value='';feedback.textContent='Usuário salvo.';await showUsers();},feedback);
@@ -69,10 +70,37 @@
     for(const module of result.data){const row=el('tr'),cell=el('td');if(can('modules.manage')&&module.id!=='fx-admin')cell.append(action(el('button',module.enabled?'Desativar':'Ativar'),async()=>{await api('modules',{id:module.id,enabled:!module.enabled});await showModules();},feedback));row.append(el('td',module.id),el('td',module.version),el('td',module.enabled?'Ativo':'Inativo'),cell);body.append(row);}
     box.append(el('p','Dependências são validadas pelo servidor. Mudanças valem no próximo bootstrap; workers persistentes precisam ser reiniciados.'));
   }
+  async function mailEditor() {
+    let saved=await api('mail/settings');
+    const box=workspace('mail-settings','Configurações de email'),form=el('form');box.append(form);
+    box.append(el('p','Os valores são salvos no .env da aplicação e lidos também pela fila. Salvar não envia email.'));
+    const enabled=field(form,'enabled','Habilitar recuperação por email','checkbox');enabled.checked=saved.enabled;
+    const inputs={};
+    for(const [key,title,type] of [['host','Servidor SMTP','text'],['port','Porta SSL/TLS','text'],['username','Usuário SMTP','text'],['password','Senha SMTP','password'],['from','Email do remetente','email'],['from_name','Nome do remetente','text'],['admin_url','Endereço HTTPS do painel','url']]) {
+      const input=field(form,key,title,type,key==='password'?'':saved[key]);inputs[key]=input;
+      if(key==='password'){input.autocomplete='new-password';input.placeholder=saved.password_set?'Já configurada. Deixe vazio para manter.':'Informe a senha SMTP';}
+      else if(key!=='from_name')input.required=true;
+    }
+    form.append(el('p','Criptografia: SSL/TLS implícito (normalmente porta 465). STARTTLS não está disponível.'));
+    const save=el('button','Salvar configuração');form.append(save);const feedback=status(box);
+    if(saved.locked){for(const input of form.querySelectorAll('input,button'))input.disabled=true;feedback.textContent='Configuração controlada por variáveis do servidor. Alterações devem ser feitas no ambiente do servidor.';}
+    formSubmit(form,async()=>{
+      const data={enabled:enabled.checked,revision:saved.revision};for(const [key,input] of Object.entries(inputs))data[key]=input.value;
+      saved=await api('mail/settings',data);inputs.password.value='';inputs.password.placeholder='Senha preservada. Deixe vazio para manter.';
+      feedback.textContent='Configuração salva no .env. A fila usa os novos valores no próximo processamento.';await loadSession();
+    },feedback);
+    box.append(el('p','Os testes abaixo usam a configuração salva. Verificar conexão não envia mensagem.'));
+    box.append(action(el('button','Verificar conexão'),async()=>{feedback.textContent='Verificando conexão…';feedback.textContent=(await api('mail/check',{})).message;},feedback));
+    const test=el('form'),recipient=field(test,'recipient','Destinatário do email de teste','email');recipient.required=true;
+    test.append(el('button','Enviar um email de teste'));box.append(test);
+    formSubmit(test,async()=>{feedback.textContent='Enviando mensagem de teste…';feedback.textContent=(await api('mail/test',{recipient:recipient.value})).message;},feedback);
+    box.append(el('p','Para envio automático, mantenha o processo admin:mail --watch ativo ou agende o comando na hospedagem.'));
+  }
+  action($('#mail-settings'),mailEditor);
   formSubmit($('#login'),async()=>{const form=$('#login');await api('login',{email:form.elements.email.value,password:form.elements.password.value});form.elements.password.value='';await loadSession();},$('#notice'));
-  formSubmit($('#forgot'),async()=>{const result=await api('forgot',{email:$('#forgot').elements.email.value});notice(result.message);},$('#notice'));
+  formSubmit($('#forgot'),async()=>{const feedback=$('#forgot-status');feedback.textContent='Solicitando recuperação…';const result=await api('forgot',{email:$('#forgot').elements.email.value});feedback.textContent=result.message;},$('#forgot-status'));
   formSubmit($('#reset'),async()=>{const result=await api('reset',{token:resetToken,password:$('#reset').elements.password.value});resetToken=null;$('#reset').reset();await loadSession();notice(result.message);},$('#notice'));
-  action($('#logout'),async()=>{await api('logout',{});location.replace('/admin');});
+  action($('#logout'),async()=>{await api('logout',{});location.replace(base + '/admin');});
   action($('[data-area=users]'),()=>showUsers());action($('[data-area=roles]'),showRoles);action($('[data-area=modules]'),showModules);
   loadSession().catch(error=>notice(error.message,true));
 })();

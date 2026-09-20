@@ -50,20 +50,33 @@ final class Panel
     }
 
     /** delivery(email, token): deve enfileirar a mensagem. logger(evento, contexto): sem segredos. */
-    public function __construct(private readonly AdminStore $store, private readonly AdminSession $session, private readonly ModuleManager $modules, private readonly ?\Closure $delivery = null, private readonly ?\Closure $logger = null) {}
+    public function __construct(private readonly AdminStore $store, private readonly AdminSession $session, private readonly ModuleManager $modules, private readonly ?\Closure $delivery = null, private readonly ?\Closure $logger = null, private readonly ?\Fx\Framework\Admin\Mail\MailSettings $mailSettings = null, private readonly ?string $appUrl = null) {}
 
     public function mount(Router $router): void
     {
+        $router->get('/', function (Request $request): Response {
+            $base=AdminUrl::base($request,$this->appUrl);
+            // Entrada explicita funciona mesmo quando mod_rewrite nao esta disponivel.
+            if (!$this->appUrl && !str_ends_with($base,'/index.php')) $base.='/index.php';
+            return new \Symfony\Component\HttpFoundation\RedirectResponse($base.'/admin');
+        });
         $resources = dirname(__DIR__, 2) . '/resources';
         foreach (['/admin' => [$resources . '/index.html', 'text/html'], '/admin/admin.js' => [$resources . '/admin.js', 'text/javascript'], '/admin/admin.css' => [$resources . '/admin.css', 'text/css'], '/admin/fxwindows.js' => [Assets::directory() . '/fxwindows.js', 'text/javascript'], '/admin/fxwindows.css' => [Assets::directory() . '/fxwindows.css', 'text/css'], '/admin/help' => [dirname(__DIR__, 2) . '/docs/index.html', 'text/html']] as $uri => [$file, $type]) {
-            $router->get($uri, fn () => new Response(file_get_contents($file), 200, ['Content-Type' => $type . '; charset=UTF-8', 'X-Content-Type-Options' => 'nosniff', 'Referrer-Policy' => 'no-referrer', 'X-Frame-Options' => 'SAMEORIGIN', 'Cache-Control' => 'no-store']));
+            $router->get($uri, function (Request $request) use ($file,$type,$uri): Response {
+                $content=file_get_contents($file);
+                if ($uri==='/admin') {
+                    $base=htmlspecialchars(AdminUrl::base($request,$this->appUrl),ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
+                    $content=str_replace(['data-fx-base=""','href="/admin','src="/admin'],['data-fx-base="'.$base.'"','href="'.$base.'/admin','src="'.$base.'/admin'],$content);
+                }
+                return new Response($content,200,['Content-Type'=>$type.'; charset=UTF-8','X-Content-Type-Options'=>'nosniff','Referrer-Policy'=>'no-referrer','X-Frame-Options'=>'SAMEORIGIN','Cache-Control'=>'no-store']);
+            });
         }
         $route = fn (string $method, string $path, ?string $permission, \Closure $action) => $this->api($router, $method, $path, $permission, $action);
         $route('GET', 'session', null, function ($request, $data, $user): array {
             $permissions = $user ? $this->store->permissions($user) : [];
             $areas = in_array('dashboard.view', $permissions, true)
                 ? array_values(array_filter($this->areas, fn ($area) => in_array($area['permission'], $permissions, true))) : [];
-            return ['csrf' => Csrf::token(), 'user' => $user?->publicData(), 'permissions' => $permissions, 'recovery' => $this->delivery !== null, 'areas' => $areas];
+            return ['csrf' => Csrf::token(), 'user' => $user?->publicData(), 'permissions' => $permissions, 'recovery' => $this->delivery !== null, 'mail_settings' => $this->mailSettings !== null && $user !== null && (int)$user->data['role_id'] === 1, 'areas' => $areas];
         });
         $route('POST', 'login', null, function (Request $request, array $data): array {
             $email = strtolower(AdminStore::text($data, 'email', 3, 254));
@@ -104,6 +117,32 @@ final class Panel
             $this->log('recovery.completed', []);
             return ['message' => 'Senha alterada. Entre novamente.', 'csrf' => Csrf::token()];
         });
+        if ($this->mailSettings !== null) {
+            $authorizeMail = static function($actor):void {
+                if (!$actor || (int)$actor->data['role_id'] !== 1) { throw new HttpException(403, 'Somente o perfil Administrador pode configurar email.'); }
+            };
+            $route('GET','mail/settings','dashboard.view',function($request,$data,$actor)use($authorizeMail):array {
+                $authorizeMail($actor);return $this->mailSettings->snapshot();
+            });
+            $route('POST','mail/settings','dashboard.view',function($request,$data,$actor)use($authorizeMail):array {
+                $authorizeMail($actor);$result=$this->mailSettings->save($data);
+                $this->log('mail.settings_saved',['actor'=>$actor->getAuthIdentifier()]);return $result;
+            });
+            foreach (['check','test'] as $operation) {
+                $route('POST','mail/'.$operation,'dashboard.view',function($request,$data,$actor)use($authorizeMail,$operation):array {
+                    $authorizeMail($actor);$this->store->throttle('mail-test:'.$actor->getAuthIdentifier(),5,300);
+                    $mail=$this->mailSettings->mail();
+                    if($mail===null)throw new HttpException(422,'Salve e habilite o email antes de testar.');
+                    $recipient=$data['recipient']??'';
+                    if($operation==='test' && (!is_string($recipient) || !filter_var($recipient,FILTER_VALIDATE_EMAIL)))throw new HttpException(422,'Informe o destinatario do teste.');
+                    try {
+                        $sender=\Fx\Framework\Admin\Mail\MailConfig::sender(['mail'=>$mail]);
+                        if($operation==='check')$sender->checkConnection();else $sender->sendTest($recipient);
+                    } catch(\RuntimeException $error) { throw new HttpException(422,$error->getMessage()); }
+                    return ['message'=>$operation==='check'?'Conexao TLS e autenticacao verificadas. Nenhum email enviado.':'O servidor SMTP aceitou a mensagem de teste. Confira entrada e spam.'];
+                });
+            }
+        }
         $route('GET', 'users', 'users.view', function (Request $request): array {
             $query = $request->query->all();
             $page = $query['page'] ?? '1'; $search = $query['q'] ?? '';

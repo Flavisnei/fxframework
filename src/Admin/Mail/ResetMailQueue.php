@@ -14,7 +14,7 @@ final class ResetMailQueue
         if (!extension_loaded('openssl') || !in_array('aes-256-gcm', openssl_get_cipher_methods(), true)) { throw new RuntimeException('A fila exige OpenSSL com AES-256-GCM.'); }
         if (!preg_match('/^[a-fA-F0-9]{64}$/D', $hexKey)) { throw new RuntimeException('FX_MAIL_KEY deve conter 32 bytes aleatorios em hexadecimal (64 caracteres).'); }
         $url = parse_url($adminUrl);
-        if (!$url || !filter_var($adminUrl, FILTER_VALIDATE_URL) || preg_match('/[\x00-\x20]/', $adminUrl) || ($url['scheme'] ?? '') !== 'https' || empty($url['host']) || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment']) || ($url['path'] ?? '') !== '/admin') { throw new RuntimeException('FX_ADMIN_URL deve ser uma URL HTTPS fixa terminada em /admin, sem credenciais, query ou fragmento.'); }
+        if (!$url || !filter_var($adminUrl, FILTER_VALIDATE_URL) || preg_match('/[\x00-\x20]/', $adminUrl) || ($url['scheme'] ?? '') !== 'https' || empty($url['host']) || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment']) || !\Fx\Framework\Admin\AdminUrl::recoveryPath($url['path'] ?? '')) { throw new RuntimeException('FX_ADMIN_URL deve ser uma URL HTTPS fixa terminada em /admin, sem credenciais, query ou fragmento.'); }
         if (!in_array($db->getAttribute(PDO::ATTR_DRIVER_NAME), ['sqlite','mysql'], true)) { throw new RuntimeException('A fila exige SQLite ou MySQL/MariaDB.'); }
         $this->key = hex2bin($hexKey);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

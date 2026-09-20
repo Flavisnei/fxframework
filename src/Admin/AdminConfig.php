@@ -13,6 +13,10 @@ final class AdminConfig
         $config = require $file;
         if (!is_array($config)) { throw new \RuntimeException('Configuracao Admin invalida.'); }
         self::validateDatabase($config['database'] ?? null);
+        if (($config['mail_settings'] ?? false) === true) {
+            $settings = new \Fx\Framework\Admin\Mail\MailSettings($root, $config['mail'] ?? null);
+            if ($settings->override()) { $config['mail'] = $settings->mail(); }
+        }
         return $config;
     }
     private static function validateDatabase(mixed $database): void
@@ -49,6 +53,10 @@ final class AdminConfig
             $queue = \Fx\Framework\Admin\Mail\MailConfig::queue($config); $queue->assertReady();
             $delivery = $queue->enqueue(...);
         }
-        return new Panel(self::store($config), new AdminSession($config['secure_cookie'] ?? true, 1800, 28800, $config['session_name'] ?? ('FXA' . substr(hash('sha256', realpath($root) ?: $root), 0, 16))), new ModuleManager($root), $delivery, $config['logger'] ?? null);
+        $settings = ($config['mail_settings'] ?? false) === true
+            ? new \Fx\Framework\Admin\Mail\MailSettings($root, $config['mail'] ?? null, static function(array $mail)use($config):void {
+                \Fx\Framework\Admin\Mail\MailConfig::queue(array_replace($config,['mail'=>$mail]))->install();
+            }) : null;
+        return new Panel(self::store($config), new AdminSession($config['secure_cookie'] ?? true, 1800, 28800, $config['session_name'] ?? ('FXA' . substr(hash('sha256', realpath($root) ?: $root), 0, 16))), new ModuleManager($root), $delivery, $config['logger'] ?? null, $settings, $config['app_url'] ?? (getenv('APP_URL') ?: null));
     }
 }
