@@ -111,7 +111,7 @@ Em uma pasta vazia, crie `composer.json` na raiz:
     ],
     "require": {
         "php": "^8.1",
-        "fxfavalessa/fx-framework": "1.1.3"
+        "fxfavalessa/fx-framework": "1.1.4"
     }
 }
 ```
@@ -123,7 +123,15 @@ composer install --no-dev --prefer-dist --optimize-autoloader
 php vendor/bin/fxartisan -v
 ```
 
-Mantenha `composer.lock` versionado. A tag `v1.1.3` é a versão estável validada; não use `dev-main` em produção.
+Mantenha `composer.lock` versionado. A tag `v1.1.4` é a versão estável validada; não use `dev-main` em produção.
+
+Confira as versões dos componentes instalados:
+
+```bash
+php vendor/bin/fxartisan -v
+```
+
+O comando mostra separadamente FX Framework, FX WordPress, FX Admin e FX Artisan, sem códigos de commit.
 
 ### Criar uma aplicação completa
 

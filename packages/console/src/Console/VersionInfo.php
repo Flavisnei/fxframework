@@ -5,9 +5,9 @@ namespace Fx\Framework\Console;
 
 final class VersionInfo
 {
-    public const FRAMEWORK = '1.1.1';
-    public const WORDPRESS = '1.1.1';
-    public const ADMIN = '1.1.1';
+    public const FRAMEWORK = '1.1.4';
+    public const WORDPRESS = '1.1.4';
+    public const ADMIN = '1.1.4';
     public const ARTISAN = Application::VERSION;
 
     /** @return array<string, string> */

@@ -1,5 +1,11 @@
 # Histórico
 
+## 1.1.4 — 2026-09-21
+
+- Perfil WordPress gera estrutura base com `src/`, `templates/` e `assets/js`, `assets/css` e `assets/img`.
+- FX Artisan identifica separadamente as versões do Framework, WordPress, Admin e Artisan.
+- Índice Composer atualizado com snapshots `1.1.4` dos onze pacotes.
+
 ## 2026-09-21 — Estrutura WordPress e versões do FX Artisan
 
 - O perfil `setup:init --profile=wordpress` agora gera uma estrutura básica de plugin com `src/`, `templates/` e `assets/js`, `assets/css` e `assets/img`, além do bootstrap `plugin.php`.

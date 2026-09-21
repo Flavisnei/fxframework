@@ -10,7 +10,7 @@ use InvalidArgumentException;
 final class PackageCatalog
 {
     /** Versao publicada dos componentes oferecidos pelo catalogo remoto. */
-    public const PUBLISHED_VERSION = '1.1.1';
+    public const PUBLISHED_VERSION = '1.1.4';
     public const COMPONENTS = [
         'core' => 'Container, configuracao e providers',
         'http' => 'Rotas, requests, respostas e middleware',
