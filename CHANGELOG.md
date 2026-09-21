@@ -1,5 +1,11 @@
 # Histórico
 
+## 2026-09-20 — Setup usa a versão publicada dos componentes
+
+- Removida a versão `1.1.0-rc.1` fixa do assistente `setup:init` e `setup:upgrade`.
+- O catálogo agora centraliza a versão publicada dos componentes e novos projetos não precisam corrigir o `composer.json` manualmente.
+- Acrescido teste de regressão para conferir a versão do Admin gerada pelo perfil completo.
+
 ## 2026-09-20 — Launcher Composer instalado como dependência
 
 - Corrigido o `vendor/bin/fxartisan` para localizar o autoload da aplicação quando o framework é instalado via Composer VCS.

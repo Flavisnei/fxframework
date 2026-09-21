@@ -9,6 +9,8 @@ use InvalidArgumentException;
 /** Catalogo de componentes disponiveis; nao representa modulos ativos. */
 final class PackageCatalog
 {
+    /** Versao publicada dos componentes oferecidos pelo catalogo remoto. */
+    public const PUBLISHED_VERSION = '1.1.1';
     public const COMPONENTS = [
         'core' => 'Container, configuracao e providers',
         'http' => 'Rotas, requests, respostas e middleware',

@@ -63,6 +63,7 @@ final class MinimalSetupTest extends TestCase
         self::assertStringNotContainsString('Você escolheu SEM BANCO',file_get_contents($complete.'/LEIA-ME.txt'));
         $manifest=json_decode(file_get_contents($complete.'/composer.json'),true);
         self::assertArrayHasKey('fxfavalessa/fx-admin',$manifest['require']);self::assertArrayHasKey('fxfavalessa/fx-database',$manifest['require']);
+        self::assertSame(\Fx\Framework\Console\Installation\PackageCatalog::PUBLISHED_VERSION,$manifest['require']['fxfavalessa/fx-admin']);
         $custom=$setup->create($this->root.'/custom',null,null,'custom',['http','validation']);
         self::assertFileDoesNotExist($custom.'/fxartisan');self::assertFileExists($custom.'/public/index.php');self::assertFileDoesNotExist($custom.'/configure.php');
         $wordpress=$setup->create($this->root.'/wordpress',null,null,'wordpress');

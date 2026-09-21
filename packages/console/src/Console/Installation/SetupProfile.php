@@ -24,7 +24,7 @@ final class SetupProfile
     {
         if ($profile === 'minimal') return $files;
         $manifest=json_decode($files['composer.json'],true,512,JSON_THROW_ON_ERROR);
-        $version=$localCore===null?'1.1.0-rc.1':'dev-main';
+        $version=$localCore===null?PackageCatalog::PUBLISHED_VERSION:'dev-main';
         foreach($components as $name)$manifest['require'][PackageCatalog::package($name)]=$version;
         if ($localCore!==null) {
             $parent=dirname(realpath($localCore));$versions=[];

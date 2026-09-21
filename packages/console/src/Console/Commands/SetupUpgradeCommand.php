@@ -17,7 +17,7 @@ final class SetupUpgradeCommand extends Command
             ->addOption('profile',null,InputOption::VALUE_REQUIRED,'complete ou custom','complete')
             ->addOption('components',null,InputOption::VALUE_REQUIRED,'Componentes separados por virgula para custom')
             ->addOption('without-admin',null,InputOption::VALUE_NONE,'Completa sem adicionar painel padrao')
-            ->addOption('constraint',null,InputOption::VALUE_REQUIRED,'Versao dos pacotes adicionados','1.1.0-rc.1')
+            ->addOption('constraint',null,InputOption::VALUE_REQUIRED,'Versao dos pacotes adicionados',PackageCatalog::PUBLISHED_VERSION)
             ->addOption('composer',null,InputOption::VALUE_REQUIRED,'Caminho de composer.phar')
             ->addOption('dry-run',null,InputOption::VALUE_NONE,'Mostra plano local sem gravar ou acessar rede')
             ->addOption('yes',null,InputOption::VALUE_NONE,'Confirma instalacao do plano')

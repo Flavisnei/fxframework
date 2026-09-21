@@ -52,7 +52,7 @@ final class MinimalSetup
         $target = self::validateTarget($target);
         if ($db !== null) { self::validateDatabase($db); }
         $repositories = [['type'=>'composer','url'=>'https://raw.githubusercontent.com/Flavisnei/fxframework/main/docs/composer']];
-        $version = '1.1.0-rc.1';
+        $version = PackageCatalog::PUBLISHED_VERSION;
         if ($localCore !== null) {
             $localCore = realpath($localCore);
             if ($localCore === false || !is_file($localCore . '/composer.json') || (json_decode(file_get_contents($localCore . '/composer.json'), true)['name'] ?? '') !== 'fxfavalessa/fx-core') { throw new RuntimeException('Informe --core-path com a pasta do pacote fx-core local.'); }
