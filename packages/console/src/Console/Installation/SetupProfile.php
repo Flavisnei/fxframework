@@ -63,6 +63,40 @@ final class SetupProfile
         }
         if($profile==='wordpress') {
             $files['plugin.php']=file_get_contents($resources.'/wordpress-plugin.php');
+            $files['src/Plugin.php'] = <<<'PHP'
+<?php
+declare(strict_types=1);
+
+namespace App;
+
+use Fx\Framework\WordPress\Plugin as FxPlugin;
+
+final class Plugin
+{
+    public function __construct(private readonly string $file) {}
+
+    public function boot(): void
+    {
+        $plugin = new FxPlugin($this->file, 'fx-projeto');
+        $plugin->app()->boot();
+        $plugin->action('admin_menu', static function (): void {
+            add_management_page('FX Projeto', 'FX Projeto', 'manage_options', 'fx-projeto', static function (): void {
+                require __DIR__ . '/../templates/admin-page.php';
+            });
+        });
+    }
+}
+PHP;
+            $files['templates/admin-page.php'] = <<<'PHP'
+<div class="wrap">
+    <h1>FX Projeto</h1>
+    <p>Plugin criado pelo FX Framework. Personalize esta página e acrescente seus módulos.</p>
+</div>
+PHP;
+            $files['assets/js/admin.js'] = "'use strict';\n\n// Adicione aqui os comportamentos AJAX do seu plugin.\n";
+            $files['assets/css/admin.css'] = "/* Estilos administrativos do plugin. */\n";
+            $files['assets/img/.gitkeep'] = '';
+            $files['README.md'] = "# FX Projeto\n\nPlugin WordPress gerado pelo FX Framework.\n\n- `plugin.php`: bootstrap do plugin.\n- `src/`: código PHP da aplicação.\n- `templates/`: HTML/PHP das telas.\n- `assets/js`, `assets/css`, `assets/img`: recursos públicos.\n";
             $instructions="WORDPRESS\nInstale as dependencias e copie esta pasta inteira, incluindo vendor, para wp-content/plugins.\nAtive FX Projeto no WordPress. Usa usuarios, permissoes e banco do WordPress; nao cria login paralelo.\nO menu Ferramentas > FX Projeto demonstra a integracao. Personalize Plugin Name e Text Domain.\nNao execute plugin.php diretamente. Nao instala nem altera o WordPress hospedeiro.\n";
         }
         if(isset($files['public/index.php'])) {

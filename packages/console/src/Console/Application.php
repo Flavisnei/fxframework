@@ -80,7 +80,9 @@ HELP;
 
     private function version(): int
     {
-        echo 'FX Artisan ' . self::VERSION . PHP_EOL;
+        foreach (VersionInfo::all() as $name => $version) {
+            echo $name . ': ' . $version . PHP_EOL;
+        }
         return 0;
     }
 

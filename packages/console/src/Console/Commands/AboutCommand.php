@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Fx\Framework\Console\Commands;
 
-use Fx\Framework\Console\Application as LegacyApplication;
+use Fx\Framework\Console\VersionInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,8 +18,13 @@ final class AboutCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $rows = [];
+        foreach (VersionInfo::all() as $name => $version) {
+            $rows[] = [$name, $version];
+        }
+
         (new Table($output))->setRows([
-            ['FX Framework', LegacyApplication::VERSION],
+            ...$rows,
             ['PHP', PHP_VERSION],
             ['Ambiente', getenv('APP_ENV') ?: 'local'],
             ['Debug', filter_var(getenv('APP_DEBUG') ?: false, FILTER_VALIDATE_BOOL) ? 'true' : 'false'],

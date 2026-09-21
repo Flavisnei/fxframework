@@ -21,6 +21,13 @@ if (!is_file($autoload)) {
 }
 require $autoload;
 
+if (in_array($argv[1] ?? null, ['-v', '--version', 'version'], true)) {
+    foreach (\Fx\Framework\Console\VersionInfo::all() as $name => $version) {
+        echo $name . ': ' . $version . PHP_EOL;
+    }
+    exit(0);
+}
+
 if (!class_exists(\Fx\Framework\Console\Artisan::class)) {
     fwrite(STDERR, "FX Console nao esta instalado. Consulte a ajuda de instalacao do componente console.\n");
     exit(1);

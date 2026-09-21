@@ -1,5 +1,13 @@
 # Entregas e revisão
 
+## Etapa atual — preset WordPress e identificação de versões
+
+O perfil WordPress do assistente agora gera uma base organizada para plugin: `plugin.php` como entrada, `src/` para PHP, `templates/` para telas e `assets/js`, `assets/css` e `assets/img` para recursos. A base contém uma página administrativa mínima e permanece deliberadamente sem regra de negócio.
+
+O comando de versão exibe separadamente FX Framework, FX WordPress, FX Admin e FX Artisan. A saída não inclui códigos de commit, hashes ou caminhos. O comando `about` mantém os dados de PHP, ambiente, debug e raiz depois das versões.
+
+Limitações: a estrutura gerada é um ponto de partida; o assistente não cria CRUD, migrations ou módulos de negócio automaticamente. O perfil WordPress continua usando o banco, usuários, permissões e ciclo de vida do WordPress hospedeiro.
+
 Cada etapa inclui implementação, testes pertinentes, revisão do diff, ajuda HTML e
 changelog. A conclusão depende de evidência, não de promessa de perfeição.
 

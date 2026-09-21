@@ -1,5 +1,11 @@
 # Histórico
 
+## 2026-09-21 — Estrutura WordPress e versões do FX Artisan
+
+- O perfil `setup:init --profile=wordpress` agora gera uma estrutura básica de plugin com `src/`, `templates/` e `assets/js`, `assets/css` e `assets/img`, além do bootstrap `plugin.php`.
+- `fxartisan -v`, `fxartisan --version` e `fxartisan version` exibem somente as versões nomeadas de FX Framework, FX WordPress, FX Admin e FX Artisan.
+- `fxartisan about` passa a mostrar essas versões separadamente antes dos dados do ambiente.
+
 ## 2026-09-20 — Setup usa a versão publicada dos componentes
 
 - Removida a versão `1.1.0-rc.1` fixa do assistente `setup:init` e `setup:upgrade`.
