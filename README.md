@@ -103,8 +103,16 @@ Em uma pasta vazia, crie `composer.json` na raiz:
 {
     "name": "empresa/minha-aplicacao",
     "type": "project",
-    "repositories": [{"type": "vcs", "url": "https://github.com/Flavisnei/fxframework.git"}],
-    "require": {"php": "^8.1", "fxfavalessa/fx-framework": "1.1.2"}
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Flavisnei/fxframework.git"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "fxfavalessa/fx-framework": "1.1.2"
+    }
 }
 ```
 
